@@ -1,0 +1,479 @@
+#!/usr/bin/perl
+# ===================================
+# Tomas Bruna, Alex Lomsadze
+#
+# This script runs large splicing alignment jobs on cluster using PBS.
+# Script should be adjusted for cluster specific configuration.
+#
+#
+# ===================================
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use File::Spec;
+use Cwd qw( abs_path cwd );
+use File::Temp qw/ tempfile /;
+use FindBin qw( $RealBin );
+use Data::Dumper;
+
+# ------------------------------------------------
+my $v = 0;
+my $debug = 0;
+my $cfg;
+my $log;
+my $bin = $RealBin;
+my $work_dir = cwd;
+# ------------------------------------------------
+
+my $N  = 90;            # number of jobs
+my $K  = 8;             # number of cores per job
+my $db = '';            # path to blast formatted database ; plain FASTA formatted file with sequence and blast db name is expected at this location
+my $aligner= '';        # Alignment engine
+my $seq_file = '';      # input sequence
+my $list_file = '';     # file with pairs of gene_id and protein_id (blast output)
+my $out_file_gff = '';  # output in GFF
+
+my $node_dir = '/tmp';  # use this directory on for holding tmp data on node
+my $PROSPLIGN_INTRONS_OUT = "scored_introns.gff";
+my $PROSPLIGN_OUT = "prosplign.gff";
+my $PROSPLIGN_OUT_ASN = "prosplign.regions.asn";
+my $SPALN_OUT = "spaln.gff";
+# ------------------------------------------------
+
+
+print Usage() if $#ARGV == -1 ;
+ParseCMD();
+my $store = $aligner; # put files with sequence and outputs here
+CheckBeforeRun();
+
+print "Start: " . localtime() . "\n" if $v;
+
+my @files = PrepareSequences();
+my %pairs = PreparePairs( \@files );
+my %jobs;   # keep job id's here
+
+foreach my $file ( @files )
+{
+	print "submitting $file\n" if $v;
+	RunOnPBS($file, $pairs{$file});
+}
+
+WaitForIt(1);
+CreateOutput();
+
+print Dumper(\%jobs) if $debug;
+print "End: " . localtime() . "\n" if $v;
+exit 0;
+
+
+# ================== sub =====================
+sub RunOnPBS
+{
+
+	my ($name, $list) = @_;
+
+ 	my $pbs = UniqTmpFile();
+	my $pbs_log = $pbs.".log";
+	my $label = $name;
+
+	my $text = "#!/bin/bash
+#PBS -N $label
+#PBS -o $pbs_log
+#PBS -j oe
+#PBS -l nodes=1:ppn=$K
+#PBS -l walltime=20:00:00
+
+dir=`mktemp  -p  $node_dir  -d`
+cd \$dir
+mkdir bin
+mkdir dependencies
+cp $bin/run_spliced_alignment.pl bin
+cp $bin/gff_from_region_to_contig.pl bin";
+
+	my $spalnPbs = "
+cp -r $bin/../dependencies/spaln_table dependencies
+cp $bin/../dependencies/spaln dependencies
+cp $bin/spaln_to_gff.py bin
+
+./bin/run_spliced_alignment.pl --nuc $name --prot $db --list $list --cores $K --aligner spaln
+
+mv $SPALN_OUT ${name}.gff
+rm bin/run_spliced_alignment.pl
+rm -r dependencies/spaln_table
+rm dependencies/spaln bin/spaln_to_gff.py bin/gff_from_region_to_contig.pl
+";
+
+	my $proSplignPbs = "
+# Move everything to the node
+cp $bin/../dependencies/prosplign dependencies
+cp $bin/asn_to_gff.pl bin
+mkdir bin/prosplign_parser
+cp $bin/prosplign_parser/blosum62.csv bin/prosplign_parser
+cp $bin/prosplign_parser/prosplign_parser bin/prosplign_parser
+
+./bin/run_spliced_alignment.pl --nuc $name  --prot $db  --list $list  --cores $K --aligner prosplign
+
+mv $PROSPLIGN_OUT ${name}.gff
+mv $PROSPLIGN_OUT_ASN ${name}.asn
+mv $PROSPLIGN_INTRONS_OUT ${name}.introns.gff
+rm bin/run_spliced_alignment.pl
+rm -r bin/prosplign_parser
+rm dependencies/prosplign bin/gff_from_region_to_contig.pl bin/asn_to_gff.pl
+";
+
+	if ($aligner eq "spaln") {
+		$text .= $spalnPbs;
+	} elsif ($aligner eq "prosplign") {
+		$text .= $proSplignPbs;
+	}
+
+	open( OUT, ">$pbs" )||die;
+	print OUT $text;
+	close OUT;
+	chmod  0755, $pbs;
+
+
+	my $id = `qsub $pbs`;
+
+	chomp $id;
+	print "qsub ID: $id\n" if $debug;
+
+	$jobs{ $id }{'seq'} = $name;
+	$jobs{ $id }{'list'} = $list;
+	$jobs{ $id }{'out_gff'} = "${name}.gff";
+	$jobs{ $id }{'out_asn'} = "${name}.asn";
+	$jobs{ $id }{'out_introns'} = "${name}.introns.gff";
+	$jobs{ $id }{'script'} = $pbs;
+	$jobs{ $id }{'log'} = $pbs_log;
+};
+# ------------------------------------------------
+sub CreateOutput
+{
+	print "creating output\n" if $debug;
+	my $OUT_GFF;
+	my $OUT_ASN;
+	my $OUT_INTRONS;
+
+	if ($aligner eq "spaln") {
+		open( $OUT_GFF, ">$SPALN_OUT" ) or die "error on open file: $SPALN_OUT $!\n";
+	} elsif ($aligner eq "prosplign") {
+		open( $OUT_GFF, ">$PROSPLIGN_OUT" ) or die "error on open file: $PROSPLIGN_OUT $!\n";
+		open( $OUT_ASN, ">$PROSPLIGN_OUT_ASN" ) or die "error on open file: $PROSPLIGN_OUT_ASN $!\n";
+		open( $OUT_INTRONS, ">$PROSPLIGN_INTRONS_OUT" ) or die "error on open file: $PROSPLIGN_INTRONS_OUT $!\n";
+	}
+
+	foreach my $id ( sort keys %jobs )
+	{
+		open( my $IN_GFF, $jobs{$id}{'out_gff'} ) or die "error on open file: $jobs{$id}{'out_gff'} $!\n";
+		while( <$IN_GFF> )
+		{
+			print $OUT_GFF $_;
+		}
+		close $IN_GFF;
+
+		if ($aligner eq "prosplign") {
+			open( my $IN_ASN, $jobs{$id}{'out_asn'} ) or die "error on open file: $jobs{$id}{'out_asn'} $!\n";
+			while( <$IN_ASN> )
+			{
+				print $OUT_ASN $_;
+			}
+			close $IN_ASN;
+
+			open( my $IN_INTRONS, $jobs{$id}{'out_introns'} ) or die "error on open file: $jobs{$id}{'out_introns'} $!\n";
+			while( <$IN_INTRONS> )
+			{
+				print $OUT_INTRONS $_;
+			}
+			close $IN_INTRONS;
+		}
+
+		# clean tmp files
+		if ( -s $jobs{$id}{'log'} )
+		{
+			print "warning, check this: $jobs{$id}{'log'}\n";
+		}
+		else
+		{
+			unlink $jobs{ $id }{'seq'};
+			unlink $jobs{ $id }{'list'};
+			if ($aligner eq "prosplign") {
+				unlink $jobs{ $id }{'out_asn'};
+				unlink $jobs{ $id }{'out_introns'};
+			}
+			unlink $jobs{ $id }{'out_gff'};
+			unlink $jobs{ $id }{'script'};
+			unlink $jobs{ $id }{'log'};
+		}
+	}
+
+	close $OUT_GFF;
+	if ($aligner eq "prosplign") {
+		close $OUT_ASN;
+		close $OUT_INTRONS;
+	}
+};
+# ------------------------------------------------
+sub WaitForIt
+{
+	my $status = shift;
+
+	print "waiting for spaln\n" if $debug;
+
+	if ( !%jobs )
+	{
+		print "error, no registered jobs\n";
+		exit 1;
+	}
+
+	while( $status )
+	{
+		sleep 5;
+		$status = 0;
+
+		foreach my $id ( keys %jobs )
+		{
+			if ( ! -e $jobs{$id}{'log'} )  { $status = 1; }
+		}
+	}
+};
+# ------------------------------------------------
+sub UniqTmpFile
+{
+	my ( $fh, $tmp_name ) = tempfile( "pbs_XXXXX" );
+	if ( !fileno($fh) ) { die "Can't open temporally  file: $!\n"; }
+	close $fh;
+	chmod 0755, $fh;
+	return $tmp_name;
+};
+# ------------------------------------------------
+sub PreparePairs
+{
+	my $ref = shift;
+
+	my %h;
+
+	# load list
+	my %gene_to_proteins;
+	LoadPairs( $list_file, \%gene_to_proteins );
+
+	# load deflines from each files
+	foreach my $name ( @{$ref} )
+	{
+		my @arr = ();
+        LoadDeflines( $name, \@arr );
+
+        # save pair info
+		SavePairs( $name ."_id", \@arr, \%gene_to_proteins );
+
+		$h{$name} = $name ."_id";
+	}
+
+	return %h;
+};
+# ------------------------------------------------
+sub SavePairs
+{
+	my( $name, $ref_arr, $ref_hash ) = @_;
+
+	print "saving id: $name\n" if $v;
+
+	open( my $OUT, ">$name" ) || die "$! on open $name\n";
+	foreach my $id ( @{$ref_arr} )
+	{
+		if ( exists $ref_hash->{$id} )
+		{
+			print $OUT $ref_hash->{$id};
+		}
+		else
+		{
+			print "warning, no pairs for: $name\n" if $v;
+		}
+	}
+	close $OUT;
+};
+# ------------------------------------------------
+sub LoadDeflines
+{
+	my( $name, $ref ) = @_;
+
+	print "reading defline: $name\n" if $v;
+
+	open( my $IN, $name ) || die "$! on open $name\n";
+	while( my $line = <$IN> )
+	{
+		if( $line !~ /^>/ ) {next;}
+
+		if( $line =~ /^>\s*(\S+)\s*/ )
+		{
+			push @$ref, $1;
+		}
+	}
+	close $IN;
+};
+# ------------------------------------------------
+sub LoadPairs
+{
+	my( $name, $ref ) = @_;
+	open( my $IN, $name ) || die "$! on open $name\n";
+	while( my $line = <$IN> )
+	{
+		if( $line =~ /^\s*$/ ) {next;}
+		if( $line =~ /^\s*#/ ) {next;}
+
+		if( $line =~ /(\S+)\s+(\S+)/ )
+		{
+			$ref->{ $1 } .= $line;
+		}
+		else { print "error, unexpected file format found$ 0: $line\n"; exit 1; }
+	}
+	close $IN;
+}
+# ------------------------------------------------
+sub PrepareSequences
+{
+	foreach my $f ( ReadFileNames( abs_path($store) ) ) { unlink $f; }
+
+	chdir $store;
+	system(" $bin/../dependencies/probuild  --seq $seq_file  --split_numfile $N  --split_fasta n ") and die("error on probuild");
+	chdir $work_dir;
+
+	return ReadFileNames( abs_path($store) );
+};
+# ------------------------------------------------
+sub ReadFileNames
+{
+	my $dir = shift;
+	my @list;
+
+	opendir( DIR, $dir ) or die "error on open directory $0: $dir, $!\n";
+	foreach my $file ( grep{ /\S+_\d+$/ } readdir(DIR) )
+	{
+		$file =  File::Spec->catfile( $dir, $file );
+		if ( -f $file )
+		{
+			$file = abs_path($file);
+			push @list, $file;
+		}
+		else { print "error, unexpected name found $0: $file\n"; exit 1; }
+	}
+	closedir DIR;
+
+	my $message = scalar @list ." files in directory";
+	print "$message\n" if $v;
+
+        my @sorted_list =
+                map{ $_->[0] }
+                sort { $a->[1] <=> $b->[1] }
+                map { [$_, $_=~/(\d+)/] }
+                        @list;
+
+	return @sorted_list;
+};
+# ------------------------------------------------
+sub CheckBeforeRun
+{
+	print "check before run\n" if $debug;
+
+	$bin      = ResolvePath( $bin );
+	$work_dir = ResolvePath( $work_dir );
+	$seq_file = ResolvePath( $seq_file );
+	$list_file = ResolvePath( $list_file );
+
+	if( !$seq_file ) { print "error, file is missing $0:  option --seq\n"; exit 1; }
+	if( !$list_file ) { print "error, file is missing $0:  option --list\n"; exit 1; }
+
+	if( !$db ) { print "error, database name is missing $0:  option --db\n"; exit 1; }
+
+	$aligner = lc $aligner;
+	if ( !$aligner ) {
+		print "Reuqired option --aligner is missing. Please specify the aligner. Valid options are: \"Spaln\", \"ProSplign\".\n";
+		exit 1;
+	}
+
+	if ( $aligner ne "spaln" && $aligner ne "prosplign" ) {
+		print "error, invalid aligner specified: $aligner. Valid options are: \"Spaln\", \"ProSplign\".\n";
+		exit 1;
+	}
+
+
+	mkdir $store;
+	if( ! -e $store ) { print "error, directory not found: $store\n"; exit 1; }
+	$store = ResolvePath($store);
+	$cfg->{'d'}->{'store'} = $store;
+
+	if ( !$node_dir ) { print "error missing tmp directory name on nodes\n"; exit 1; }
+};
+# ------------------------------------------------
+sub ResolvePath
+{
+	my( $name, $path ) = @_;
+	return '' if !$name;
+	$name = File::Spec->catfile( $path, $name ) if ( defined $path and $path );
+	if( ! -e $name ) { print "error, file not found $0: $name\n"; exit 1; }
+	return abs_path( $name );
+};
+# ------------------------------------------------
+sub ParseCMD
+{
+	print "parse cmd\n" if $debug;
+
+	my $cmd = $0;
+	foreach my $str (@ARGV) { $cmd .= ( ' '. $str ); }
+
+	my $opt_results = GetOptions
+	(
+		'seq=s'   => \$seq_file,
+		'list=s'  => \$list_file,
+		'db=s'    => \$db,
+		'tmp=s'   => \$node_dir,
+		'N=i'     => \$N,
+		'K=i'     => \$K,
+		'aligner=s' => \$aligner,
+		'verbose' => \$v,
+		'debug'   => \$debug
+	);
+
+	if( !$opt_results ) { print "error on command line: $0\n"; exit 1; }
+	if( @ARGV > 0 ) { print "error, unexpected argument found on command line: $0 @ARGV\n"; exit 1; }
+	$v = 1 if $debug;
+
+	# save information for debug
+	$cfg->{'d'}->{'seq_file'}  = $seq_file;
+	$cfg->{'d'}->{'list_file'} = $list_file;
+	$cfg->{'d'}->{'tmp'}   = $node_dir;
+	$cfg->{'d'}->{'bd'}    = $db;
+	$cfg->{'d'}->{'N'}     = $N;
+	$cfg->{'d'}->{'K'}     = $K;
+	$cfg->{'d'}->{'aligner'} = $aligner;
+	$cfg->{'d'}->{'v'}     = $v;
+	$cfg->{'d'}->{'debug'} = $debug;
+	$cfg->{'d'}->{'cmd'}   = $cmd;
+
+	print Dumper($cfg) if $debug;
+};
+# ------------------------------------------------
+sub Usage
+{
+	my $txt =
+"# ----------
+Usage: $0 options
+
+run blast on PBS
+
+  --seq  [s] FASTA file with nucleotide sequences
+  --list [s] list with  dna-to-protein mappings pair names
+  --aligner [s]  Which spliced alignment tool to use. Valid options are: \"Spaln, ProSplign\"
+  --db   [s] proteins are here
+  --tmp  [s] name of temporary directory on node
+  --N    [i] number of jobs to submit
+  --K    [i] number of cores per job (on the same node)
+  --v        verbose
+  --debug
+# -----------
+";
+	print $txt;
+	exit 1;
+};
+# --------------------------------------------
