@@ -4,33 +4,38 @@
 import unittest
 import sys
 import os
-import filecmp
+import subprocess
 
 
 class TestProcessOutput(unittest.TestCase):
 
+    def compareFiles(self, file1, file2):
+        command = "diff <(sort " + file1 + " ) \
+                <(sort " + file2 + " )"
+        diffResult = subprocess.call(command, shell=True, executable='/bin/bash')
+        self.assertEqual(diffResult, 0)
+
     def testProcessOutput(self):
         prothint.workDir = testDir + "/test_processOutput"
-        prothint.processOutput(4, 0.3, 90)
+        prothint.processOutput()
         os.chdir(prothint.workDir)
 
-        self.assertEqual(filecmp.cmp("introns.gff",
-                                     "test_introns.gff"), True)
+        self.compareFiles("ProSplign/prosplign_combined.gff",
+                          "test_prosplign_combined.gff")
+        self.compareFiles("prothint.gff",
+                          "test_prothint.gff")
+        self.compareFiles("evidence.gff",
+                          "test_evidence.gff")
+        self.compareFiles("prothint_augustus.gff",
+                          "test_prothint_augustus.gff")
+        self.compareFiles("evidence_augustus.gff",
+                          "test_evidence_augustus.gff")
 
-        self.assertEqual(filecmp.cmp("ProSplign/prosplign_combined.gff",
-                                     "test_prosplign_combined.gff"), True)
-
-        self.assertEqual(filecmp.cmp("hints.gff",
-                                     "test_hints.gff"), True)
-
-        self.assertEqual(filecmp.cmp("evidence.gff",
-                                     "test_evidence.gff"), True)
-
-        os.remove("introns.gff")
         os.remove("ProSplign/prosplign_combined.gff")
-        os.remove("ProSplign/starts_stops.gff")
-        os.remove("hints.gff")
+        os.remove("prothint.gff")
         os.remove("evidence.gff")
+        os.remove("prothint_augustus.gff")
+        os.remove("evidence_augustus.gff")
 
 
 if __name__ == '__main__':
