@@ -1,23 +1,19 @@
 #!/usr/bin/env python
 # Author: Tomas Bruna
-
-# Filter out starts which are overlapped by at least CDSCoverageThreshold CDS
-# alignments. CDS regions which start before a start starting coordinate and end
-# after a start ending coordinate are considered to be overlapping. Both input
+#
+# Compute and print the number of CDS segments overlapping each start. CDS
+# regions which start before a start codon starting coordinate and end after a
+# start codon ending coordinate are considered to be overlapping. Both input
 # files (start codons and CDS coordinates in gff format) need to be sorted by
 # chromosome, start and end. For example like this: sort -k1,1 -k4,4n -k5,5n
-# starts.gff > starts_sorted.gff.
-#
+# starts.gff > starts_sorted.gff. The file with CDS coordinates can be collapsed
+# (with combine_gff_records.gff script) for faster execution of this script.
+
 # positional arguments:
-#   starts.gff            Sorted start codons in gff format.
-#   cds.gff               Sorted CDS regions in gff format. If the 6th score
-#                         column contains a number, this number is treated as
-#                         coverage of the given CDS region.
-#   CDSCoverageThreshold  CDS overlap threshold. Starts with maxCDSCoverage or
-#                         more overlapping CDS regions are filtered out.
-#
-# optional arguments:
-#   -h, --help            show this help message and exit
+#   starts.gff  Sorted start codons in gff format.
+#   cds.gff     Sorted CDS regions in gff format. If the 6th score column
+#               contains a number, this number is treated as coverage of the
+#               given CDS region.
 
 
 import csv
@@ -50,7 +46,7 @@ def loadCDS(cdsFileName):
     return codingSegments
 
 
-def filterStarts(startsFileName, cdsFileName, threshold):
+def filterStarts(startsFileName, cdsFileName):
     codingSegments = loadCDS(cdsFileName)
 
     startsFile = open(startsFileName)
@@ -84,8 +80,12 @@ def filterStarts(startsFileName, cdsFileName, threshold):
                 startOverlaps += codingSegments[chrom][i].coverage
             i += 1
 
-        if startOverlaps < threshold:
-            print("\t".join(start))
+        if start[8] == ".":
+            start[8] = "CDS_overlap=" + str(startOverlaps) + ";"
+        else:
+            start[8] += " CDS_overlap=" + str(startOverlaps) + ";"
+
+        print("\t".join(start))
 
         prevChromosome = chrom
 
@@ -94,17 +94,19 @@ def filterStarts(startsFileName, cdsFileName, threshold):
 
 def main():
     args = parseCmd()
-    filterStarts(args.starts, args.cds, args.coverage)
+    filterStarts(args.starts, args.cds)
 
 
 def parseCmd():
 
-    parser = argparse.ArgumentParser(description='Filter out starts which are \
-        overlapped by at least CDSCoverageThreshold CDS alignments. CDS regions which start \
-        before a start starting coordinate and end after a start ending coordinate \
-        are considered to be overlapping. Both input files (start codons and CDS \
-        coordinates in gff format) need to be sorted by chromosome, start and end. \
-        For example like this: sort -k1,1 -k4,4n -k5,5n starts.gff > starts_sorted.gff.')
+    parser = argparse.ArgumentParser(description='Compute and print the number of CDS  \
+        segments overlapping each start. CDS regions which start before a start codon \
+        starting coordinate and end after a start codon ending coordinate are considered \
+        to be overlapping. Both input files (start codons and CDS coordinates in gff\
+        format) need to be sorted by chromosome, start and end. For example like this: \
+        sort -k1,1 -k4,4n -k5,5n starts.gff > starts_sorted.gff. The file with CDS \
+        coordinates can be collapsed (with combine_gff_records.gff script) for faster\
+        execution of this script.')
 
     parser.add_argument('starts', metavar='starts.gff', type=str,
                         help='Sorted start codons in gff format.')
@@ -112,9 +114,6 @@ def parseCmd():
                         help='Sorted CDS regions in gff format. If the 6th score column \
                         contains a number, this number is treated as coverage of the \
                         given CDS region.')
-    parser.add_argument('coverage', metavar='CDSCoverageThreshold', type=int,
-                        help='CDS overlap threshold. Starts with maxCDSCoverage \
-                        or more overlapping CDS regions are filtered out.')
 
     return parser.parse_args()
 

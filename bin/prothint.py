@@ -40,7 +40,7 @@ def main():
     prepareProSplignPairs(diamondPairs, args.ensureDiamondPairs)
     runProSplign(args.pbs)
 
-    processOutput(args.coverageThreshold, args.alignmentScoreThreshold, args.closeThreshold)
+    processOutput()
 
     if cleanup:
         cleanup()
@@ -218,70 +218,48 @@ def runProSplign(pbs):
     subprocess.call(command, shell=True)
 
 
-def processOutput(coverageThreshold, alignmentScoreThreshold, closeThreshold):
+def processOutput():
     """Prepare the final output
-       Flag highly reliable introns from with high coverage and alignment score
-       Create chained hints for close alignments
-
-    Args:
-        coverageThreshold (int): Minimum coverage for highly reliable introns
-        alignmentScoreThreshold (float): Minimum alignment score for highly reliable introns
-        closeThreshold (float): Percent identity threshold for close homologs (chained output)
+       Convert the output to GeneMark and Augustus compatible formats
     """
     os.chdir(workDir)
 
-    # All introns
-    command = binDir + "/combine_gff_records.pl --in_gff ProSplign/scored_introns.gff --out_gff introns.gff"
-    subprocess.call(command, shell=True)
+    # Collapse all scored introns, add them to the final output
+    subprocess.call(binDir + "/combine_gff_records.pl --in_gff \
+        ProSplign/scored_introns.gff --out_gff prothint.gff", shell=True)
 
-    # Add info about full protein aligned
-    command = binDir + "/combine_outputs.py introns.gff ProSplign/prosplign.gff > tmp.gff; mv tmp.gff introns.gff"
-    subprocess.call(command, shell=True)
+    # Collapse full ProSplign output
+    subprocess.call(binDir + "/combine_gff_records.pl --in_gff ProSplign/prosplign.gff \
+                    --out_gff ProSplign/prosplign_combined.gff", shell=True)
 
-    command = binDir + "/promapp2augustus.py --scoredIntrons introns.gff --al_score " + \
-        str(alignmentScoreThreshold) + " --intronCoverage " + str(coverageThreshold) + " > hints.gff"
-    subprocess.call(command, shell=True)
+    # Add stops to output directly
+    subprocess.call("grep -P \"\t[Ss]top_codon\t\" ProSplign/prosplign_combined.gff >> \
+                    prothint.gff", shell=True)
 
-    # Start and stop codons
-    command = binDir + "/combine_gff_records.pl --in_gff ProSplign/prosplign.gff --out_gff ProSplign/prosplign_combined.gff"
-    subprocess.call(command, shell=True)
+    # Count CDS overlaps of starts before adding them to the output file
+    subprocess.call("grep -P \"\t[Ss]tart_codon\t\" ProSplign/prosplign_combined.gff | \
+                    sort -k1,1 -k4,4n -k5,5n > ProSplign/starts_sorted.gff", shell=True)
 
-    # Add info about full protein aligned
-    command = binDir + "/combine_outputs.py ProSplign/prosplign_combined.gff ProSplign/prosplign.gff > tmp.gff; \
-              mv tmp.gff ProSplign/prosplign_combined.gff"
-    subprocess.call(command, shell=True)
+    subprocess.call("grep -P \"\tCDS\t|\tCDS[Pp]art\t\" ProSplign/prosplign_combined.gff | \
+                    sort -k1,1 -k4,4n -k5,5n > ProSplign/cds_sorted.gff", shell=True)
 
-    command = binDir + "/promapp2augustus.py --startStops ProSplign/prosplign_combined.gff \
-        --startCoverage " + str(coverageThreshold) + " --stopCoverage " + str(coverageThreshold) + " > ProSplign/starts_stops.gff"
-    subprocess.call(command, shell=True)
-
-    # Add stops to hints directly
-    command = "grep -P \"\t[Ss]top_codon\t\" ProSplign/starts_stops.gff >> hints.gff"
-    subprocess.call(command, shell=True)
-
-    # Extra filtering step for starts -- filter by CDS overlaps
-    command = "grep -P \"\t[Ss]tart_codon\t\" ProSplign/starts_stops.gff | sort -k1,1 -k4,4n -k5,5n > ProSplign/starts_sorted.gff"
-    subprocess.call(command, shell=True)
-
-    command = "grep -P \"\tCDS\t|\tCDS[Pp]art\t\" ProSplign/prosplign_combined.gff | sort -k1,1 -k4,4n -k5,5n > ProSplign/cds_sorted.gff"
-    subprocess.call(command, shell=True)
-
-    command = binDir + "/filterStarts.py ProSplign/starts_sorted.gff ProSplign/cds_sorted.gff 4 >> hints.gff"
-    subprocess.call(command, shell=True)
+    subprocess.call(binDir + "/count_cds_overlaps.py ProSplign/starts_sorted.gff \
+                    ProSplign/cds_sorted.gff >> prothint.gff", shell=True)
     os.remove("ProSplign/cds_sorted.gff")
     os.remove("ProSplign/starts_sorted.gff")
 
-    # Evidence file
-    command = "grep \"src=M;\" hints.gff  > evidence.gff"
-    subprocess.call(command, shell=True)
+    # Add info about full protein aligned
+    subprocess.call(binDir + "/combine_outputs.py prothint.gff ProSplign/prosplign.gff > \
+                    tmp.gff; mv tmp.gff prothint.gff", shell=True)
 
-    # Chained hints
-    # command = binDir + "/asn_to_gff.pl --asn ProSplign/prosplign.gff.regions.asn --out asn_regions.gff \
-    #           --exons --exonCutoff 15 --close " + str(closeThreshold) + " --augustus"
-    # subprocess.call(command, shell=True)
+    # Print high confidence hints
+    subprocess.call(binDir + "/print_high_confidence.py prothint.gff > evidence.gff", shell=True)
 
-    # command = binDir + "/gff_from_region_to_contig.pl --in_gff asn_regions.gff --seq nuc.fasta --out chained.gff"
-    # subprocess.call(command, shell=True)
+    # Agustus compatible format
+    subprocess.call(binDir + "/prothint2augustus.py prothint.gff > prothint_augustus.gff", shell=True)
+    subprocess.call(binDir + "/prothint2augustus.py evidence.gff > evidence_augustus.gff", shell=True)
+
+    # TODO: Chains for Augustus
 
 
 def cleanup():
@@ -335,7 +313,10 @@ def parseCmd():
     Returns:
         dictionary: Dictionary with arguments
     """
-    parser = argparse.ArgumentParser('promapp.py')
+    parser = argparse.ArgumentParser(description='ProtHint pipeline. The set of high confidence hints \
+                                     is generated using default thresholds in print_high_confidence.py \
+                                     script. If you wish to use different filtering criteria, re-run\
+                                     print_high_confidence.py script with custom thresholds.')
 
     parser.add_argument('genome', metavar='genome.fasta', type=str,
                         help='Input genomic sequence in FASTA format.')
@@ -360,13 +341,6 @@ def parseCmd():
                         but may decrease accuracy. Default is set to 10.')
     parser.add_argument('--ensureDiamondPairs', type=int, default=5,
                         help='Always align (with ProSplign) this many top proteins for each gene in DIAMOND output (no matter the Spaln result). Default = 5.')
-    parser.add_argument('--closeThreshold', type=int, default=90,
-                        help='Percent identity threshold of ProSplign alignment to be treated as an alignment of close homologs. Full CDS structure \
-                        including start and stop codons is reported for alignments with pID higher than this threshold.')
-    parser.add_argument('--coverageThreshold', type=int, default=4,
-                        help='Flag highly reliable introns with coverage >= coverageThreshold and alignment score >= alignmentScoreThreshold. Default = 4.')
-    parser.add_argument('--alignmentScoreThreshold', type=float, default=0.3,
-                        help='Flag highly reliable introns with coverage >= coverageThreshold and alignment score >= alignmentScoreThreshold. Default = 0.3.')
     parser.add_argument('--cleanup', default=False, action='store_true',
                         help='Delete temporary files and intermediate results. Cleanup is turned off by default as it is useful to keep these files \
                         for troubleshooting and the intermediate results might be useful on their own.')
