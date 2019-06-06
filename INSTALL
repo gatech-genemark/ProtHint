@@ -1,0 +1,76 @@
+#================================================
+# Copyright Georgia Institute of Technology, Atlanta, Georgia, USA
+#================================================
+
+To install, copy the content of distribution to desired location.
+The following dependencies need to be satisfied:
+
+#------------------------------------
+1. PERL DEPENDENCIES
+
+Perl scripts are configured with default Perl location at "/usr/bin/perl".
+
+The following non-Core Perl modules are required:
+   MCE::Mutex
+   threads
+   YAML
+These Perl modules are freely available for installation from CPAN
+
+#------------------------------------
+2. PYTHON
+
+Python 2.7 or higher is required.
+
+No libraries outside of the Python Standard Library are required.
+
+#------------------------------------
+3. GENEMARK-ES
+
+There are two ways of using GeneMark-ES:
+
+    a. Run ProtHint with "--geneMarkGtf genemark.gtf" option which specifies the path
+    to a file with GeneMark-ES predictions. If this option is used, GeneMark-ES does not 
+    need to be installed.
+
+    b. Install GeneMark-ES, ProtHint will run it automatically as a part of the pipeline:
+
+    Download and extract the contents of the GeneMark-ES suite (versions 4.30 and up) into
+    the ProtHint/dependencies/GeneMarkES folder.
+
+    GeneMark-ES suite is available at http://exon.gatech.edu/GeneMark/license_download.cgi
+
+    To check that all the required Perl CPAN modules for ES are installed on your system,
+    run GeneMark-ES without parameters:
+
+    ProtHint/dependencies/GeneMarkES/bin/gmes_petap.pl
+
+    If the command outputs usage information, then all the required Perl modules are installed.
+
+#------------------------------------
+4. DIAMOND
+
+DIAMOND local sequence aligner (available at https://github.com/bbuchfink/diamond)
+is included in this distribution package.
+
+In case the included version is not working, install DIAMOND from https://github.com/bbuchfink/diamond
+and replace the DIAMOND binary in ProtHint/dependencies folder.
+
+#------------------------------------
+5. Spaln
+
+Spaln, space-efficient spliced alignment program (available at https://github.com/ogotoh/spaln), 
+is included in this distribution package.
+
+In case the included version is not working, install Spaln from https://github.com/ogotoh/spaln
+and replace the Spaln binary in ProtHint/dependencies folder.
+
+#------------------------------------
+6. ProSplign
+
+ProSplign program from NCBI – with the standard NCBI license (http://www.ncbi.nlm.nih.gov/sutils/static/prosplign/prosplign.html)
+is included in this distribution package.
+
+In case the included version is not working, download the executable from https://www.ncbi.nlm.nih.gov/sutils/static/prosplign/prosplign.html
+and replace the ProSplign binary in ProtHint/dependencies folder.
+
+#================================================
