@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 # ==============================================================
 # Tomas Bruna, Alex Lomsadze
+# Copyright 2019, Georgia Institute of Technology, USA
 # 
 # This script takes as input protein and nucleotide sequences 
 # and runs Spliced alignment

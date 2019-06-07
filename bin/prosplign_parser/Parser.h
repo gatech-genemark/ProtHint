@@ -1,3 +1,6 @@
+// Author: Tomas Bruna
+// Copyright 2019, Georgia Institute of Technology, USA
+
 #ifndef PARSER_H
 #define PARSER_H
 

@@ -1,7 +1,8 @@
 #!/usr/bin/perl
 # ==============================================================
 # Alex Lomsadze, Tomas Bruna
-# 
+# Copyright 2019, Georgia Institute of Technology, USA
+#
 # This script takes as input alignment info from ProSplign in ASN
 # and selects subset of info in GFF format
 # ==============================================================

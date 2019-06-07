@@ -1,9 +1,10 @@
 #!/usr/bin/perl
 # ==============================================================
 # Alex Lomsadze
+# Copyright 2019, Georgia Institute of Technology, USA
 # 
 # This script takes as input nucleotide sequence, gene coordinates and list of gene ID's
-# and outputs nucleotide sequence of spesified genes with marging
+# and outputs nucleotide sequence of specified genes with margins
 # ==============================================================
 
 use strict;

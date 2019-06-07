@@ -1,3 +1,6 @@
+// Author: Tomas Bruna
+// Copyright 2019, Georgia Institute of Technology, USA
+
 #include "Parser.h"
 #include <string>
 #include <fstream>

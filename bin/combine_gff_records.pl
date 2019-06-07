@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 # ==============================================================
 # Alex Lomsadze, Tomas Bruna
+# Copyright 2019, Georgia Institute of Technology, USA
 # 
 # This script takes as input GFF file and creates a non redundant set
 # ==============================================================

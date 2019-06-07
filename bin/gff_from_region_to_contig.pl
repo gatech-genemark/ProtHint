@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 # ==============================================================
 # Alex Lomsadze
+# Copyright 2019, Georgia Institute of Technology, USA
 # 
 # This script takes as input GFF on region level and transfers coordinates to contig level
 # ==============================================================

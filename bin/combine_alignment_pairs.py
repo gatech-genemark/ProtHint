@@ -1,16 +1,10 @@
 #!/usr/bin/env python
-# Author: Tomas Bruna
-
-# Add top k pairs from diamond seed protein-gene pairs to the Spaln pairs
+# ==============================================================
+# Tomas Bruna
+# Copyright 2019, Georgia Institute of Technology, USA
 #
-# Options:
-#   --diamondPairs DIAMONDPAIRS
-#                         Diamond seed gene-protein pairs.
-#   --spalnPairs SPALNPAIRS
-#                         Seed gene-protein pairs coming from Spaln.
-#   --output OUTPUT       Output file with combined pairs.
-#   --k K                 Output this many best pairs from diamond pairs.
-#                         Default = 5.
+# Add top k pairs from diamond seed protein-gene pairs to the Spaln pairs
+# ==============================================================
 
 import argparse
 import sys

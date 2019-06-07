@@ -1,3 +1,6 @@
+// Author: Tomas Bruna
+// Copyright 2019, Georgia Institute of Technology, USA
+
 #ifndef KERNEL_H
 #define KERNEL_H
 

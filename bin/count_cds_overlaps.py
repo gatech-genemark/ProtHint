@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-# Author: Tomas Bruna
+# ==============================================================
+# Tomas Bruna
+# Copyright 2019, Georgia Institute of Technology, USA
 #
 # Compute and print the number of CDS segments overlapping each start. CDS
 # regions which start before a start codon starting coordinate and end after a
@@ -8,12 +10,7 @@
 # chromosome, start and end. For example like this: sort -k1,1 -k4,4n -k5,5n
 # starts.gff > starts_sorted.gff. The file with CDS coordinates can be collapsed
 # (with combine_gff_records.gff script) for faster execution of this script.
-
-# positional arguments:
-#   starts.gff  Sorted start codons in gff format.
-#   cds.gff     Sorted CDS regions in gff format. If the 6th score column
-#               contains a number, this number is treated as coverage of the
-#               given CDS region.
+# ==============================================================
 
 
 import csv

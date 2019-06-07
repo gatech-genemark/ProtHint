@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-# Author: Tomas Bruna
-
-# Convert ProtHint output to Augustus compatible format
+# ==============================================================
+# Tomas Bruna
+# Copyright 2019, Georgia Institute of Technology, USA
 #
-# positional arguments:
-#   prothint.gff  ProtHint output file.
+# Convert ProtHint output to Augustus compatible format
+# ==============================================================
 
 
 import argparse

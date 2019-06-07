@@ -1,7 +1,8 @@
 #!/usr/bin/perl
 # ==============================================================
 # Alex Lomsadze
-# 2015
+# Copyright 2019, Georgia Institute of Technology, USA
+#
 # This script takes as input nucleotide sequence and gene coordinates
 # and outputs protein sequences of genes
 # ==============================================================

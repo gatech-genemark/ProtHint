@@ -1,29 +1,10 @@
 #!/usr/bin/env python
-# Author: Tomas Bruna
+# ==============================================================
+# Tomas Bruna
+# Copyright 2019, Georgia Institute of Technology, USA
 #
 # Select high confidence features from ProtHint output file.
-#
-# positional arguments:
-#   prothint.gff          ProtHint output file.
-#
-# optional arguments:
-#   --intronCoverage INTRONCOVERAGE
-#                         Intron coverage score threshold. Print all introns
-#                         with coverage >= intronCoverage. Default = 4.
-#   --startCoverage STARTCOVERAGE
-#                         Start coverage score threshold. Print all starts with
-#                         coverage >= startCoverage. Default = 4.
-#   --stopCoverage STOPCOVERAGE
-#                         Stop coverage score threshold. Print all stops with
-#                         coverage >= stopCoverage. Default = 4.
-#   --intronAlignment INTRONALIGNMENT
-#                         Intron alignment score threshold. Print all introns
-#                         with al_score >= intronAlignment. Default = 0.3.
-#   --startOverlap STARTOVERLAP
-#                         Maximum alowed CDS overlap of a start. Print all
-#                         starts with CDS overlap <= startOverlap. Default = 3
-#   --addFullAligned      Add hints with fullProteinAligned flag even if they do
-#                         not satisfy the coverage threshold condition.
+# ==============================================================
 
 
 import argparse

@@ -1,25 +1,15 @@
 #!/usr/bin/env python
-# Author: Tomas Bruna
-
+# ==============================================================
+# Tomas Bruna
+# Copyright 2019, Georgia Institute of Technology, USA
+#
 # Convert spaln output to gff with introns, start and stop codons. Starts are
 # reported only if the alignment starts with ATG and the protein start matches
-# the alignment start. Stops are reported only of the codon right after the last
+# the alignment start. Stops are reported only if the codon right after the last
 # aligned exon is a stop codon and protein end matches the alignment end. Spaln
 # output file is read from standard input.
-#
-# optional arguments:
-#   -h, --help            show this help message and exit
-#   --intronScore INTRONSCORE
-#                         Minimum score of exons downstream and upstream of
-#                         intron fot intron to be reported
-#   --startScore STARTSCORE
-#                         Minimum score of a first aligned exon for a start to
-#                         be reported
-#   --stopScore STOPSCORE
-#                         Minimum score of last aligned exon for a stop to be
-#                         reported
-#   --gene GENE           Fasta file with genomic sequence used for alignment.
-#   --prot PROT           Fasta file with protein sequence used for alignment.
+# ==============================================================
+
 
 import sys
 import argparse
@@ -120,7 +110,7 @@ def parseCmd():
     parser = argparse.ArgumentParser(description='Convert spaln output to gff with introns, \
                                      start and stop codons. Starts are reported only if the \
                                      alignment starts with ATG and the protein start matches \
-                                     the alignment start. Stops are reported only of the codon \
+                                     the alignment start. Stops are reported only if the codon \
                                      right after the last aligned exon is a stop codon and protein \
                                      end matches the alignment end. Spaln output file is read \
                                      from standard input.')

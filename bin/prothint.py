@@ -1,9 +1,11 @@
 #!/usr/bin/env python
-# Author: Tomas Bruna
-
-# TODO:
-# * Chained hints for Augustus
-
+# ==============================================================
+# Tomas Bruna
+# Copyright 2019, Georgia Institute of Technology, USA
+#
+# ProtHint: Pipeline for generating genome wide footprints of homologous
+# proteins
+# ==============================================================
 
 import argparse
 import os
@@ -259,8 +261,6 @@ def processOutput():
     subprocess.call(binDir + "/prothint2augustus.py prothint.gff > prothint_augustus.gff", shell=True)
     subprocess.call(binDir + "/prothint2augustus.py evidence.gff > evidence_augustus.gff", shell=True)
 
-    # TODO: Chains for Augustus
-
 
 def cleanup():
     print()
@@ -313,7 +313,8 @@ def parseCmd():
     Returns:
         dictionary: Dictionary with arguments
     """
-    parser = argparse.ArgumentParser(description='ProtHint pipeline. The set of high confidence hints \
+    parser = argparse.ArgumentParser(description='ProtHint: Pipeline for generating genome wide \
+                                     footprints of homologous proteins. The set of high confidence hints \
                                      is generated using default thresholds in print_high_confidence.py \
                                      script. If you wish to use different filtering criteria, re-run\
                                      print_high_confidence.py script with custom thresholds.')

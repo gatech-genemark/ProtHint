@@ -1,3 +1,6 @@
+// Author: Tomas Bruna
+// Copyright 2019, Georgia Institute of Technology, USA
+
 #ifndef SCORE_MATRIX_H
 #define SCORE_MATRIX_H
 

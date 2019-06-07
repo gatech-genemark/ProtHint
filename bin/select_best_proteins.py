@@ -1,10 +1,12 @@
 #!/usr/bin/env python
-# Author: Tomas Bruna
-
+# ==============================================================
+# Tomas Bruna
+# Copyright 2019, Georgia Institute of Technology, USA
+#
 # This script selects NUM_PROTEINS best proteins
 # supporting each intron/start/stop.
-#
-# Usage: select_best_proteins.py in.gff NUM_PROTEINS
+# ==============================================================
+
 
 import csv
 import sys

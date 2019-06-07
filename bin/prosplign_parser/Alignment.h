@@ -1,3 +1,6 @@
+// Author: Tomas Bruna
+// Copyright 2019, Georgia Institute of Technology, USA
+
 #ifndef ALIGNMENT_H
 #define ALIGNMENT_H
 

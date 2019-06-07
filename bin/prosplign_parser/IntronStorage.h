@@ -1,3 +1,6 @@
+// Author: Tomas Bruna
+// Copyright 2019, Georgia Institute of Technology, USA
+
 #ifndef INTRON_STORAGE_H
 #define INTRON_STORAGE_H
 

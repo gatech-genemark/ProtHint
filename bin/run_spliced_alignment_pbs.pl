@@ -1,11 +1,10 @@
 #!/usr/bin/perl
-# ===================================
+# ==============================================================
 # Tomas Bruna, Alex Lomsadze
+# Copyright 2019, Georgia Institute of Technology, USA
 #
 # This script runs large splicing alignment jobs on cluster using PBS.
 # Script should be adjusted for cluster specific configuration.
-#
-#
 # ===================================
 
 use strict;

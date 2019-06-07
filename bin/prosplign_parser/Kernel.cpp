@@ -1,3 +1,6 @@
+// Author: Tomas Bruna
+// Copyright 2019, Georgia Institute of Technology, USA
+
 #include <cstdlib>
 #include <cmath>
 #include "Kernel.h"

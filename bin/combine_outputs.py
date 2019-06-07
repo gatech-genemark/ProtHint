@@ -1,14 +1,14 @@
 #!/usr/bin/env python
-# Author: Tomas Bruna
-
+# ==============================================================
+# Tomas Bruna
+# Copyright 2019, Georgia Institute of Technology, USA
+#
 # Add information about full protein alignment from second input file to
-# features (possibly combined/collapsed) in the frist gff file. If the first
+# features (possibly combined/collapsed) in the first gff file. If the first
 # input file has combined features, only one of them needs to come from a fully
 # aligned protein for the flag to be set in the output.
-#
-# positional arguments:
-#   input.gff      Input file to which the information is added
-#   prosplign.gff  ProSplign output with fullProteinAligned flag for each entry
+# ==============================================================
+
 
 import argparse
 import csv
@@ -79,7 +79,7 @@ def parseCmd():
 
     parser = argparse.ArgumentParser(description='Add information about \
         full protein alignment from second input file to features (possibly \
-        combined/collapsed) in the frist gff file. If the first input file has \
+        combined/collapsed) in the first gff file. If the first input file has \
         combined features, only one of them needs to come from a fully \
         aligned protein for the flag to be set in the output.\n')
 
