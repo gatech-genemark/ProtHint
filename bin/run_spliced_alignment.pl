@@ -230,7 +230,7 @@ sub alignWithProSplign
 
 	system("$bin/../dependencies/prosplign -o \"${tmp_out_file}_asn\" -eo \"${tmp_out_file}_ali\"  -nfa \"$tmp_nuc_file\" -pfa \"$tmp_prot_file\" -nogenbank -gaps_inf -two_stages");
 	# Parse and score introns from alignment file
-	system("$bin/prosplign_parser/prosplign_parser -i \"${tmp_out_file}_ali\" -o \"$tmp_out_file\" -w 10 -s $bin/prosplign_parser/blosum62.csv");
+	system("$bin/prosplign_parser/prosplign_parser -i \"${tmp_out_file}_ali\" -o \"$tmp_out_file\" -w 10 -a -s $bin/prosplign_parser/blosum62.csv");
 	# Convert asn output to gff
 	system("$bin/asn_to_gff.pl --asn \"${tmp_out_file}_asn\" --out \"${tmp_out_file}_asn_gff\" --exons");
 

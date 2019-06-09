@@ -24,6 +24,13 @@ def extractFeature(text, feature):
 def intron(row, args):
     al_score = float(extractFeature(row[8], "al_score"))
     fullProtein = extractFeature(row[8], "fullProteinAligned")
+
+    if not args.addAllSpliceSites:
+        spliceSites = extractFeature(row[8], "splice_sites")
+        if spliceSites is not None and spliceSites != "GT_AG":
+            if not args.addGCAG or spliceSites != "GC_AG":
+                return
+
     if (((int(row[5]) >= args.intronCoverage) or
         (args.addFullAligned and fullProtein == "TRUE")) and
        (al_score >= args.intronAlignment)):
@@ -87,6 +94,12 @@ def parseCmd():
     parser.add_argument('--addFullAligned', action='store_true',
                         help='Add hints with fullProteinAligned flag even if they do not \
                         satisfy the coverage threshold condition.')
+    parser.add_argument('--addGCAG', action='store_true',
+                        help='Add introns with GC_AG splice sites. By default, \
+                        only introns with canonical GT_AG splice sites are printed.')
+    parser.add_argument('--addAllSpliceSites', action='store_true',
+                        help='Add introns with any splice sites.  By default, \
+                        only introns with canonical GT_AG splice sites are printed')
 
     return parser.parse_args()
 

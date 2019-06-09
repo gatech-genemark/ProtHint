@@ -52,6 +52,21 @@ sub PrintToFile
 	open( my $OUT, ">$name" ) or die( "$!, error on open file $name" ); 
 	foreach my $key (keys %$ref) 
 	{
+
+		if ($ref->{$key}{'al_score'} == -1) {
+			$ref->{$key}{'att'} = ".";
+		} else {
+			$ref->{$key}{'att'} = "al_score=$ref->{$key}{'al_score'};";
+		}
+
+		if ($ref->{$key}{'splice_sites'}) {
+			if ($ref->{$key}{'att'} eq ".") {
+				$ref->{$key}{'att'} = "splice_sites=$ref->{$key}{'splice_sites'};";
+			} else {
+				$ref->{$key}{'att'} .= " splice_sites=$ref->{$key}{'splice_sites'};";
+			}
+		}
+
 		$line = $ref->{$key}{'id'}     ."\t";
 		$line .= $ref->{$key}{'info'}  ."\t";
 		$line .= $ref->{$key}{'type'}  ."\t";
@@ -92,12 +107,12 @@ sub ParseGFF
 			$ref->{$key}{'ph'} = $8;
 
 			$current = $6;
+			my $attribute = $9;
 
-			ParseAlignmentScore($9, $ref, $key);
-			if ($ref->{$key}{'al_score'} == -1) {
-				$ref->{$key}{'att'} = ".";
-			} else {
-				$ref->{$key}{'att'} = "al_score=$ref->{$key}{'al_score'};";
+			ParseAlignmentScore($attribute, $ref, $key);
+
+			if ($attribute =~ /splice_sites=([^;]+);.*/) {
+				$ref->{$key}{'splice_sites'} = $1;
 			}
 
 			if ( $current eq '.' )
