@@ -12,7 +12,7 @@ import shutil
 class TestProSplign(unittest.TestCase):
 
     def testProSplign(self):
-        prothint.workDir = testDir + "/test_ProSplign"
+        prothint.workDir = testDir + "/test_ProSplign/pbs"
         prothint.proteins = prothint.workDir + "/proteins.fasta"
         prothint.runProSplign(pbs=True)
 
@@ -30,7 +30,7 @@ class TestProSplign(unittest.TestCase):
             shutil.rmtree(prothint.workDir + "/ProSplign")
 
     def testProSplignNonPBS(self):
-        prothint.workDir = testDir + "/test_ProSplign_no_pbs"
+        prothint.workDir = testDir + "/test_ProSplign/no_pbs"
         prothint.proteins = prothint.workDir + "/proteins.fasta"
         prothint.runProSplign(pbs=False)
 
