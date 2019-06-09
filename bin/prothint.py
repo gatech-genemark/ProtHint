@@ -14,6 +14,7 @@ import subprocess
 import multiprocessing
 
 
+VERSION = '1.0'
 workDir = ''
 binDir = ''
 genome = ''
@@ -349,6 +350,7 @@ def parseCmd():
                         help='Run GeneMark-ES, Spaln and ProSplign on pbs.')
     parser.add_argument('--threads', type=int, default=-1,
                         help='Number of threads used by ES, DIAMOND, Spaln and ProSplign. By default, all available threads are used.')
+    parser.add_argument('--version', action='version', version='%(prog)s ' + VERSION)
 
     return parser.parse_args()
 
