@@ -98,6 +98,10 @@ if ( $debug )
 my $OUT;
 open( $OUT, ">$out_file_regions" ) or die( "$!, error on open file $out_file_regions" );
 close $OUT;
+
+open( $OUT, ">spaln.ali" ) or die( "$!, error on open file $out_file_regions" );
+close $OUT;
+
 if ($aligner eq "prosplign") {
 	open( $OUT, ">$out_file_asn_regions" ) or die( "$!, error on open file $out_file_asn_regions" );
 	close $OUT;
@@ -170,7 +174,8 @@ foreach my $thr (threads->list())
 
 # Cerate final output with correct coordinates
 if ($aligner eq "spaln") {
-	system("$bin/gff_from_region_to_contig.pl --in_gff $out_file_regions --seq $nuc_file --out_gff $SPALN_OUT");
+	# system("$bin/gff_from_region_to_contig.pl --in_gff $out_file_regions --seq $nuc_file --out_gff $SPALN_OUT");
+	system("mv $out_file_regions $SPALN_OUT");
 } elsif ($aligner eq "prosplign") {
 	system("$bin/gff_from_region_to_contig.pl --in_gff $out_file_regions --seq $nuc_file --out_gff $PROSPLIGN_INTRONS_OUT");
 	system("$bin/gff_from_region_to_contig.pl --in_gff $out_file_asn_gff_regions --seq $nuc_file --out_gff $PROSPLIGN_OUT");
@@ -250,10 +255,13 @@ sub alignWithSpaln
 	# -O4    Output exons
 
 	# Align and directly filter the result
-	system("$bin/../dependencies/spaln -Q7 -pw -S1 -O4  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null | " .
-		"$bin/spaln_to_gff.py > \"$tmp_out_file\" --intronScore $SPALN_MIN_EXON_SCORE " .
-		"--startScore $SPALN_MIN_START_SCORE --stopScore $SPALN_MIN_STOP_SCORE " .
-		"--gene \"$tmp_nuc_file\" --prot \"$tmp_prot_file\"");
+	# system("$bin/../dependencies/spaln -Q7 -pw -S1 -O4  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null | " .
+	#	"$bin/spaln_to_gff.py > \"$tmp_out_file\" --intronScore $SPALN_MIN_EXON_SCORE " .
+	#	"--startScore $SPALN_MIN_START_SCORE --stopScore $SPALN_MIN_STOP_SCORE " .
+	#	"--gene \"$tmp_nuc_file\" --prot \"$tmp_prot_file\"");
+    my $chars = `wc -m $tmp_nuc_file | cut -f1 -d" "`;
+    $chars = ($chars + 100) * 2;
+    system("$bin/../dependencies/spaln -Q3 -LS -pw -S1 -O1 -l $chars  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null >> $tmp_out_file");
 }
 
 #------------------------------------------------

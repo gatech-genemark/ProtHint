@@ -38,6 +38,8 @@ def main():
 
     prepareSeedSequences(diamondPairs)
     runSpaln(diamondPairs, args.pbs)
+
+    return;
     filterSpalnPairs(args.maxSpalnCoverage)
 
     prepareProSplignPairs(diamondPairs, args.ensureDiamondPairs)
@@ -158,7 +160,7 @@ def runSpaln(diamondPairs, pbs):
                   " --nuc ../nuc.fasta --list " + diamondPairs + \
                   " --prot " + proteins + " --v --aligner spaln  > loginfo_spaln"
     else:
-        command = binDir + "/run_spliced_alignment_pbs.pl --N 120 --K 8 --seq \
+        command = binDir + "/run_spliced_alignment_pbs.pl --N 10 --K 8 --seq \
                   ../nuc.fasta --list " + diamondPairs + " --db " + \
                   proteins + " --v --aligner spaln  > loginfo_spaln"
 
