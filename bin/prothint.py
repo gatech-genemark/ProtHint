@@ -38,6 +38,9 @@ def main():
 
     prepareSeedSequences(diamondPairs)
     runSpaln(diamondPairs, args.pbs)
+
+    return
+
     filterSpalnPairs(args.maxSpalnCoverage)
 
     prepareProSplignPairs(diamondPairs, args.ensureDiamondPairs)

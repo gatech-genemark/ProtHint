@@ -244,16 +244,27 @@ sub alignWithSpaln
 	my $tmp_prot_file = shift;
 	my $tmp_out_file = shift;
 
-	# -Q7    Algorithm runs in the mode of recursive HSP search up to the level of 3 (fastest)
+	# Estimate the maximum possible possible length of the alignment, including gaps.
+	my $alignmentLength = ((stat "$tmp_nuc_file")[7]) * 2;
+
+	# -Q3    Algorithm runs in the fast heuristic mod
 	# -pw    Report result even if alignment score is below threshold value
 	# -S1    Dna is in the forward orientation
-	# -O4    Output exons
+	# -LS    Smith-Waterman-type local alignment. This option may prune out weakly matched terminal regions.
+	# -O1    Output alignment
+	# -l     Number of characters per line in alignment
 
-	# Align and directly filter the result
-	system("$bin/../dependencies/spaln -Q7 -pw -S1 -O4  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null | " .
-		"$bin/spaln_to_gff.py > \"$tmp_out_file\" --intronScore $SPALN_MIN_EXON_SCORE " .
-		"--startScore $SPALN_MIN_START_SCORE --stopScore $SPALN_MIN_STOP_SCORE " .
-		"--gene \"$tmp_nuc_file\" --prot \"$tmp_prot_file\"");
+	# Align
+	system("$bin/../dependencies/spaln -Q3 -LS -pw -S1 -O1 -l $alignmentLength  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null > ${tmp_out_file}_ali");
+	# Parse and score hints
+	system("$bin/spaln_parser/spaln_parser -i \"${tmp_out_file}_ali\" -o \"$tmp_out_file\" -w 10 -a -s $bin/spaln_parser/blosum62.csv");
+
+	unlink "${tmp_out_file}_ali";
+
+	# system("$bin/../dependencies/spaln -Q7 -pw -S1 -O4  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null | " .
+	#	"$bin/spaln_to_gff.py > \"$tmp_out_file\" --intronScore $SPALN_MIN_EXON_SCORE " .
+	#	"--startScore $SPALN_MIN_START_SCORE --stopScore $SPALN_MIN_STOP_SCORE " .
+	#	"--gene \"$tmp_nuc_file\" --prot \"$tmp_prot_file\"");
 }
 
 #------------------------------------------------

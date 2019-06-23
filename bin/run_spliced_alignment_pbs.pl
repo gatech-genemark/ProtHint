@@ -95,12 +95,16 @@ cp $bin/gff_from_region_to_contig.pl bin";
 cp -r $bin/../dependencies/spaln_table dependencies
 cp $bin/../dependencies/spaln dependencies
 cp $bin/spaln_to_gff.py bin
+mkdir bin/spaln_parser
+cp $bin/spaln_parser/blosum62.csv bin/spaln_parser
+cp $bin/spaln_parser/spaln_parser bin/spaln_parser
 
 ./bin/run_spliced_alignment.pl --nuc $name --prot $db --list $list --cores $K --aligner spaln
 
 mv $SPALN_OUT ${name}.gff
 rm bin/run_spliced_alignment.pl
 rm -r dependencies/spaln_table
+rm -r bin/spaln_parser
 rm dependencies/spaln bin/spaln_to_gff.py bin/gff_from_region_to_contig.pl
 ";
 
