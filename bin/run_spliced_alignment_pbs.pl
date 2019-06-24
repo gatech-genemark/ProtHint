@@ -41,29 +41,30 @@ my $PROSPLIGN_OUT_ASN = "prosplign.regions.asn";
 my $SPALN_OUT = "spaln.gff";
 # ------------------------------------------------
 
-
-print Usage() if $#ARGV == -1 ;
+Usage() if $#ARGV == -1;
 ParseCMD();
 my $store = $aligner; # put files with sequence and outputs here
 CheckBeforeRun();
 
-print "Start: " . localtime() . "\n" if $v;
-
+print STDERR "[" . localtime() . "] Starting spliced alignment on PBS\n" if $v;
+print STDERR "[" . localtime() . "] Splitting the input file\n" if $v;
 my @files = PrepareSequences();
 my %pairs = PreparePairs( \@files );
 my %jobs;   # keep job id's here
 
 foreach my $file ( @files )
 {
-	print "submitting $file\n" if $v;
+	print STDERR "[" . localtime() . "] submitting $file\n" if $v;
 	RunOnPBS($file, $pairs{$file});
 }
 
+print STDERR "[" . localtime() . "] All jobs submitted. Waiting for jobs to finish.\n" if $v;
 WaitForIt(1);
+print STDERR "[" . localtime() . "] Finished, writing output\n" if $v;
 CreateOutput();
 
-print Dumper(\%jobs) if $debug;
-print "End: " . localtime() . "\n" if $v;
+print STDERR Dumper(\%jobs) if $debug;
+print STDERR "[" . localtime() . "] Spliced alignment on PBS finished\n" if $v;
 exit 0;
 
 
@@ -141,7 +142,7 @@ rm dependencies/prosplign bin/gff_from_region_to_contig.pl bin/asn_to_gff.pl
 	my $id = `qsub $pbs`;
 
 	chomp $id;
-	print "qsub ID: $id\n" if $debug;
+	print STDERR "qsub ID: $id\n" if $debug;
 
 	$jobs{ $id }{'seq'} = $name;
 	$jobs{ $id }{'list'} = $list;
@@ -154,7 +155,7 @@ rm dependencies/prosplign bin/gff_from_region_to_contig.pl bin/asn_to_gff.pl
 # ------------------------------------------------
 sub CreateOutput
 {
-	print "creating output\n" if $debug;
+	print STDERR "creating output\n" if $debug;
 	my $OUT_GFF;
 	my $OUT_ASN;
 	my $OUT_INTRONS;
@@ -169,6 +170,8 @@ sub CreateOutput
 
 	foreach my $id ( sort keys %jobs )
 	{
+		print STDERR "[" . localtime() . "] Collecting results for $jobs{$id}{'seq'}\n" if $v;
+
 		open( my $IN_GFF, $jobs{$id}{'out_gff'} ) or die "error on open file: $jobs{$id}{'out_gff'} $!\n";
 		while( <$IN_GFF> )
 		{
@@ -195,7 +198,7 @@ sub CreateOutput
 		# clean tmp files
 		if ( -s $jobs{$id}{'log'} )
 		{
-			print "warning, check this: $jobs{$id}{'log'}\n";
+			print STDERR "warning, check this: $jobs{$id}{'log'}\n";
 		}
 		else
 		{
@@ -222,11 +225,11 @@ sub WaitForIt
 {
 	my $status = shift;
 
-	print "waiting for spaln\n" if $debug;
+	print STDERR "waiting for spaln\n" if $debug;
 
 	if ( !%jobs )
 	{
-		print "error, no registered jobs\n";
+		print STDERR "error, no registered jobs\n";
 		exit 1;
 	}
 
@@ -280,7 +283,7 @@ sub SavePairs
 {
 	my( $name, $ref_arr, $ref_hash ) = @_;
 
-	print "saving id: $name\n" if $v;
+	print STDERR "[" . localtime() . "] saving id: $name\n" if $v;
 
 	open( my $OUT, ">$name" ) || die "$! on open $name\n";
 	foreach my $id ( @{$ref_arr} )
@@ -291,7 +294,7 @@ sub SavePairs
 		}
 		else
 		{
-			print "warning, no pairs for: $name\n" if $v;
+			print STDERR "warning, no pairs for: $name\n" if $v;
 		}
 	}
 	close $OUT;
@@ -301,7 +304,7 @@ sub LoadDeflines
 {
 	my( $name, $ref ) = @_;
 
-	print "reading defline: $name\n" if $v;
+	print STDERR "[" . localtime() . "] reading defline: $name\n" if $v;
 
 	open( my $IN, $name ) || die "$! on open $name\n";
 	while( my $line = <$IN> )
@@ -329,7 +332,7 @@ sub LoadPairs
 		{
 			$ref->{ $1 } .= $line;
 		}
-		else { print "error, unexpected file format found$ 0: $line\n"; exit 1; }
+		else { print STDERR "error, unexpected file format found$ 0: $line\n"; exit 1; }
 	}
 	close $IN;
 }
@@ -359,12 +362,12 @@ sub ReadFileNames
 			$file = abs_path($file);
 			push @list, $file;
 		}
-		else { print "error, unexpected name found $0: $file\n"; exit 1; }
+		else { print STDERR "error, unexpected name found $0: $file\n"; exit 1; }
 	}
 	closedir DIR;
 
 	my $message = scalar @list ." files in directory";
-	print "$message\n" if $v;
+	print STDERR "$message\n" if $v;
 
         my @sorted_list =
                 map{ $_->[0] }
@@ -377,36 +380,36 @@ sub ReadFileNames
 # ------------------------------------------------
 sub CheckBeforeRun
 {
-	print "check before run\n" if $debug;
+	print STDERR "check before run\n" if $debug;
 
 	$bin      = ResolvePath( $bin );
 	$work_dir = ResolvePath( $work_dir );
 	$seq_file = ResolvePath( $seq_file );
 	$list_file = ResolvePath( $list_file );
 
-	if( !$seq_file ) { print "error, file is missing $0:  option --seq\n"; exit 1; }
-	if( !$list_file ) { print "error, file is missing $0:  option --list\n"; exit 1; }
+	if( !$seq_file ) { print STDERR "error, file is missing $0:  option --seq\n"; exit 1; }
+	if( !$list_file ) { print STDERR "error, file is missing $0:  option --list\n"; exit 1; }
 
-	if( !$db ) { print "error, database name is missing $0:  option --db\n"; exit 1; }
+	if( !$db ) { print STDERR "error, database name is missing $0:  option --db\n"; exit 1; }
 
 	$aligner = lc $aligner;
 	if ( !$aligner ) {
-		print "Reuqired option --aligner is missing. Please specify the aligner. Valid options are: \"Spaln\", \"ProSplign\".\n";
+		print STDERR "Required option --aligner is missing. Please specify the aligner. Valid options are: \"Spaln\", \"ProSplign\".\n";
 		exit 1;
 	}
 
 	if ( $aligner ne "spaln" && $aligner ne "prosplign" ) {
-		print "error, invalid aligner specified: $aligner. Valid options are: \"Spaln\", \"ProSplign\".\n";
+		print STDERR "error, invalid aligner specified: $aligner. Valid options are: \"Spaln\", \"ProSplign\".\n";
 		exit 1;
 	}
 
 
 	mkdir $store;
-	if( ! -e $store ) { print "error, directory not found: $store\n"; exit 1; }
+	if( ! -e $store ) { print STDERR "error, directory not found: $store\n"; exit 1; }
 	$store = ResolvePath($store);
 	$cfg->{'d'}->{'store'} = $store;
 
-	if ( !$node_dir ) { print "error missing tmp directory name on nodes\n"; exit 1; }
+	if ( !$node_dir ) { print STDERR "error missing tmp directory name on nodes\n"; exit 1; }
 };
 # ------------------------------------------------
 sub ResolvePath
@@ -414,13 +417,13 @@ sub ResolvePath
 	my( $name, $path ) = @_;
 	return '' if !$name;
 	$name = File::Spec->catfile( $path, $name ) if ( defined $path and $path );
-	if( ! -e $name ) { print "error, file not found $0: $name\n"; exit 1; }
+	if( ! -e $name ) { print STDERR "error, file not found $0: $name\n"; exit 1; }
 	return abs_path( $name );
 };
 # ------------------------------------------------
 sub ParseCMD
 {
-	print "parse cmd\n" if $debug;
+	print STDERR "parse cmd\n" if $debug;
 
 	my $cmd = $0;
 	foreach my $str (@ARGV) { $cmd .= ( ' '. $str ); }
@@ -438,8 +441,8 @@ sub ParseCMD
 		'debug'   => \$debug
 	);
 
-	if( !$opt_results ) { print "error on command line: $0\n"; exit 1; }
-	if( @ARGV > 0 ) { print "error, unexpected argument found on command line: $0 @ARGV\n"; exit 1; }
+	if( !$opt_results ) { print STDERR "error on command line: $0\n"; exit 1; }
+	if( @ARGV > 0 ) { print STDERR "error, unexpected argument found on command line: $0 @ARGV\n"; exit 1; }
 	$v = 1 if $debug;
 
 	# save information for debug
@@ -454,7 +457,7 @@ sub ParseCMD
 	$cfg->{'d'}->{'debug'} = $debug;
 	$cfg->{'d'}->{'cmd'}   = $cmd;
 
-	print Dumper($cfg) if $debug;
+	print STDERR Dumper($cfg) if $debug;
 };
 # ------------------------------------------------
 sub Usage

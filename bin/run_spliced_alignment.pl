@@ -55,6 +55,8 @@ Usage() if ( @ARGV < 1 );
 ParseCMD();
 CheckBeforeRun();
 
+print STDERR "[" . localtime() . "] Starting spliced alignment with $aligner\n" if $v;
+
 if ($aligner eq "spaln") {
 	$out_file_regions = "spaln.regions.gff";
 } elsif ($aligner eq "prosplign") {
@@ -80,9 +82,9 @@ my %nuc;
 my %prot;
 my @list;
 
-ReadList( $list_file, \@list, \%nuc, \%prot );
+print STDERR "[" . localtime() . "] Loading alignment pairs into memory\n" if $v;
 
-print "list size: ". (scalar @list) ."\n" if $v;
+ReadList( $list_file, \@list, \%nuc, \%prot );
 
 ReadSequence( $nuc_file,  \%nuc,  \%nuc );
 ReadSequence( $prot_file, \%prot, \%prot );
@@ -91,8 +93,8 @@ if ( $debug )
 {
 	foreach my $val  (@list)
 	{
-		if ( ! exists $nuc{ $val->[0] } ) { print "$val->[0] missing\n"; }
-		if ( ! exists $prot{ $val->[1] } ) { print "$val->[1] missing\n"; }
+		if ( ! exists $nuc{ $val->[0] } ) { print STDERR "$val->[0] missing\n"; }
+		if ( ! exists $prot{ $val->[1] } ) { print STDERR "$val->[1] missing\n"; }
 	}
 }
 
@@ -107,24 +109,29 @@ if ($aligner eq "prosplign") {
 	close $OUT;
 }
 
-
 my $tmp_prot_file;
 my $tmp_nuc_file;
 my $tmp_out_file;
-
 
 my $key;
 my $value;
 my $ref;
 
 my $counter = 0;
+my $nextPrint = 0;
 
 $ENV{ALN_TAB} = "$bin/../dependencies/spaln_table";
 
-print "looping list\n" if $v;
+my $pairsCount = (scalar @list);
+print STDERR "[" . localtime() . "] Pairs loaded. Number of pairs to align: $pairsCount\n" if $v;
+print STDERR "[" . localtime() . "] Starting the alignments\n" if $v;
 foreach $ref ( @list )
 {
-
+	my $permille = int(($counter * 1000) / $pairsCount);
+	if ($permille >= $nextPrint) {
+		printf STDERR "[" . localtime() . "] $counter/$pairsCount (%.1f%%) pairs aligned\n", $permille / 10 if $v;
+        $nextPrint = $permille + 1;
+	}
 	$key = $ref->[0];
 	$value = $ref->[1];
 
@@ -136,8 +143,6 @@ foreach $ref ( @list )
 	# Header may be longer than a file name length limit
 	$file_value = substr $file_value, 0, 200;
 
-	print $key ." ". $value ." ". $counter  ."\n" if $v;
-
 	$tmp_nuc_file  = "nuc_". $key ."_". $counter;
 	$tmp_prot_file = "prot_". $file_value ."_". $counter;
 	$tmp_out_file  = "out_". $key ."_". $file_value ."_". $counter;
@@ -148,7 +153,7 @@ foreach $ref ( @list )
 
 	if ( $debug )
 	{
-		print "error on $tmp_nuc_file\n" if( ! -e $tmp_nuc_file );
+		print STDERR "error on $tmp_nuc_file\n" if( ! -e $tmp_nuc_file );
 	}
 
 	SaveSingleFasta( $tmp_nuc_file,  $key,   $nuc{$key} );
@@ -160,8 +165,6 @@ foreach $ref ( @list )
 
 }
 
-print "total runs: $counter\n" if $v;
-
 # Finish and wait for threads
 $q->end();
 foreach my $thr (threads->list())
@@ -169,6 +172,9 @@ foreach my $thr (threads->list())
 	$thr -> join();
 }
 
+print STDERR "[" . localtime() . "] $pairsCount/$pairsCount (100%) pairs aligned\n" if $v;
+print STDERR "[" . localtime() . "] Alignment of pairs finished\n" if $v;
+print STDERR "[" . localtime() . "] Translating coordinates from local pair level to contig level\n" if $v;
 
 # Cerate final output with correct coordinates
 if ($aligner eq "spaln") {
@@ -181,6 +187,7 @@ if ($aligner eq "spaln") {
 
 unlink $out_file_regions;
 
+print STDERR "[" . localtime() . "] Finished spliced alignment\n" if $v;
 exit 0;
 
 #------------------------------------------------
@@ -337,7 +344,7 @@ sub ReadList
 				$h_s->{$2} = '';
 			}
 		}
-		else { print "error, unexpected file format found$0: $line\n"; exit 1; }
+		else { print STDERR "error, unexpected file format found$0: $line\n"; exit 1; }
 	}
 	close $IN;
 }
@@ -365,7 +372,7 @@ sub ReadSequence
 		}
 		else
 		{
-			if( !$id ) { print "error, fasta record whithout definition line found $0: $line\n"; exit 1; }
+			if( !$id ) { print STDERR "error, fasta record whithout definition line found $0: $line\n"; exit 1; }
 
 			if ( defined $h_ref and $skip ) {next;}
 
@@ -383,7 +390,7 @@ sub ReadSequence
 # ------------------------------------------------
 sub CheckBeforeRun
 {
-	print "check before run\n" if $debug;
+	print STDERR "check before run\n" if $debug;
 		
 	$bin      = ResolvePath( $bin );
 	$work_dir = ResolvePath( $work_dir );
@@ -392,21 +399,21 @@ sub CheckBeforeRun
 	$prot_file = ResolvePath( $prot_file );
 	$list_file = ResolvePath( $list_file );
 	
-	if( !$nuc_file )  { print "error, required file name is missing $0:  option --nuc\n"; exit 1; }
-	if( !$prot_file ) { print "error, required file name is missing $0:  option --prot\n"; exit 1; }
-	if( !$list_file ) { print "error, required file name is missing $0:  option --list\n"; exit 1; }
+	if( !$nuc_file )  { print STDERR "error, required file name is missing $0:  option --nuc\n"; exit 1; }
+	if( !$prot_file ) { print STDERR "error, required file name is missing $0:  option --prot\n"; exit 1; }
+	if( !$list_file ) { print STDERR "error, required file name is missing $0:  option --list\n"; exit 1; }
 	
-	if( $cores < 1 ) { print "error, out of range values specified for number of cores $0: $cores\n"; exit 1; }
+	if( $cores < 1 ) { print STDERR "error, out of range values specified for number of cores $0: $cores\n"; exit 1; }
 
 	$aligner = lc $aligner;
 
 	if ( !$aligner ) {
-		print "Reuqired option --aligner is missing. Please specify the aligner. Valid options are: \"Spaln\", \"ProSplign\".\n"; exit 1; 
+		print STDERR "Reuqired option --aligner is missing. Please specify the aligner. Valid options are: \"Spaln\", \"ProSplign\".\n"; exit 1;
 	} 
 
 	if ( $aligner ne "spaln" && $aligner ne "prosplign" ) 
 	{
-		print "error, invalid aligner specified: $aligner. Valid options are: \"Spaln\", \"ProSplign\".\n"; 
+		print STDERR "error, invalid aligner specified: $aligner. Valid options are: \"Spaln\", \"ProSplign\".\n";
 		exit 1;
 	}
 };
@@ -416,13 +423,13 @@ sub ResolvePath
 	my( $name, $path ) = @_;
 	return '' if !$name;
 	$name = File::Spec->catfile( $path, $name ) if ( defined $path and $path );
-	if( ! -e $name ) { print "error, file not found $0: $name\n"; exit 1; }
+	if( ! -e $name ) { print STDERR "error, file not found $0: $name\n"; exit 1; }
 	return abs_path( $name );
 };
 # ------------------------------------------------
 sub ParseCMD
 {
-	print "parse cmd\n" if $debug;
+	print STDERR "parse cmd\n" if $debug;
 	
 	my $cmd = $0;
 	foreach my $str (@ARGV) { $cmd .= ( ' '. $str ); }
@@ -438,8 +445,8 @@ sub ParseCMD
 		'debug'     => \$debug,
 	);
 
-	if( !$opt_results ) { print "error on command line: $0\n"; exit 1; }
-	if( @ARGV > 0 ) { print "error, unexpected argument found on command line: $0 @ARGV\n"; exit 1; }
+	if( !$opt_results ) { print STDERR "error on command line: $0\n"; exit 1; }
+	if( @ARGV > 0 ) { print STDERR "error, unexpected argument found on command line: $0 @ARGV\n"; exit 1; }
 	$v = 1 if $debug;
 
 	# save informaton for debug
@@ -452,7 +459,7 @@ sub ParseCMD
 	$cfg->{'d'}->{'debug'} = $debug;
 	$cfg->{'d'}->{'cmd'}   = $cmd;
 	
-	print Dumper($cfg) if $debug;
+	print STDERR Dumper($cfg) if $debug;
 };
 # ------------------------------------------------
 sub Usage

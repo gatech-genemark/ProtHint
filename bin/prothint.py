@@ -159,11 +159,11 @@ def runSpaln(diamondPairs, pbs):
     if not pbs:
         command = binDir + "/run_spliced_alignment.pl --cores " + threads + \
                   " --nuc ../nuc.fasta --list " + diamondPairs + \
-                  " --prot " + proteins + " --v --aligner spaln  > loginfo_spaln"
+                  " --prot " + proteins + " --v --aligner spaln"
     else:
         command = binDir + "/run_spliced_alignment_pbs.pl --N 120 --K 8 --seq \
                   ../nuc.fasta --list " + diamondPairs + " --db " + \
-                  proteins + " --v --aligner spaln  > loginfo_spaln"
+                  proteins + " --v --aligner spaln"
 
     subprocess.call(command, shell=True)
 
@@ -215,11 +215,11 @@ def runProSplign(pbs):
     if not pbs:
         command = binDir + "/run_spliced_alignment.pl --cores " + threads + \
                   " --nuc ../nuc.fasta --list ../pairs_for_prosplign.out \
-                  --prot " + proteins + " --v --aligner prosplign  > loginfo_prosplign"
+                  --prot " + proteins + " --v --aligner prosplign"
     else:
         command = binDir + "/run_spliced_alignment_pbs.pl --N 240 --K 8 --seq \
                   ../nuc.fasta --list ../pairs_for_prosplign.out \
-                  --db " + proteins + " --v --aligner prosplign  > loginfo_prosplign"
+                  --db " + proteins + " --v --aligner prosplign"
 
     subprocess.call(command, shell=True)
 
