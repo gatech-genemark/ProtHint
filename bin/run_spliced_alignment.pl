@@ -47,6 +47,8 @@ my $SPALN_OUT = "spaln.gff";
 my $SPALN_MIN_EXON_SCORE = 50;
 my $SPALN_MIN_START_SCORE = 100;
 my $SPALN_MIN_STOP_SCORE = 100;
+my $LONG_GENE = 30000;
+my $LONG_PROTEIN = 15000;
 # ------------------------------------------------
 
 Usage() if ( @ARGV < 1 );
@@ -244,8 +246,10 @@ sub alignWithSpaln
 	my $tmp_prot_file = shift;
 	my $tmp_out_file = shift;
 
+	my $geneLength = (stat "$tmp_nuc_file")[7];
+	my $proteinLength = (stat "$tmp_prot_file")[7];
 	# Estimate the maximum possible possible length of the alignment, including gaps.
-	my $alignmentLength = ((stat "$tmp_nuc_file")[7]) * 2;
+	my $alignmentLength = $geneLength * 2;
 
 	# -Q3    Algorithm runs in the fast heuristic mod
 	# -pw    Report result even if alignment score is below threshold value
@@ -254,8 +258,14 @@ sub alignWithSpaln
 	# -O1    Output alignment
 	# -l     Number of characters per line in alignment
 
-	# Align
-	system("$bin/../dependencies/spaln -Q3 -LS -pw -S1 -O1 -l $alignmentLength  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null > ${tmp_out_file}_ali");
+	if ($geneLength > $LONG_GENE || $proteinLength > $LONG_PROTEIN) {
+		# Align
+		system("$bin/../dependencies/spaln -Q7 -LS -pw -S1 -O1 -l $alignmentLength  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null > ${tmp_out_file}_ali");
+	} else {
+		# Align
+		system("$bin/../dependencies/spaln -Q3 -LS -pw -S1 -O1 -l $alignmentLength  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null > ${tmp_out_file}_ali");
+	}
+
 	# Parse and score hints
 	system("$bin/spaln_parser/spaln_parser -i \"${tmp_out_file}_ali\" -o \"$tmp_out_file\" -w 10 -a -s $bin/spaln_parser/blosum62.csv");
 
