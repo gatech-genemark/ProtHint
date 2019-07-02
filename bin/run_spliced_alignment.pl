@@ -265,23 +265,14 @@ sub alignWithSpaln
 	# -O1    Output alignment
 	# -l     Number of characters per line in alignment
 
+	my $mode = "-Q3";
 	if ($geneLength > $LONG_GENE || $proteinLength > $LONG_PROTEIN) {
-		# Align
-		system("$bin/../dependencies/spaln -Q7 -LS -pw -S1 -O1 -l $alignmentLength  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null > ${tmp_out_file}_ali");
-	} else {
-		# Align
-		system("$bin/../dependencies/spaln -Q3 -LS -pw -S1 -O1 -l $alignmentLength  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null > ${tmp_out_file}_ali");
+		$mode = "-Q7";
 	}
 
-	# Parse and score hints
-	system("$bin/spaln_parser/spaln_parser -i \"${tmp_out_file}_ali\" -o \"$tmp_out_file\" -w 10 -a -s $bin/spaln_parser/blosum62.csv");
-
-	unlink "${tmp_out_file}_ali";
-
-	# system("$bin/../dependencies/spaln -Q7 -pw -S1 -O4  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null | " .
-	#	"$bin/spaln_to_gff.py > \"$tmp_out_file\" --intronScore $SPALN_MIN_EXON_SCORE " .
-	#	"--startScore $SPALN_MIN_START_SCORE --stopScore $SPALN_MIN_STOP_SCORE " .
-	#	"--gene \"$tmp_nuc_file\" --prot \"$tmp_prot_file\"");
+	# Align and directly parse the output
+	system("$bin/../dependencies/spaln $mode -LS -pw -S1 -O1 -l $alignmentLength  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null | " .
+		"$bin/spaln_parser/spaln_parser -o \"$tmp_out_file\" -w 10 -s $bin/spaln_parser/blosum62.csv");
 }
 
 #------------------------------------------------
