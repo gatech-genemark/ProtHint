@@ -12,6 +12,7 @@ import os
 import sys
 import subprocess
 import multiprocessing
+import time
 
 
 VERSION = '1.0'
@@ -29,12 +30,18 @@ def main():
     geneMarkGtf = args.geneMarkGtf
     if not geneMarkGtf:
         geneMarkGtf = runGeneMarkES(args.pbs)
+    else:
+        sys.stderr.write("[" + time.ctime() + "] Skipping GeneMark-ES, using "
+                         "the supplied genemark.gtf file instead\n")
 
     translateSeeds(geneMarkGtf)
 
     diamondPairs = args.diamondPairs
     if not diamondPairs:
         diamondPairs = runDiamond(args.diamondBin, args.maxProteinsPerSeed, args.evalue)
+    else:
+        sys.stderr.write("[" + time.ctime() + "] Skipping DIAMOND, using "
+                         "the supplied DIAMOND output file instead\n")
 
     prepareSeedSequences(diamondPairs)
     runSpaln(diamondPairs, args.pbs)
@@ -61,6 +68,7 @@ def runGeneMarkES(pbs):
     Returns:
         string: Path to genemark gff output
     """
+    sys.stderr.write("[" + time.ctime() + "] Running GeneMark-ES.\n")
     ESDir = workDir + "/GeneMark_ES"
     if not os.path.isdir(ESDir):
         os.mkdir(ESDir)
@@ -75,7 +83,7 @@ def runGeneMarkES(pbs):
                   --max_intergenic 50000 --ES --seq " + genome + " --soft 1000"
 
     subprocess.call(command, shell=True)
-
+    sys.stderr.write("[" + time.ctime() + "] GeneMark-ES finished.\n")
     return os.path.abspath("genemark.gtf")
 
 
@@ -85,12 +93,13 @@ def translateSeeds(geneMarkGtf):
     Args:
         geneMarkGtf (filepath): Path to GeneMark.gtf prediction file
     """
+    sys.stderr.write("[" + time.ctime() + "] Translating GeneMark seeds to proteins\n")
     os.chdir(workDir)
 
     command = binDir + "/proteins_from_gtf.pl --stat gene_stat.yaml --seq " + \
               genome + " --annot " + geneMarkGtf + " --out gmes_proteins.faa --format GTF"
     subprocess.call(command, shell=True)
-
+    sys.stderr.write("[" + time.ctime() + "] Translation of seeds finished\n")
 
 def runDiamond(diamondBin, maxProteins, evalue):
     """Run DIAMOND protein search
@@ -104,6 +113,7 @@ def runDiamond(diamondBin, maxProteins, evalue):
     Returns:
         string: Path to DIAMOND output
     """
+    sys.stderr.write("[" + time.ctime() + "] Running DIAMOND\n")
     if not diamondBin:
         diamondBin = binDir + "/../dependencies/diamond"
 
@@ -127,6 +137,7 @@ def runDiamond(diamondBin, maxProteins, evalue):
               " --evalue " + str(evalue)
     subprocess.call(command, shell=True)
 
+    sys.stderr.write("[" + time.ctime() + "] DIAMOND finished\n")
     return os.path.abspath("diamond.out")
 
 
@@ -136,11 +147,13 @@ def prepareSeedSequences(diamondPairs):
     Args:
         diamondPairs (filepath): Path to file with seed gene-protein pairs
     """
+    sys.stderr.write("[" + time.ctime() + "] Preparing pairs for alignments\n")
     os.chdir(workDir)
 
     command = binDir + "/nucseq_for_selected_genes.pl --seq " + genome + \
               " --out nuc.fasta --gene gene_stat.yaml --list " + diamondPairs
     subprocess.call(command, shell=True)
+    sys.stderr.write("[" + time.ctime() + "] Preparation of pairs finished\n")
 
 
 def runSpaln(diamondPairs, pbs):
@@ -277,6 +290,8 @@ def setEnvironment(args):
         args (dictionary): Command line arguments
 
     """
+    sys.stderr.write("ProtHint Version " + VERSION + "\n")
+    sys.stderr.write("Copyright 2019, Georgia Institute of Technology, USA\n\n")
     global workDir, binDir, genome, proteins, threads
     workDir = os.path.abspath(args.workdir)
     binDir = os.path.abspath(os.path.dirname(__file__))
@@ -286,6 +301,15 @@ def setEnvironment(args):
 
     if not os.path.isdir(workDir):
         os.mkdir(workDir)
+
+    # Log info about cmd
+    callDir = "Called from: " + os.path.abspath(".") + "\n"
+    cmd = "Cmd: " + " ".join(sys.argv) + "\n\n"
+    sys.stderr.write(callDir)
+    sys.stderr.write(cmd)
+    with open(workDir + "/cmd.log", "w") as file:
+        file.write(callDir)
+        file.write(cmd)
 
     if args.geneMarkGtf:
         args.geneMarkGtf = checkFileAndMakeAbsolute(args.geneMarkGtf)
@@ -317,7 +341,7 @@ def parseCmd():
     Returns:
         dictionary: Dictionary with arguments
     """
-    parser = argparse.ArgumentParser(description='ProtHint: Pipeline for generating genome wide \
+    parser = argparse.ArgumentParser(description='ProtHint ' + VERSION + ': Pipeline for generating genome wide \
                                      footprints of homologous proteins. The set of high confidence hints \
                                      is generated using default thresholds in print_high_confidence.py \
                                      script. If you wish to use different filtering criteria, re-run\
