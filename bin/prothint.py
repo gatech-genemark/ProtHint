@@ -189,10 +189,64 @@ def processSpalnOutput():
     """Prepare the final output from Spaln result
        Convert the output to GeneMark and Augustus compatible formats
     """
+    sys.stderr.write("[" + time.ctime() + "] Processing the output\n")
     os.chdir(workDir)
 
-    print("Processing output from spaln")
+    # Process introns
+    subprocess.call("grep Intron Spaln/spaln.gff > introns.gff", shell=True)
 
+    subprocess.call(binDir + "/print_high_confidence.py introns.gff "
+                    "--intronCoverage 0 --intronAlignment 0.1 "
+                    "--addAllSpliceSites > introns_01.gff; rm introns.gff", shell=True)
+
+    subprocess.call(binDir + "/combine_gff_records.pl --in_gff introns_01.gff "
+                    "--out_gff prothint.gff; rm introns_01.gff", shell=True)
+
+    # Process stops
+    subprocess.call("grep stop_codon Spaln/spaln.gff > stops.gff", shell=True)
+
+    subprocess.call(binDir + "/print_high_confidence.py stops.gff "
+                    "--stopCoverage 0 --stopScore 0.01 > stops_01.gff;"
+                    "rm stops.gff", shell=True)
+
+    subprocess.call(binDir + "/combine_gff_records.pl --in_gff stops_01.gff "
+                    "--out_gff stops_01_combined.gff; cat stops_01_combined.gff >> "
+                    "prothint.gff; rm stops_01.gff stops_01_combined.gff", shell=True)
+
+    # Process starts
+    subprocess.call("grep start_codon Spaln/spaln.gff > starts.gff", shell=True)
+
+    subprocess.call(binDir + "/print_high_confidence.py starts.gff "
+                    "--startCoverage 0 --startScore 0.01 > starts_01.gff;"
+                    "rm starts.gff", shell=True)
+
+    subprocess.call(binDir + "/combine_gff_records.pl --in_gff starts_01.gff "
+                    "--out_gff starts_01_combined.gff; rm starts_01.gff", shell=True)
+
+    subprocess.call("sort -k1,1 -k4,4n -k5,5n starts_01_combined.gff > "
+                    "starts_01_combined_sorted.gff; rm starts_01_combined.gff", shell=True)
+
+    # Count CDS overlap of starts
+    subprocess.call("grep CDS Spaln/spaln.gff > cds.gff", shell=True)
+
+    subprocess.call(binDir + "/combine_gff_records.pl --in_gff cds.gff "
+                    "--out_gff cds_combined.gff; rm cds.gff", shell=True)
+
+    subprocess.call("sort -k1,1 -k4,4n -k5,5n cds_combined.gff > "
+                    "cds_combined_sorted.gff; rm cds_combined.gff", shell=True)
+
+    subprocess.call(binDir + "/count_cds_overlaps.py starts_01_combined_sorted.gff "
+                    "cds_combined_sorted.gff >> prothint.gff;"
+                    "rm starts_01_combined_sorted.gff cds_combined_sorted.gff", shell=True)
+
+    # High confidence
+    subprocess.call(binDir + "/print_high_confidence.py prothint.gff > evidence.gff", shell=True)
+
+    # Augustus compatible format
+    subprocess.call(binDir + "/prothint2augustus.py prothint.gff > prothint_augustus.gff", shell=True)
+    subprocess.call(binDir + "/prothint2augustus.py evidence.gff > evidence_augustus.gff", shell=True)
+
+    sys.stderr.write("[" + time.ctime() + "] Output processed\n")
 
 
 def filterSpalnPairs(maxCoverage):
@@ -286,9 +340,10 @@ def processProSplignOutput():
                     tmp.gff; mv tmp.gff prothint.gff", shell=True)
 
     # Print high confidence hints
-    subprocess.call(binDir + "/print_high_confidence.py prothint.gff > evidence.gff", shell=True)
+    subprocess.call(binDir + "/print_high_confidence.py --startCoverage 4 "
+                    "--startOverlap 3 prothint.gff > evidence.gff", shell=True)
 
-    # Agustus compatible format
+    # Augustus compatible format
     subprocess.call(binDir + "/prothint2augustus.py prothint.gff > prothint_augustus.gff", shell=True)
     subprocess.call(binDir + "/prothint2augustus.py evidence.gff > evidence_augustus.gff", shell=True)
 
