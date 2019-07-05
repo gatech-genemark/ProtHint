@@ -13,9 +13,10 @@ import sys
 import subprocess
 import multiprocessing
 import time
+import shutil
 
 
-VERSION = '1.0'
+VERSION = '2.0'
 workDir = ''
 binDir = ''
 genome = ''
@@ -59,8 +60,10 @@ def main():
         runProSplign(args.pbs)
         processProSplignOutput()
 
-    if cleanup:
+    if args.cleanup:
         cleanup()
+
+    sys.stderr.write("[" + time.ctime() + "] ProtHint finished.\n")
 
 
 def runGeneMarkES(pbs):
@@ -104,6 +107,7 @@ def translateSeeds(geneMarkGtf):
               genome + " --annot " + geneMarkGtf + " --out gmes_proteins.faa --format GTF"
     subprocess.call(command, shell=True)
     sys.stderr.write("[" + time.ctime() + "] Translation of seeds finished\n")
+
 
 def runDiamond(diamondBin, maxProteins, evalue):
     """Run DIAMOND protein search
@@ -182,8 +186,8 @@ def runSpaln(diamondPairs, pbs, minExonScore):
                   "--min_exon_score " + str(minExonScore)
 
     else:
-        command = binDir + "/run_spliced_alignment_pbs.pl --N 120 --K 8 --seq \
-                  ../nuc.fasta --list " + diamondPairs + " --db " + \
+        command = binDir + "/run_spliced_alignment_pbs.pl --N 120 --K " + threads + \
+                  " --seq ../nuc.fasta --list " + diamondPairs + " --db " + \
                   proteins + " --v --aligner spaln " + \
                   "--min_exon_score " + str(minExonScore)
 
@@ -303,8 +307,8 @@ def runProSplign(pbs):
                   " --nuc ../nuc.fasta --list ../pairs_for_prosplign.out \
                   --prot " + proteins + " --v --aligner prosplign"
     else:
-        command = binDir + "/run_spliced_alignment_pbs.pl --N 240 --K 8 --seq \
-                  ../nuc.fasta --list ../pairs_for_prosplign.out \
+        command = binDir + "/run_spliced_alignment_pbs.pl --N 240 --K " + threads + \
+                  " --seq ../nuc.fasta --list ../pairs_for_prosplign.out \
                   --db " + proteins + " --v --aligner prosplign"
 
     subprocess.call(command, shell=True)
@@ -354,7 +358,39 @@ def processProSplignOutput():
 
 
 def cleanup():
-    print()
+    """Delete temporary files and intermediate results
+    """
+    sys.stderr.write("[" + time.ctime() + "] Cleaning up\n")
+    os.chdir(workDir)
+    try:
+        os.remove("gene_stat.yaml")
+        os.remove("gmes_proteins.faa")
+        os.remove("nuc.fasta")
+    except OSError:
+        pass
+
+    try:
+        os.remove("diamond/diamond_db.dmnd")
+    except OSError:
+        pass
+
+    try:
+        os.remove("Spaln/spaln.gff")
+    except OSError:
+        pass
+
+    try:
+        os.remove("ProSplign/scored_introns.gff")
+        os.remove("ProSplign/prosplign.gff")
+    except OSError:
+        pass
+
+    if os.path.exists("GeneMark_ES"):
+        shutil.rmtree("GeneMark_ES/data", ignore_errors=True)
+        shutil.rmtree("GeneMark_ES/info", ignore_errors=True)
+        shutil.rmtree("GeneMark_ES/run", ignore_errors=True)
+        shutil.rmtree("GeneMark_ES/output/data", ignore_errors=True)
+        shutil.rmtree("GeneMark_ES/output/gmhmm", ignore_errors=True)
 
 
 def setEnvironment(args):
@@ -450,7 +486,7 @@ def parseCmd():
                         help='Number of threads used by ES, DIAMOND, Spaln and ProSplign. By default, all available threads are used.')
     parser.add_argument('--version', action='version', version='%(prog)s ' + VERSION)
 
-    parser.add_argument('--ProSplign', action='store_true',
+    parser.add_argument('--ProSplign',  default=False, action='store_true',
                         help='Re-align hints discovered by Spaln with ProSplign and report ProSplign results. This is a legacy option which makes the pipeline \
                         considerably (~20x) slower without a significant effect on the final accuracy. NOT SUPPORTED IN THIS VERSION.')
     parser.add_argument('--maxSpalnCoverage', type=int, default=10,
