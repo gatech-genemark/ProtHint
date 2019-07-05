@@ -65,7 +65,9 @@ In case the included version is not working, install Spaln from https://github.c
 and replace the Spaln binary in ProtHint/dependencies folder.
 
 #------------------------------------
-6. ProSplign
+6. ProSplign (Optinal Installation)
+
+ProSplign is only used if ProtHint is run with the "--ProSplign" option.
 
 ProSplign program from NCBI – with the standard NCBI license (http://www.ncbi.nlm.nih.gov/sutils/static/prosplign/prosplign.html)
 is included in this distribution package.

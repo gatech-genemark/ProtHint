@@ -63,6 +63,8 @@ To run the pipeline use the following command:
 
     prothint.py genome.fasta proteins.fasta
 
+See the example folder for a sample input and output.
+
 
 To display a list of all available options, use:
 
