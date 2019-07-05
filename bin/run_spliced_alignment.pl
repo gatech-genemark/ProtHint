@@ -40,13 +40,11 @@ my $out_file_asn_gff_regions  = '';
 my $cores = 1;
 my $aligner = '';
 my $tmp_dir = '';
+my $min_exon_score = 25;
 # ------------------------------------------------
 my $PROSPLIGN_INTRONS_OUT = "scored_introns.gff";
 my $PROSPLIGN_OUT = "prosplign.gff";
 my $SPALN_OUT = "spaln.gff";
-my $SPALN_MIN_EXON_SCORE = 50;
-my $SPALN_MIN_START_SCORE = 100;
-my $SPALN_MIN_STOP_SCORE = 100;
 my $LONG_GENE = 30000;
 my $LONG_PROTEIN = 15000;
 # ------------------------------------------------
@@ -272,7 +270,7 @@ sub alignWithSpaln
 
 	# Align and directly parse the output
 	system("$bin/../dependencies/spaln $mode -LS -pw -S1 -O1 -l $alignmentLength  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null | " .
-		"$bin/spaln_parser/spaln_parser -o \"$tmp_out_file\" -w 10 -s $bin/spaln_parser/blosum62.csv");
+		"$bin/spaln_parser/spaln_parser -o \"$tmp_out_file\" -w 10 -s $bin/spaln_parser/blosum62.csv -e $min_exon_score");
 }
 
 #------------------------------------------------
@@ -434,6 +432,7 @@ sub ParseCMD
 		'aligner=s' => \$aligner,
 		'verbose'   => \$v,
 		'debug'     => \$debug,
+		'min_exon_score=f' => \$min_exon_score
 	);
 
 	if( !$opt_results ) { print STDERR "error on command line: $0\n"; exit 1; }
@@ -449,6 +448,7 @@ sub ParseCMD
 	$cfg->{'d'}->{'v'}     = $v;
 	$cfg->{'d'}->{'debug'} = $debug;
 	$cfg->{'d'}->{'cmd'}   = $cmd;
+	$cfg->{'d'}->{'min_exon_score'} = $min_exon_score;
 	
 	print STDERR Dumper($cfg) if $debug;
 };
@@ -464,8 +464,10 @@ Required options:
   --list      [name] list of nuc to prot mapping
   --aligner   [name] Which spliced alignment tool to use. Valid options are: \"Spaln, ProSplign\"
 
+
  Optional parameters:
-  --cores  [number]  number of threads to use
+  --cores            [number] number of threads to use
+  --min_exon_score   [number] discard all hints inside/neighboring exons with score lower than minExonScore. Spaln specific option.
 
 Developer options:
   --verbose

@@ -49,7 +49,7 @@ def main():
                          "the supplied DIAMOND output file instead\n")
 
     prepareSeedSequences(diamondPairs)
-    runSpaln(diamondPairs, args.pbs)
+    runSpaln(diamondPairs, args.pbs, args.minExonScore)
 
     if (not args.ProSplign):
         processSpalnOutput()
@@ -160,12 +160,14 @@ def prepareSeedSequences(diamondPairs):
     sys.stderr.write("[" + time.ctime() + "] Preparation of pairs finished\n")
 
 
-def runSpaln(diamondPairs, pbs):
+def runSpaln(diamondPairs, pbs, minExonScore):
     """Run Spaln spliced alignment
 
     Args:
         diamondPairs (filePath): Path to file with seed gene-protein pairs to align
         pbs (boolean): Whether to run on pbs
+        minExonScore (float): Discard all hints inside/neighboring exons with
+                              score lower than minExonScore
     """
     spalnDir = workDir + "/Spaln"
     if not os.path.isdir(spalnDir):
@@ -176,11 +178,14 @@ def runSpaln(diamondPairs, pbs):
     if not pbs:
         command = binDir + "/run_spliced_alignment.pl --cores " + threads + \
                   " --nuc ../nuc.fasta --list " + diamondPairs + \
-                  " --prot " + proteins + " --v --aligner spaln"
+                  " --prot " + proteins + " --v --aligner spaln " + \
+                  "--min_exon_score " + str(minExonScore)
+
     else:
         command = binDir + "/run_spliced_alignment_pbs.pl --N 120 --K 8 --seq \
                   ../nuc.fasta --list " + diamondPairs + " --db " + \
-                  proteins + " --v --aligner spaln"
+                  proteins + " --v --aligner spaln " + \
+                  "--min_exon_score " + str(minExonScore)
 
     subprocess.call(command, shell=True)
 
@@ -434,6 +439,8 @@ def parseCmd():
                         Default is set to 250.')
     parser.add_argument('--evalue', type=float, default=0.001,
                         help='Maximum e-value for DIAMOND alignments hits. Default = 0.001')
+    parser.add_argument('--minExonScore', type=float, default=25,
+                        help='Discard all hints inside/neighboring exons with score lower than minExonScore. Default = 25')
     parser.add_argument('--cleanup', default=False, action='store_true',
                         help='Delete temporary files and intermediate results. Cleanup is turned off by default as it is useful to keep these files \
                         for troubleshooting and the intermediate results might be useful on their own.')

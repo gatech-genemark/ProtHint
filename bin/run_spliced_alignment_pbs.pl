@@ -33,6 +33,7 @@ my $aligner= '';        # Alignment engine
 my $seq_file = '';      # input sequence
 my $list_file = '';     # file with pairs of gene_id and protein_id (blast output)
 my $out_file_gff = '';  # output in GFF
+my $min_exon_score = 25;
 
 my $node_dir = '/tmp';  # use this directory on for holding tmp data on node
 my $PROSPLIGN_INTRONS_OUT = "scored_introns.gff";
@@ -100,7 +101,7 @@ mkdir bin/spaln_parser
 cp $bin/spaln_parser/blosum62.csv bin/spaln_parser
 cp $bin/spaln_parser/spaln_parser bin/spaln_parser
 
-./bin/run_spliced_alignment.pl --nuc $name --prot $db --list $list --cores $K --aligner spaln
+./bin/run_spliced_alignment.pl --nuc $name --prot $db --list $list --cores $K --aligner spaln --min_exon_score $min_exon_score
 
 mv $SPALN_OUT ${name}.gff
 rm bin/run_spliced_alignment.pl
@@ -438,7 +439,8 @@ sub ParseCMD
 		'K=i'     => \$K,
 		'aligner=s' => \$aligner,
 		'verbose' => \$v,
-		'debug'   => \$debug
+		'debug'   => \$debug,
+		'min_exon_score=f' => \$min_exon_score
 	);
 
 	if( !$opt_results ) { print STDERR "error on command line: $0\n"; exit 1; }
@@ -456,6 +458,7 @@ sub ParseCMD
 	$cfg->{'d'}->{'v'}     = $v;
 	$cfg->{'d'}->{'debug'} = $debug;
 	$cfg->{'d'}->{'cmd'}   = $cmd;
+	$cfg->{'d'}->{'min_exon_score'} = $min_exon_score;
 
 	print STDERR Dumper($cfg) if $debug;
 };
@@ -476,6 +479,7 @@ run blast on PBS
   --N    [i] number of jobs to submit
   --K    [i] number of cores per job (on the same node)
   --v        verbose
+  --min_exon_score [f] discard all hints inside/neighboring exons with score lower than minExonScore. Spaln specific option.
   --debug
 # -----------
 ";
