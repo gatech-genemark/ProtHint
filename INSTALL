@@ -3,6 +3,9 @@
 #================================================
 
 To install, copy the content of distribution to desired location.
+
+To verify the installation, run ProtHint on the sample input located in the example folder.
+
 The following dependencies need to be satisfied:
 
 #------------------------------------
