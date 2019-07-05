@@ -15,7 +15,7 @@ class TestSpaln(unittest.TestCase):
     def testSpaln(self, pbs=True):
         prothint.workDir = testDir + "/test_Spaln"
         prothint.proteins = prothint.workDir + "/proteins.fasta"
-        prothint.runSpaln(prothint.workDir + "/pairs.out", pbs=pbs)
+        prothint.runSpaln(prothint.workDir + "/pairs.out", pbs, 25)
 
         command = "diff <(sort " + prothint.workDir + "/Spaln/spaln.gff) \
             <(sort " + prothint.workDir + "/result_spaln.gff)"
@@ -26,6 +26,18 @@ class TestSpaln(unittest.TestCase):
 
     def testSpalnNoPbs(self):
         self.testSpaln(pbs=False)
+
+    def testSpaln1000(self):
+        prothint.workDir = testDir + "/test_Spaln"
+        prothint.proteins = prothint.workDir + "/proteins.fasta"
+        prothint.runSpaln(prothint.workDir + "/pairs.out", True, 1000)
+
+        command = "diff <(sort " + prothint.workDir + "/Spaln/spaln.gff) \
+            <(sort " + prothint.workDir + "/result_spaln_1000.gff)"
+        diffResult = subprocess.call(command, shell=True, executable='/bin/bash')
+        self.assertEqual(diffResult, 0)
+        if (diffResult == 0):
+            shutil.rmtree(prothint.workDir + "/Spaln")
 
 
 if __name__ == '__main__':
