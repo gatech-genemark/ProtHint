@@ -73,6 +73,8 @@ def start(row, args):
 
 def printHighConfidence(args):
     for row in csv.reader(open(args.input), delimiter='\t'):
+        row[1] = "ProtHint"
+
         if row[5] == ".":
             row[5] = "1"
 

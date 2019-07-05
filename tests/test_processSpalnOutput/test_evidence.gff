@@ -1,151 +1,151 @@
-3R	Spaln	Intron	31044140	31044204	250	+	.	al_score=0.398069; splice_sites=gt_ag;
-3R	Spaln	Intron	28866524	28866584	249	+	.	al_score=0.417629; splice_sites=gt_ag;
-X	Spaln	Intron	10750095	10750155	250	-	.	al_score=0.318901; splice_sites=gt_ag;
-X	Spaln	Intron	15730474	15730536	225	+	.	al_score=0.389837; splice_sites=gt_ag;
-2R	Spaln	Intron	23384647	23384701	209	-	.	al_score=0.319539; splice_sites=gt_ag;
-X	Spaln	Intron	14268904	14268958	212	+	.	al_score=0.383368; splice_sites=gt_ag;
-2L	Spaln	Intron	2213757	2213895	31	-	.	al_score=0.303251; splice_sites=gt_ag;
-3L	Spaln	Intron	3376035	3376090	38	+	.	al_score=0.352729; splice_sites=gt_ag;
-X	Spaln	Intron	15791397	15791461	248	+	.	al_score=0.321988; splice_sites=gt_ag;
-3R	Spaln	Intron	31042699	31042758	250	+	.	al_score=0.485723; splice_sites=gt_ag;
-2L	Spaln	Intron	2213558	2213615	243	-	.	al_score=0.333905; splice_sites=gt_ag;
-3L	Spaln	Intron	3351687	3351964	111	+	.	al_score=0.31791; splice_sites=gt_ag;
-3R	Spaln	Intron	21578730	21578796	249	-	.	al_score=0.377055; splice_sites=gt_ag;
-3L	Spaln	Intron	7111802	7115216	38	+	.	al_score=0.365435; splice_sites=gt_ag;
-2R	Spaln	Intron	9402836	9403706	250	-	.	al_score=0.4038; splice_sites=gt_ag;
-3R	Spaln	Intron	31043243	31043388	250	+	.	al_score=0.453983; splice_sites=gt_ag;
-3R	Spaln	Intron	7190267	7190720	250	+	.	al_score=0.43897; splice_sites=gt_ag;
-3R	Spaln	Intron	21073006	21073065	216	-	.	al_score=0.302692; splice_sites=gt_ag;
-3L	Spaln	Intron	257202	257552	191	-	.	al_score=0.449635; splice_sites=gt_ag;
-3R	Spaln	Intron	31791257	31791313	241	-	.	al_score=0.326897; splice_sites=gt_ag;
-X	Spaln	Intron	17636755	17636830	248	+	.	al_score=0.404706; splice_sites=gt_ag;
-3R	Spaln	Intron	7191679	7191735	250	+	.	al_score=0.337967; splice_sites=gt_ag;
-X	Spaln	Intron	15729832	15729898	227	+	.	al_score=0.427729; splice_sites=gt_ag;
-2R	Spaln	Intron	8895168	8895229	243	+	.	al_score=0.385291; splice_sites=gt_ag;
-3L	Spaln	Intron	17807773	17807841	249	-	.	al_score=0.341969; splice_sites=gt_ag;
-X	Spaln	Intron	14272548	14272626	243	+	.	al_score=0.375829; splice_sites=gt_ag;
-2R	Spaln	Intron	11524848	11525127	250	-	.	al_score=0.367255; splice_sites=gt_ag;
-3L	Spaln	Intron	7118081	7118255	22	+	.	al_score=0.315152; splice_sites=gt_ag;
-2R	Spaln	Intron	11525226	11526358	234	-	.	al_score=0.436767; splice_sites=gt_ag;
-3L	Spaln	Intron	254637	254696	247	-	.	al_score=0.396691; splice_sites=gt_ag;
-3R	Spaln	Intron	31042076	31042277	249	+	.	al_score=0.392707; splice_sites=gt_ag;
-3L	Spaln	Intron	13852491	13852566	43	+	.	al_score=0.3045; splice_sites=gt_ag;
-X	Spaln	Intron	14831667	14831740	81	-	.	al_score=0.360126; splice_sites=gt_ag;
-2L	Spaln	Intron	1709105	1709173	229	-	.	al_score=0.425218; splice_sites=gt_ag;
-2R	Spaln	Intron	5709100	5716648	224	-	.	al_score=0.317269; splice_sites=gt_ag;
-X	Spaln	Intron	17321092	17322657	250	+	.	al_score=0.530568; splice_sites=gt_ag;
-3L	Spaln	Intron	251326	251389	238	-	.	al_score=0.456809; splice_sites=gt_ag;
-3L	Spaln	Intron	3359790	3359852	158	+	.	al_score=0.340993; splice_sites=gt_ag;
-2L	Spaln	Intron	10254116	10254192	249	+	.	al_score=0.45792; splice_sites=gt_ag;
-3L	Spaln	Intron	3354385	3354636	197	+	.	al_score=0.300563; splice_sites=gt_ag;
-3R	Spaln	Intron	23927372	23927426	176	-	.	al_score=0.466221; splice_sites=gt_ag;
-X	Spaln	Intron	15730968	15731044	219	+	.	al_score=0.439284; splice_sites=gt_ag;
-3R	Spaln	Intron	24640970	24641030	242	-	.	al_score=0.363633; splice_sites=gt_ag;
-2R	Spaln	Intron	16002499	16002551	245	+	.	al_score=0.355276; splice_sites=gt_ag;
-3L	Spaln	Intron	3353855	3353922	62	+	.	al_score=0.346855; splice_sites=gt_ag;
-3L	Spaln	Intron	4258063	4258115	243	-	.	al_score=0.400976; splice_sites=gt_ag;
-3L	Spaln	Intron	13858919	13858979	21	+	.	al_score=0.358624; splice_sites=gt_ag;
-3L	Spaln	Intron	15571959	15572022	250	+	.	al_score=0.408903; splice_sites=gt_ag;
-2L	Spaln	Intron	10253612	10253667	250	+	.	al_score=0.438824; splice_sites=gt_ag;
-3L	Spaln	Intron	4257257	4257311	231	-	.	al_score=0.36379; splice_sites=gt_ag;
-2R	Spaln	Intron	8895474	8895531	168	+	.	al_score=0.300954; splice_sites=gt_ag;
-2L	Spaln	Intron	3324882	3324936	232	+	.	al_score=0.31279; splice_sites=gt_ag;
-3R	Spaln	Intron	24648391	24648507	237	-	.	al_score=0.326437; splice_sites=gt_ag;
-3R	Spaln	Intron	31792651	31792704	250	-	.	al_score=0.431202; splice_sites=gt_ag;
-3L	Spaln	Intron	15572420	15572482	245	+	.	al_score=0.418753; splice_sites=gt_ag;
-3L	Spaln	Intron	3354825	3354948	230	+	.	al_score=0.431788; splice_sites=gt_ag;
-2L	Spaln	Intron	1708403	1708461	249	-	.	al_score=0.417119; splice_sites=gt_ag;
-X	Spaln	Intron	15790860	15790978	237	+	.	al_score=0.378281; splice_sites=gt_ag;
-X	Spaln	Intron	15730088	15730151	225	+	.	al_score=0.410377; splice_sites=gt_ag;
-X	Spaln	Intron	14274801	14275132	244	+	.	al_score=0.411517; splice_sites=gt_ag;
-2R	Spaln	Intron	5708107	5708182	250	-	.	al_score=0.446874; splice_sites=gt_ag;
-3L	Spaln	Intron	7119275	7119335	242	+	.	al_score=0.32851; splice_sites=gt_ag;
-3L	Spaln	Intron	4256500	4256559	216	-	.	al_score=0.338318; splice_sites=gt_ag;
-2L	Spaln	Intron	10253075	10253138	249	+	.	al_score=0.374226; splice_sites=gt_ag;
-3L	Spaln	Intron	252482	252538	248	-	.	al_score=0.430949; splice_sites=gt_ag;
-X	Spaln	Intron	6816133	6816189	233	+	.	al_score=0.315352; splice_sites=gt_ag;
-X	Spaln	Intron	14275407	14275467	241	+	.	al_score=0.394706; splice_sites=gt_ag;
-3R	Spaln	Intron	31042853	31043116	250	+	.	al_score=0.465473; splice_sites=gt_ag;
-3R	Spaln	Intron	24639094	24639154	248	-	.	al_score=0.446253; splice_sites=gt_ag;
-3R	Spaln	Intron	28866760	28866818	249	+	.	al_score=0.301298; splice_sites=gt_ag;
-3L	Spaln	Intron	15569935	15570006	93	+	.	al_score=0.392133; splice_sites=gt_ag;
-3R	Spaln	Intron	24639765	24639823	247	-	.	al_score=0.382251; splice_sites=gt_ag;
-3R	Spaln	Intron	24638674	24638740	244	-	.	al_score=0.360088; splice_sites=gt_ag;
-3L	Spaln	Intron	3180681	3180741	242	+	.	al_score=0.366092; splice_sites=gt_ag;
-3R	Spaln	Intron	7191930	7191994	247	+	.	al_score=0.413686; splice_sites=gt_ag;
-2R	Spaln	Intron	5716789	5717281	104	-	.	al_score=0.354618; splice_sites=gt_ag;
-3L	Spaln	Intron	3181021	3181085	18	+	.	al_score=0.311174; splice_sites=gt_ag;
-3L	Spaln	Intron	12158319	12159147	32	-	.	al_score=0.386643; splice_sites=gt_ag;
-3L	Spaln	Intron	256594	256648	43	-	.	al_score=0.340993; splice_sites=gt_ag;
-3R	Spaln	Intron	21117545	21117595	75	+	.	al_score=0.310392; splice_sites=gt_ag;
-2L	Spaln	Intron	1708678	1708820	249	-	.	al_score=0.469258; splice_sites=gt_ag;
-3L	Spaln	Intron	3354186	3354254	227	+	.	al_score=0.387919; splice_sites=gt_ag;
-3R	Spaln	Intron	24641219	24641276	246	-	.	al_score=0.438873; splice_sites=gt_ag;
-3L	Spaln	Intron	17808580	17808636	230	-	.	al_score=0.375552; splice_sites=gt_ag;
-X	Spaln	Intron	14274391	14274545	244	+	.	al_score=0.396763; splice_sites=gt_ag;
-2L	Spaln	Intron	19052218	19052278	240	+	.	al_score=0.312427; splice_sites=gt_ag;
-3L	Spaln	Intron	250614	250670	237	-	.	al_score=0.457006; splice_sites=gt_ag;
-2R	Spaln	Intron	21658481	21658539	155	+	.	al_score=0.510527; splice_sites=gt_ag;
-3R	Spaln	Intron	24641401	24641461	246	-	.	al_score=0.47943; splice_sites=gt_ag;
-3L	Spaln	Intron	252644	252693	236	-	.	al_score=0.328111; splice_sites=gt_ag;
-X	Spaln	Intron	20421995	20422058	248	-	.	al_score=0.547839; splice_sites=gt_ag;
-3L	Spaln	Intron	250820	250876	236	-	.	al_score=0.364289; splice_sites=gt_ag;
-3R	Spaln	Intron	7191492	7191556	250	+	.	al_score=0.408903; splice_sites=gt_ag;
-3R	Spaln	Intron	31041876	31041963	250	+	.	al_score=0.505364; splice_sites=gt_ag;
-3L	Spaln	Intron	17808331	17808419	249	-	.	al_score=0.422281; splice_sites=gt_ag;
-3R	Spaln	Intron	7187548	7190123	250	+	.	al_score=0.412952; splice_sites=gt_ag;
-2R	Spaln	Intron	9122568	9122621	18	+	.	al_score=0.302258; splice_sites=gt_ag;
-3R	Spaln	Intron	31042424	31042480	250	+	.	al_score=0.348521; splice_sites=gt_ag;
-3L	Spaln	Intron	4257521	4257583	240	-	.	al_score=0.460241; splice_sites=gt_ag;
-3R	Spaln	Intron	24640224	24640449	246	-	.	al_score=0.408221; splice_sites=gt_ag;
-3L	Spaln	Intron	7111468	7111626	92	+	.	al_score=0.333278; splice_sites=gt_ag;
-X	Spaln	Intron	2249770	2249827	19	-	.	al_score=0.402672; splice_sites=gt_ag;
-3R	Spaln	Intron	24642115	24642172	247	-	.	al_score=0.475102; splice_sites=gt_ag;
-3R	Spaln	Intron	21578501	21578559	250	-	.	al_score=0.327122; splice_sites=gt_ag;
-X	Spaln	Intron	15730703	15730776	224	+	.	al_score=0.397272; splice_sites=gt_ag;
-2R	Spaln	Intron	8898174	8898250	239	+	.	al_score=0.310145; splice_sites=gt_ag;
-2R	Spaln	Intron	23385048	23385112	208	-	.	al_score=0.348286; splice_sites=gt_ag;
-3R	Spaln	Intron	28867041	28867107	248	+	.	al_score=0.333184; splice_sites=gt_ag;
-2L	Spaln	Intron	7695972	7696027	249	-	.	al_score=0.34807; splice_sites=gt_ag;
-3R	Spaln	Intron	7190797	7191388	233	+	.	al_score=0.389311; splice_sites=gt_ag;
-3L	Spaln	Intron	3352133	3353737	86	+	.	al_score=0.336379; splice_sites=gt_ag;
-X	Spaln	Intron	6815433	6815489	33	+	.	al_score=0.348678; splice_sites=gt_ag;
-3L	Spaln	Intron	255038	255162	20	-	.	al_score=0.366927; splice_sites=gt_ag;
-3R	Spaln	Intron	15482395	15482512	247	+	.	al_score=0.354005; splice_sites=gt_ag;
-3L	Spaln	Intron	4258275	4258335	244	-	.	al_score=0.361338; splice_sites=gt_ag;
-X	Spaln	Intron	14269244	14269307	225	+	.	al_score=0.407511; splice_sites=gt_ag;
-3R	Spaln	Intron	21116634	21116695	230	+	.	al_score=0.411002; splice_sites=gt_ag;
-3L	Spaln	Intron	9436008	9436115	19	+	.	al_score=0.35162; splice_sites=gt_ag;
-2R	Spaln	Intron	9402586	9402655	250	-	.	al_score=0.364994; splice_sites=gt_ag;
-3R	Spaln	Intron	28865868	28865928	249	+	.	al_score=0.380582; splice_sites=gt_ag;
-3R	Spaln	stop_codon	12208360	12208362	15	-	.	.
-2L	Spaln	stop_codon	16295860	16295862	14	+	.	.
-2R	Spaln	stop_codon	7950947	7950949	59	+	.	.
-3L	Spaln	stop_codon	250510	250512	237	-	.	.
-2R	Spaln	stop_codon	18235859	18235861	10	+	.	.
-2L	Spaln	stop_codon	1707772	1707774	161	-	.	.
-2R	Spaln	stop_codon	24135168	24135170	78	+	.	.
-2R	Spaln	stop_codon	11340635	11340637	24	-	.	.
-X	Spaln	stop_codon	15731145	15731147	220	+	.	.
-3R	Spaln	stop_codon	31791126	31791128	8	-	.	.
-3R	Spaln	stop_codon	21071013	21071015	114	-	.	.
-X	Spaln	stop_codon	20421865	20421867	240	-	.	.
-2R	Spaln	stop_codon	7950333	7950335	83	+	.	.
-X	Spaln	stop_codon	21120256	21120258	5	+	.	.
-X	Spaln	stop_codon	10749791	10749793	11	-	.	.
-3L	Spaln	stop_codon	22873686	22873688	64	+	.	.
-2L	Spaln	stop_codon	19053597	19053599	77	+	.	.
-X	Spaln	stop_codon	13213521	13213523	247	+	.	.
-2L	Spaln	start_codon	16294351	16294353	65	+	.	CDS_overlap=2;
-2L	Spaln	start_codon	19052054	19052056	12	+	.	CDS_overlap=1;
-2L	Spaln	start_codon	20752612	20752614	57	+	.	CDS_overlap=0;
-2R	Spaln	start_codon	8893945	8893947	238	+	.	CDS_overlap=6;
-2R	Spaln	start_codon	11341421	11341423	22	-	.	CDS_overlap=2;
-2R	Spaln	start_codon	21658353	21658355	135	+	.	CDS_overlap=16;
-3L	Spaln	start_codon	15978543	15978545	10	+	.	CDS_overlap=0;
-3R	Spaln	start_codon	21073216	21073218	10	-	.	CDS_overlap=1;
-3R	Spaln	start_codon	21116304	21116306	180	+	.	CDS_overlap=0;
-3R	Spaln	start_codon	23927566	23927568	158	-	.	CDS_overlap=9;
-X	Spaln	start_codon	15714115	15714117	197	+	.	CDS_overlap=5;
-X	Spaln	start_codon	20422850	20422852	173	-	.	CDS_overlap=1;
-X	Spaln	start_codon	21117496	21117498	128	+	.	CDS_overlap=12;
+3R	ProtHint	Intron	31044140	31044204	250	+	.	al_score=0.398069; splice_sites=gt_ag;
+3R	ProtHint	Intron	28866524	28866584	249	+	.	al_score=0.417629; splice_sites=gt_ag;
+X	ProtHint	Intron	10750095	10750155	250	-	.	al_score=0.318901; splice_sites=gt_ag;
+X	ProtHint	Intron	15730474	15730536	225	+	.	al_score=0.389837; splice_sites=gt_ag;
+2R	ProtHint	Intron	23384647	23384701	209	-	.	al_score=0.319539; splice_sites=gt_ag;
+X	ProtHint	Intron	14268904	14268958	212	+	.	al_score=0.383368; splice_sites=gt_ag;
+2L	ProtHint	Intron	2213757	2213895	31	-	.	al_score=0.303251; splice_sites=gt_ag;
+3L	ProtHint	Intron	3376035	3376090	38	+	.	al_score=0.352729; splice_sites=gt_ag;
+X	ProtHint	Intron	15791397	15791461	248	+	.	al_score=0.321988; splice_sites=gt_ag;
+3R	ProtHint	Intron	31042699	31042758	250	+	.	al_score=0.485723; splice_sites=gt_ag;
+2L	ProtHint	Intron	2213558	2213615	243	-	.	al_score=0.333905; splice_sites=gt_ag;
+3L	ProtHint	Intron	3351687	3351964	111	+	.	al_score=0.31791; splice_sites=gt_ag;
+3R	ProtHint	Intron	21578730	21578796	249	-	.	al_score=0.377055; splice_sites=gt_ag;
+3L	ProtHint	Intron	7111802	7115216	38	+	.	al_score=0.365435; splice_sites=gt_ag;
+2R	ProtHint	Intron	9402836	9403706	250	-	.	al_score=0.4038; splice_sites=gt_ag;
+3R	ProtHint	Intron	31043243	31043388	250	+	.	al_score=0.453983; splice_sites=gt_ag;
+3R	ProtHint	Intron	7190267	7190720	250	+	.	al_score=0.43897; splice_sites=gt_ag;
+3R	ProtHint	Intron	21073006	21073065	216	-	.	al_score=0.302692; splice_sites=gt_ag;
+3L	ProtHint	Intron	257202	257552	191	-	.	al_score=0.449635; splice_sites=gt_ag;
+3R	ProtHint	Intron	31791257	31791313	241	-	.	al_score=0.326897; splice_sites=gt_ag;
+X	ProtHint	Intron	17636755	17636830	248	+	.	al_score=0.404706; splice_sites=gt_ag;
+3R	ProtHint	Intron	7191679	7191735	250	+	.	al_score=0.337967; splice_sites=gt_ag;
+X	ProtHint	Intron	15729832	15729898	227	+	.	al_score=0.427729; splice_sites=gt_ag;
+2R	ProtHint	Intron	8895168	8895229	243	+	.	al_score=0.385291; splice_sites=gt_ag;
+3L	ProtHint	Intron	17807773	17807841	249	-	.	al_score=0.341969; splice_sites=gt_ag;
+X	ProtHint	Intron	14272548	14272626	243	+	.	al_score=0.375829; splice_sites=gt_ag;
+2R	ProtHint	Intron	11524848	11525127	250	-	.	al_score=0.367255; splice_sites=gt_ag;
+3L	ProtHint	Intron	7118081	7118255	22	+	.	al_score=0.315152; splice_sites=gt_ag;
+2R	ProtHint	Intron	11525226	11526358	234	-	.	al_score=0.436767; splice_sites=gt_ag;
+3L	ProtHint	Intron	254637	254696	247	-	.	al_score=0.396691; splice_sites=gt_ag;
+3R	ProtHint	Intron	31042076	31042277	249	+	.	al_score=0.392707; splice_sites=gt_ag;
+3L	ProtHint	Intron	13852491	13852566	43	+	.	al_score=0.3045; splice_sites=gt_ag;
+X	ProtHint	Intron	14831667	14831740	81	-	.	al_score=0.360126; splice_sites=gt_ag;
+2L	ProtHint	Intron	1709105	1709173	229	-	.	al_score=0.425218; splice_sites=gt_ag;
+2R	ProtHint	Intron	5709100	5716648	224	-	.	al_score=0.317269; splice_sites=gt_ag;
+X	ProtHint	Intron	17321092	17322657	250	+	.	al_score=0.530568; splice_sites=gt_ag;
+3L	ProtHint	Intron	251326	251389	238	-	.	al_score=0.456809; splice_sites=gt_ag;
+3L	ProtHint	Intron	3359790	3359852	158	+	.	al_score=0.340993; splice_sites=gt_ag;
+2L	ProtHint	Intron	10254116	10254192	249	+	.	al_score=0.45792; splice_sites=gt_ag;
+3L	ProtHint	Intron	3354385	3354636	197	+	.	al_score=0.300563; splice_sites=gt_ag;
+3R	ProtHint	Intron	23927372	23927426	176	-	.	al_score=0.466221; splice_sites=gt_ag;
+X	ProtHint	Intron	15730968	15731044	219	+	.	al_score=0.439284; splice_sites=gt_ag;
+3R	ProtHint	Intron	24640970	24641030	242	-	.	al_score=0.363633; splice_sites=gt_ag;
+2R	ProtHint	Intron	16002499	16002551	245	+	.	al_score=0.355276; splice_sites=gt_ag;
+3L	ProtHint	Intron	3353855	3353922	62	+	.	al_score=0.346855; splice_sites=gt_ag;
+3L	ProtHint	Intron	4258063	4258115	243	-	.	al_score=0.400976; splice_sites=gt_ag;
+3L	ProtHint	Intron	13858919	13858979	21	+	.	al_score=0.358624; splice_sites=gt_ag;
+3L	ProtHint	Intron	15571959	15572022	250	+	.	al_score=0.408903; splice_sites=gt_ag;
+2L	ProtHint	Intron	10253612	10253667	250	+	.	al_score=0.438824; splice_sites=gt_ag;
+3L	ProtHint	Intron	4257257	4257311	231	-	.	al_score=0.36379; splice_sites=gt_ag;
+2R	ProtHint	Intron	8895474	8895531	168	+	.	al_score=0.300954; splice_sites=gt_ag;
+2L	ProtHint	Intron	3324882	3324936	232	+	.	al_score=0.31279; splice_sites=gt_ag;
+3R	ProtHint	Intron	24648391	24648507	237	-	.	al_score=0.326437; splice_sites=gt_ag;
+3R	ProtHint	Intron	31792651	31792704	250	-	.	al_score=0.431202; splice_sites=gt_ag;
+3L	ProtHint	Intron	15572420	15572482	245	+	.	al_score=0.418753; splice_sites=gt_ag;
+3L	ProtHint	Intron	3354825	3354948	230	+	.	al_score=0.431788; splice_sites=gt_ag;
+2L	ProtHint	Intron	1708403	1708461	249	-	.	al_score=0.417119; splice_sites=gt_ag;
+X	ProtHint	Intron	15790860	15790978	237	+	.	al_score=0.378281; splice_sites=gt_ag;
+X	ProtHint	Intron	15730088	15730151	225	+	.	al_score=0.410377; splice_sites=gt_ag;
+X	ProtHint	Intron	14274801	14275132	244	+	.	al_score=0.411517; splice_sites=gt_ag;
+2R	ProtHint	Intron	5708107	5708182	250	-	.	al_score=0.446874; splice_sites=gt_ag;
+3L	ProtHint	Intron	7119275	7119335	242	+	.	al_score=0.32851; splice_sites=gt_ag;
+3L	ProtHint	Intron	4256500	4256559	216	-	.	al_score=0.338318; splice_sites=gt_ag;
+2L	ProtHint	Intron	10253075	10253138	249	+	.	al_score=0.374226; splice_sites=gt_ag;
+3L	ProtHint	Intron	252482	252538	248	-	.	al_score=0.430949; splice_sites=gt_ag;
+X	ProtHint	Intron	6816133	6816189	233	+	.	al_score=0.315352; splice_sites=gt_ag;
+X	ProtHint	Intron	14275407	14275467	241	+	.	al_score=0.394706; splice_sites=gt_ag;
+3R	ProtHint	Intron	31042853	31043116	250	+	.	al_score=0.465473; splice_sites=gt_ag;
+3R	ProtHint	Intron	24639094	24639154	248	-	.	al_score=0.446253; splice_sites=gt_ag;
+3R	ProtHint	Intron	28866760	28866818	249	+	.	al_score=0.301298; splice_sites=gt_ag;
+3L	ProtHint	Intron	15569935	15570006	93	+	.	al_score=0.392133; splice_sites=gt_ag;
+3R	ProtHint	Intron	24639765	24639823	247	-	.	al_score=0.382251; splice_sites=gt_ag;
+3R	ProtHint	Intron	24638674	24638740	244	-	.	al_score=0.360088; splice_sites=gt_ag;
+3L	ProtHint	Intron	3180681	3180741	242	+	.	al_score=0.366092; splice_sites=gt_ag;
+3R	ProtHint	Intron	7191930	7191994	247	+	.	al_score=0.413686; splice_sites=gt_ag;
+2R	ProtHint	Intron	5716789	5717281	104	-	.	al_score=0.354618; splice_sites=gt_ag;
+3L	ProtHint	Intron	3181021	3181085	18	+	.	al_score=0.311174; splice_sites=gt_ag;
+3L	ProtHint	Intron	12158319	12159147	32	-	.	al_score=0.386643; splice_sites=gt_ag;
+3L	ProtHint	Intron	256594	256648	43	-	.	al_score=0.340993; splice_sites=gt_ag;
+3R	ProtHint	Intron	21117545	21117595	75	+	.	al_score=0.310392; splice_sites=gt_ag;
+2L	ProtHint	Intron	1708678	1708820	249	-	.	al_score=0.469258; splice_sites=gt_ag;
+3L	ProtHint	Intron	3354186	3354254	227	+	.	al_score=0.387919; splice_sites=gt_ag;
+3R	ProtHint	Intron	24641219	24641276	246	-	.	al_score=0.438873; splice_sites=gt_ag;
+3L	ProtHint	Intron	17808580	17808636	230	-	.	al_score=0.375552; splice_sites=gt_ag;
+X	ProtHint	Intron	14274391	14274545	244	+	.	al_score=0.396763; splice_sites=gt_ag;
+2L	ProtHint	Intron	19052218	19052278	240	+	.	al_score=0.312427; splice_sites=gt_ag;
+3L	ProtHint	Intron	250614	250670	237	-	.	al_score=0.457006; splice_sites=gt_ag;
+2R	ProtHint	Intron	21658481	21658539	155	+	.	al_score=0.510527; splice_sites=gt_ag;
+3R	ProtHint	Intron	24641401	24641461	246	-	.	al_score=0.47943; splice_sites=gt_ag;
+3L	ProtHint	Intron	252644	252693	236	-	.	al_score=0.328111; splice_sites=gt_ag;
+X	ProtHint	Intron	20421995	20422058	248	-	.	al_score=0.547839; splice_sites=gt_ag;
+3L	ProtHint	Intron	250820	250876	236	-	.	al_score=0.364289; splice_sites=gt_ag;
+3R	ProtHint	Intron	7191492	7191556	250	+	.	al_score=0.408903; splice_sites=gt_ag;
+3R	ProtHint	Intron	31041876	31041963	250	+	.	al_score=0.505364; splice_sites=gt_ag;
+3L	ProtHint	Intron	17808331	17808419	249	-	.	al_score=0.422281; splice_sites=gt_ag;
+3R	ProtHint	Intron	7187548	7190123	250	+	.	al_score=0.412952; splice_sites=gt_ag;
+2R	ProtHint	Intron	9122568	9122621	18	+	.	al_score=0.302258; splice_sites=gt_ag;
+3R	ProtHint	Intron	31042424	31042480	250	+	.	al_score=0.348521; splice_sites=gt_ag;
+3L	ProtHint	Intron	4257521	4257583	240	-	.	al_score=0.460241; splice_sites=gt_ag;
+3R	ProtHint	Intron	24640224	24640449	246	-	.	al_score=0.408221; splice_sites=gt_ag;
+3L	ProtHint	Intron	7111468	7111626	92	+	.	al_score=0.333278; splice_sites=gt_ag;
+X	ProtHint	Intron	2249770	2249827	19	-	.	al_score=0.402672; splice_sites=gt_ag;
+3R	ProtHint	Intron	24642115	24642172	247	-	.	al_score=0.475102; splice_sites=gt_ag;
+3R	ProtHint	Intron	21578501	21578559	250	-	.	al_score=0.327122; splice_sites=gt_ag;
+X	ProtHint	Intron	15730703	15730776	224	+	.	al_score=0.397272; splice_sites=gt_ag;
+2R	ProtHint	Intron	8898174	8898250	239	+	.	al_score=0.310145; splice_sites=gt_ag;
+2R	ProtHint	Intron	23385048	23385112	208	-	.	al_score=0.348286; splice_sites=gt_ag;
+3R	ProtHint	Intron	28867041	28867107	248	+	.	al_score=0.333184; splice_sites=gt_ag;
+2L	ProtHint	Intron	7695972	7696027	249	-	.	al_score=0.34807; splice_sites=gt_ag;
+3R	ProtHint	Intron	7190797	7191388	233	+	.	al_score=0.389311; splice_sites=gt_ag;
+3L	ProtHint	Intron	3352133	3353737	86	+	.	al_score=0.336379; splice_sites=gt_ag;
+X	ProtHint	Intron	6815433	6815489	33	+	.	al_score=0.348678; splice_sites=gt_ag;
+3L	ProtHint	Intron	255038	255162	20	-	.	al_score=0.366927; splice_sites=gt_ag;
+3R	ProtHint	Intron	15482395	15482512	247	+	.	al_score=0.354005; splice_sites=gt_ag;
+3L	ProtHint	Intron	4258275	4258335	244	-	.	al_score=0.361338; splice_sites=gt_ag;
+X	ProtHint	Intron	14269244	14269307	225	+	.	al_score=0.407511; splice_sites=gt_ag;
+3R	ProtHint	Intron	21116634	21116695	230	+	.	al_score=0.411002; splice_sites=gt_ag;
+3L	ProtHint	Intron	9436008	9436115	19	+	.	al_score=0.35162; splice_sites=gt_ag;
+2R	ProtHint	Intron	9402586	9402655	250	-	.	al_score=0.364994; splice_sites=gt_ag;
+3R	ProtHint	Intron	28865868	28865928	249	+	.	al_score=0.380582; splice_sites=gt_ag;
+3R	ProtHint	stop_codon	12208360	12208362	15	-	.	.
+2L	ProtHint	stop_codon	16295860	16295862	14	+	.	.
+2R	ProtHint	stop_codon	7950947	7950949	59	+	.	.
+3L	ProtHint	stop_codon	250510	250512	237	-	.	.
+2R	ProtHint	stop_codon	18235859	18235861	10	+	.	.
+2L	ProtHint	stop_codon	1707772	1707774	161	-	.	.
+2R	ProtHint	stop_codon	24135168	24135170	78	+	.	.
+2R	ProtHint	stop_codon	11340635	11340637	24	-	.	.
+X	ProtHint	stop_codon	15731145	15731147	220	+	.	.
+3R	ProtHint	stop_codon	31791126	31791128	8	-	.	.
+3R	ProtHint	stop_codon	21071013	21071015	114	-	.	.
+X	ProtHint	stop_codon	20421865	20421867	240	-	.	.
+2R	ProtHint	stop_codon	7950333	7950335	83	+	.	.
+X	ProtHint	stop_codon	21120256	21120258	5	+	.	.
+X	ProtHint	stop_codon	10749791	10749793	11	-	.	.
+3L	ProtHint	stop_codon	22873686	22873688	64	+	.	.
+2L	ProtHint	stop_codon	19053597	19053599	77	+	.	.
+X	ProtHint	stop_codon	13213521	13213523	247	+	.	.
+2L	ProtHint	start_codon	16294351	16294353	65	+	.	CDS_overlap=2;
+2L	ProtHint	start_codon	19052054	19052056	12	+	.	CDS_overlap=1;
+2L	ProtHint	start_codon	20752612	20752614	57	+	.	CDS_overlap=0;
+2R	ProtHint	start_codon	8893945	8893947	238	+	.	CDS_overlap=6;
+2R	ProtHint	start_codon	11341421	11341423	22	-	.	CDS_overlap=2;
+2R	ProtHint	start_codon	21658353	21658355	135	+	.	CDS_overlap=16;
+3L	ProtHint	start_codon	15978543	15978545	10	+	.	CDS_overlap=0;
+3R	ProtHint	start_codon	21073216	21073218	10	-	.	CDS_overlap=1;
+3R	ProtHint	start_codon	21116304	21116306	180	+	.	CDS_overlap=0;
+3R	ProtHint	start_codon	23927566	23927568	158	-	.	CDS_overlap=9;
+X	ProtHint	start_codon	15714115	15714117	197	+	.	CDS_overlap=5;
+X	ProtHint	start_codon	20422850	20422852	173	-	.	CDS_overlap=1;
+X	ProtHint	start_codon	21117496	21117498	128	+	.	CDS_overlap=12;
