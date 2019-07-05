@@ -25,6 +25,11 @@ threads = ''
 
 def main():
     args = parseCmd()
+    if (args.ProSplign):
+        sys.stderr.write("The ProSplign option is not "
+                         "supported in this version.\n")
+        return
+
     setEnvironment(args)
 
     geneMarkGtf = args.geneMarkGtf
@@ -46,14 +51,13 @@ def main():
     prepareSeedSequences(diamondPairs)
     runSpaln(diamondPairs, args.pbs)
 
-    return
-
-    filterSpalnPairs(args.maxSpalnCoverage)
-
-    prepareProSplignPairs(diamondPairs, args.ensureDiamondPairs)
-    runProSplign(args.pbs)
-
-    processOutput()
+    if (not args.ProSplign):
+        processSpalnOutput()
+    else:
+        filterSpalnPairs(args.maxSpalnCoverage)
+        prepareProSplignPairs(diamondPairs, args.ensureDiamondPairs)
+        runProSplign(args.pbs)
+        processProSplignOutput()
 
     if cleanup:
         cleanup()
@@ -181,6 +185,16 @@ def runSpaln(diamondPairs, pbs):
     subprocess.call(command, shell=True)
 
 
+def processSpalnOutput():
+    """Prepare the final output from Spaln result
+       Convert the output to GeneMark and Augustus compatible formats
+    """
+    os.chdir(workDir)
+
+    print("Processing output from spaln")
+
+
+
 def filterSpalnPairs(maxCoverage):
     """Keep only maxCoverage best proteins supporting each intron/start/stop.
        Kept pairs will be realigned with ProSplign.
@@ -237,8 +251,8 @@ def runProSplign(pbs):
     subprocess.call(command, shell=True)
 
 
-def processOutput():
-    """Prepare the final output
+def processProSplignOutput():
+    """Prepare the final output from ProSplign result
        Convert the output to GeneMark and Augustus compatible formats
     """
     os.chdir(workDir)
@@ -365,11 +379,6 @@ def parseCmd():
                         Default is set to 250.')
     parser.add_argument('--evalue', type=float, default=0.001,
                         help='Maximum e-value for DIAMOND alignments hits. Default = 0.001')
-    parser.add_argument('--maxSpalnCoverage', type=int, default=10,
-                        help='Limit number of proteins supporting each intron and start/stop codon found by Spaln by this number. Lowering this number decreases runtime \
-                        but may decrease accuracy. Default is set to 10.')
-    parser.add_argument('--ensureDiamondPairs', type=int, default=5,
-                        help='Always align (with ProSplign) this many top proteins for each gene in DIAMOND output (no matter the Spaln result). Default = 5.')
     parser.add_argument('--cleanup', default=False, action='store_true',
                         help='Delete temporary files and intermediate results. Cleanup is turned off by default as it is useful to keep these files \
                         for troubleshooting and the intermediate results might be useful on their own.')
@@ -378,6 +387,14 @@ def parseCmd():
     parser.add_argument('--threads', type=int, default=-1,
                         help='Number of threads used by ES, DIAMOND, Spaln and ProSplign. By default, all available threads are used.')
     parser.add_argument('--version', action='version', version='%(prog)s ' + VERSION)
+
+    parser.add_argument('--ProSplign', action='store_true',
+                        help='Re-align hints discovered by Spaln with ProSplign and report ProSplign results. This is a legacy option which makes the pipeline \
+                        considerably (~20x) slower without a significant effect on the final accuracy. NOT SUPPORTED IN THIS VERSION.')
+    parser.add_argument('--maxSpalnCoverage', type=int, default=10,
+                        help='For each hint, select maxSpalnCoverage proteins for ProSplign realignment.')
+    parser.add_argument('--ensureDiamondPairs', type=int, default=5,
+                        help='Always align (with ProSplign) this many top proteins for each gene in DIAMOND output (no matter the Spaln result). Default = 5.')
 
     return parser.parse_args()
 
