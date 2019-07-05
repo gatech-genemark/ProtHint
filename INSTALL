@@ -65,7 +65,7 @@ In case the included version is not working, install Spaln from https://github.c
 and replace the Spaln binary in ProtHint/dependencies folder.
 
 #------------------------------------
-6. ProSplign (Optinal Installation)
+6. ProSplign (Optional Installation)
 
 ProSplign is only used if ProtHint is run with the "--ProSplign" option.
 
