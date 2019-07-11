@@ -1,0 +1,21 @@
+# Changelog
+
+## [2.1.0] 2019-7-11
+
+- Improved filtering of high confidence starts
+
+## [2.0.0] 2019-7-5
+
+### Major changes
+
+- Output is now directly parsed and filtered from Spaln, ProSplign step is omitted
+    - This change significantly improves the runtime (3x-20x speedup depending on 
+      the genome size)
+- Improved sensitivity of all reported hints (in prothint.gff file) due to changes
+  in the filtering procedure, especially for very remote proteins
+ 
+### Other changes
+
+- Added usage example
+- Added printing of progress messages
+- Added a cleanup option
