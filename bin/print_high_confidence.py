@@ -121,7 +121,7 @@ def parseCmd():
                         with al_score >= intronAlignment. Default = 0.3.', default=0.3)
     parser.add_argument('--startOverlap', type=int,
                         help='Maximum alowed CDS overlap of a start. Print all starts \
-                        with CDS overlap <= startOverlap. Default = 20', default=20)
+                        with CDS overlap <= startOverlap. Default = 0', default=0)
     parser.add_argument('--addFullAligned', action='store_true',
                         help='Add hints with fullProteinAligned flag even if they do not \
                         satisfy the coverage threshold condition.')

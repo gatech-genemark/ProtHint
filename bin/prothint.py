@@ -241,6 +241,12 @@ def processSpalnOutput():
     subprocess.call(binDir + "/combine_gff_records.pl --in_gff cds.gff "
                     "--out_gff cds_combined.gff; rm cds.gff", shell=True)
 
+    # Only consider CDS regions which have an upstream support
+    # (by start codon or intron) in hints
+    subprocess.call(binDir + "/cds_with_upstream_support.py cds_combined.gff "
+                    "starts_01_combined_sorted.gff prothint.gff > tmp; \
+                    mv tmp cds_combined.gff", shell=True)
+
     subprocess.call("sort -k1,1 -k4,4n -k5,5n cds_combined.gff > "
                     "cds_combined_sorted.gff; rm cds_combined.gff", shell=True)
 
