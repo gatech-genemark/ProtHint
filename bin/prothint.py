@@ -16,7 +16,7 @@ import time
 import shutil
 
 
-VERSION = '2.1.0'
+VERSION = '2.1.1'
 workDir = ''
 binDir = ''
 genome = ''
@@ -26,10 +26,6 @@ threads = ''
 
 def main():
     args = parseCmd()
-    if (args.ProSplign):
-        sys.stderr.write("The ProSplign option is not "
-                         "supported in this version.\n")
-        return
 
     setEnvironment(args)
 
@@ -271,6 +267,7 @@ def filterSpalnPairs(maxCoverage):
     Args:
         maxCoverage (int): number of proteins to keep for each intron/start/stop
     """
+    sys.stderr.write("[" + time.ctime() + "] Selecting proteins for ProSplign alignment.\n")
     spalnDir = workDir + "/Spaln"
     os.chdir(spalnDir)
 
@@ -324,6 +321,7 @@ def processProSplignOutput():
     """Prepare the final output from ProSplign result
        Convert the output to GeneMark and Augustus compatible formats
     """
+    sys.stderr.write("[" + time.ctime() + "] Processing the output\n")
     os.chdir(workDir)
 
     # Collapse all scored introns, add them to the final output
@@ -361,6 +359,8 @@ def processProSplignOutput():
     # Augustus compatible format
     subprocess.call(binDir + "/prothint2augustus.py prothint.gff > prothint_augustus.gff", shell=True)
     subprocess.call(binDir + "/prothint2augustus.py evidence.gff > evidence_augustus.gff", shell=True)
+
+    sys.stderr.write("[" + time.ctime() + "] Output processed\n")
 
 
 def cleanup():

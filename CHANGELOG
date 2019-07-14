@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.1.1] 2019-7-11
+
+- Added the option to run final alignment with ProSplign
+    - Spaln is still used to pre-select proteins for alignment, as a speed-up
+
 ## [2.1.0] 2019-7-11
 
 - Improved filtering of high confidence starts

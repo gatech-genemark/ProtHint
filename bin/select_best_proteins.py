@@ -13,23 +13,7 @@ import sys
 import re
 
 
-class Intron:
-
-    def __init__(self, prot, gene, left, right):
-        self.pair = gene + "\t" + prot
-        self.score = self.__computeScore(left, right)
-
-    def __computeScore(self, left, right):
-        return float(left) * float(right)
-
-    def getPair(self):
-        return self.pair
-
-    def __lt__(self, other):
-        return self.score > other.score
-
-
-class Codon:
+class Hint:
 
     def __init__(self, prot, gene, score):
         self.pair = gene + "\t" + prot
@@ -60,11 +44,11 @@ def getBest(input, k):
         for row in csv_reader:
             feature = None
             if row[2].lower() == "intron":
-                feature = Intron(extractFeature(row[8], "prot"), extractFeature(row[8], "seed_gene_id"),
-                                 extractFeature(row[8], "LScore"), extractFeature(row[8], "RScore"))
+                feature = Hint(extractFeature(row[8], "prot"), extractFeature(row[8], "seed_gene_id"),
+                               extractFeature(row[8], "al_score"))
             elif row[2].lower() == "start_codon" or row[2].lower() == "stop_codon":
-                feature = Codon(extractFeature(row[8], "prot"), extractFeature(row[8], "seed_gene_id"),
-                                extractFeature(row[8], "eScore"))
+                feature = Hint(extractFeature(row[8], "prot"), extractFeature(row[8], "seed_gene_id"),
+                               extractFeature(row[8], "score"))
             else:
                 continue
 
