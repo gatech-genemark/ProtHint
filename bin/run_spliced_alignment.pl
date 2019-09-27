@@ -3,8 +3,8 @@
 # Tomas Bruna, Alex Lomsadze
 # Copyright 2019, Georgia Institute of Technology, USA
 # 
-# This script takes as input protein and nucleotide sequences 
-# and runs Spliced alignment
+# This script takes as input protein and nucleotide sequences,
+# runs spliced alignment and scores the output with boundary scorer
 # ==============================================================
 
 use strict;
@@ -84,8 +84,8 @@ print STDERR "[" . localtime() . "] Loading alignment pairs into memory\n" if $v
 
 ReadList( $list_file, \@list, \%nuc, \%prot );
 
-ReadSequence( $nuc_file,  \%nuc,  \%nuc );
-ReadSequence( $prot_file, \%prot, \%prot );
+ReadSequence( $nuc_file,  \%nuc);
+ReadSequence( $prot_file, \%prot);
 
 if ( $debug )
 {
@@ -264,6 +264,8 @@ sub alignWithSpaln
 	# -l     Number of characters per line in alignment
 
 	my $mode = "-Q3";
+
+	# Mapping mode usually consumes less memory, use it for long alignments.
 	if ($geneLength > $LONG_GENE || $proteinLength > $LONG_PROTEIN) {
 		$mode = "-Q7";
 	}
@@ -327,11 +329,8 @@ sub ReadList
 		{
 			push @{ $ref }, [$1, $2];
 			
-			if ( defined $h_f )
-			{
-				$h_f->{$1} = '';
-				$h_s->{$2} = '';
-			}
+			$h_f->{$1} = '';
+			$h_s->{$2} = '';
 		}
 		else { print STDERR "error, unexpected file format found$0: $line\n"; exit 1; }
 	}
@@ -340,7 +339,7 @@ sub ReadList
 #------------------------------------------------
 sub ReadSequence
 {
-	my ($name, $ref, $h_ref ) = @_;
+	my ($name, $ref) = @_;
 	open( my $IN, "$name" ) || die "$! on open $name\n";
 
 	my $id = "";
@@ -354,16 +353,15 @@ sub ReadSequence
 			$id = $1;
 			
 			$skip = 0;
-			if ( defined $h_ref )
-			{
-				$skip = 1 if ( ! exists $ref->{$id} );
+			if ( ! exists $ref->{$id} ) {
+				$skip = 1;
 			}
 		}
 		else
 		{
 			if( !$id ) { print STDERR "error, fasta record whithout definition line found $0: $line\n"; exit 1; }
 
-			if ( defined $h_ref and $skip ) {next;}
+			if ( $skip ) {next;}
 
 			$line = uc $line;
 
