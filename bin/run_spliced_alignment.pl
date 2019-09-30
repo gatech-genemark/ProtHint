@@ -111,8 +111,8 @@ my $tmp_prot_file;
 my $tmp_nuc_file;
 my $tmp_out_file;
 
-my $key;
-my $value;
+my $nuc_id;
+my $prot_id;
 my $ref;
 
 my $counter = 0;
@@ -130,37 +130,20 @@ foreach $ref ( @list )
 		printf STDERR "[" . localtime() . "] $counter/$pairsCount (%.1f%%) pairs aligned\n", $permille / 10 if $v;
         $nextPrint = $permille + 1;
 	}
-	$key = $ref->[0];
-	$value = $ref->[1];
 
 	$counter += 1;
+	$nuc_id = $ref->[0];
+	$prot_id = $ref->[1];
 
-	# Some fasta protein headers may contain a slash
-	my $file_value = $value;
-	$file_value =~ tr/\//_/;
-	# Header may be longer than a file name length limit
-	$file_value = substr $file_value, 0, 200;
+	$tmp_nuc_file  = "nuc_" . $counter;
+	$tmp_prot_file = "prot_" . $counter;
+	$tmp_out_file  = "out_" . $counter;
 
-	$tmp_nuc_file  = "nuc_". $key ."_". $counter;
-	$tmp_prot_file = "prot_". $file_value ."_". $counter;
-	$tmp_out_file  = "out_". $key ."_". $file_value ."_". $counter;
-
-	# Spaln does not like dots in file names; orthoDB headers contain dots
-	$tmp_nuc_file  =~ tr/\./_/;
-	$tmp_prot_file  =~ tr/\./_/;
-
-	if ( $debug )
-	{
-		print STDERR "error on $tmp_nuc_file\n" if( ! -e $tmp_nuc_file );
-	}
-
-	SaveSingleFasta( $tmp_nuc_file,  $key,   $nuc{$key} );
-	SaveSingleFasta( $tmp_prot_file, $value, $prot{$value} );
+	SaveSingleFasta( $tmp_nuc_file,  $nuc_id, $nuc{$nuc_id} );
+	SaveSingleFasta( $tmp_prot_file, $prot_id, $prot{$prot_id} );
 
 	my @files = ($tmp_nuc_file, $tmp_prot_file, $tmp_out_file);
 	$q->enqueue(\@files);
-
-
 }
 
 # Finish and wait for threads
@@ -257,7 +240,7 @@ sub alignWithSpaln
 	my $alignmentLength = $geneLength * 2;
 
 	# -Q3    Algorithm runs in the fast heuristic mod
-	# -pw    Report result even if alignment score is below threshold value
+	# -pw    Report result even if alignment score is below threshold prot_id
 	# -S1    Dna is in the forward orientation
 	# -LS    Smith-Waterman-type local alignment. This option may prune out weakly matched terminal regions.
 	# -O1    Output alignment
@@ -390,7 +373,7 @@ sub CheckBeforeRun
 	if( !$prot_file ) { print STDERR "error, required file name is missing $0:  option --prot\n"; exit 1; }
 	if( !$list_file ) { print STDERR "error, required file name is missing $0:  option --list\n"; exit 1; }
 	
-	if( $cores < 1 ) { print STDERR "error, out of range values specified for number of cores $0: $cores\n"; exit 1; }
+	if( $cores < 1 ) { print STDERR "error, out of range prot_ids specified for number of cores $0: $cores\n"; exit 1; }
 
 	$aligner = lc $aligner;
 
