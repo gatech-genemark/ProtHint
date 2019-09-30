@@ -161,7 +161,7 @@ def prepareSeedSequences(diamondPairs):
 
 
 def runSpaln(diamondPairs, pbs, minExonScore):
-    """Run Spaln spliced alignment
+    """Run Spaln spliced alignment and score the outputs with spaln-boundary-scorer
 
     Args:
         diamondPairs (filePath): Path to file with seed gene-protein pairs to align
@@ -191,13 +191,27 @@ def runSpaln(diamondPairs, pbs, minExonScore):
 
 
 def processSpalnOutput():
-    """Prepare the final output from Spaln result
+    """Prepare the final output from Spaln result scored by spaln-boundary-scorer
        Convert the output to GeneMark and Augustus compatible formats
     """
     sys.stderr.write("[" + time.ctime() + "] Processing the output\n")
     os.chdir(workDir)
 
-    # Process introns
+    processSpalnIntrons()
+    processSpalnStops()
+    processSpalnStarts()
+
+    # High confidence
+    subprocess.call(binDir + "/print_high_confidence.py prothint.gff > evidence.gff", shell=True)
+
+    # Augustus compatible format
+    subprocess.call(binDir + "/prothint2augustus.py prothint.gff > prothint_augustus.gff", shell=True)
+    subprocess.call(binDir + "/prothint2augustus.py evidence.gff > evidence_augustus.gff", shell=True)
+
+    sys.stderr.write("[" + time.ctime() + "] Output processed\n")
+
+
+def processSpalnIntrons():
     subprocess.call("grep Intron Spaln/spaln.gff > introns.gff", shell=True)
 
     subprocess.call(binDir + "/print_high_confidence.py introns.gff "
@@ -207,7 +221,8 @@ def processSpalnOutput():
     subprocess.call(binDir + "/combine_gff_records.pl --in_gff introns_01.gff "
                     "--out_gff prothint.gff; rm introns_01.gff", shell=True)
 
-    # Process stops
+
+def processSpalnStops():
     subprocess.call("grep stop_codon Spaln/spaln.gff > stops.gff", shell=True)
 
     subprocess.call(binDir + "/print_high_confidence.py stops.gff "
@@ -218,7 +233,8 @@ def processSpalnOutput():
                     "--out_gff stops_01_combined.gff; cat stops_01_combined.gff >> "
                     "prothint.gff; rm stops_01.gff stops_01_combined.gff", shell=True)
 
-    # Process starts
+
+def processSpalnStarts():
     subprocess.call("grep start_codon Spaln/spaln.gff > starts.gff", shell=True)
 
     subprocess.call(binDir + "/print_high_confidence.py starts.gff "
@@ -237,7 +253,7 @@ def processSpalnOutput():
     subprocess.call(binDir + "/combine_gff_records.pl --in_gff cds.gff "
                     "--out_gff cds_combined.gff; rm cds.gff", shell=True)
 
-    # Only consider CDS regions which have an upstream support
+    # Only count CDS regions which have an upstream support
     # (by start codon or intron) in hints
     subprocess.call(binDir + "/cds_with_upstream_support.py cds_combined.gff "
                     "starts_01_combined_sorted.gff prothint.gff > tmp; \
@@ -249,15 +265,6 @@ def processSpalnOutput():
     subprocess.call(binDir + "/count_cds_overlaps.py starts_01_combined_sorted.gff "
                     "cds_combined_sorted.gff >> prothint.gff;"
                     "rm starts_01_combined_sorted.gff cds_combined_sorted.gff", shell=True)
-
-    # High confidence
-    subprocess.call(binDir + "/print_high_confidence.py prothint.gff > evidence.gff", shell=True)
-
-    # Augustus compatible format
-    subprocess.call(binDir + "/prothint2augustus.py prothint.gff > prothint_augustus.gff", shell=True)
-    subprocess.call(binDir + "/prothint2augustus.py evidence.gff > evidence_augustus.gff", shell=True)
-
-    sys.stderr.write("[" + time.ctime() + "] Output processed\n")
 
 
 def filterSpalnPairs(maxCoverage):
@@ -292,7 +299,7 @@ def prepareProSplignPairs(diamondPairs, k):
 
 
 def runProSplign(pbs):
-    """Run ProSplign spliced alignment
+    """Run ProSplign spliced alignment and score the outputs with prosplign-intron-scorer
 
     Args:
         closeThreshold (int): Percent identity threshold of ProSplign alignment
@@ -318,7 +325,8 @@ def runProSplign(pbs):
 
 
 def processProSplignOutput():
-    """Prepare the final output from ProSplign result
+    """Prepare the final output from full ProSplign output and ProSplign
+       introns scored by prosplign-intron-scorer.
        Convert the output to GeneMark and Augustus compatible formats
     """
     sys.stderr.write("[" + time.ctime() + "] Processing the output\n")
