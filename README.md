@@ -12,14 +12,15 @@ spliced aligning predicted genes to a database of reference protein sequences.
     * [GeneMark-ES](#genemark-es)
     * [DIAMOND](#diamond)
     * [Spaln](#spaln)
-        * [Spaln boundary scorer](#Spaln-boundary-scorer)
-    * [ProSplign](#prosplign)
+        * [Spaln boundary scorer](#spaln-boundary-scorer)
+    * [ProSplign](#prosplign-optional-installation)
         * [ProSplign intron scorer](#prosplign-intron-scorer)
 * [Usage](#usage)
     * [Input](#input)
     * [Protein Database Preparation](#protein-database-preparation)
     * [Running ProtHint](#running-prothint)
     * [Output](#output)
+* [About](#about)
 
 
 # Installation
@@ -90,7 +91,7 @@ In case the included version is not working, install Spaln from
 https://github.com/ogotoh/spaln and replace the `spaln` binary in
 ProtHint/dependencies folder.
 
-##### Spaln boundary scorer
+#### Spaln boundary scorer
 
 Binary for parsing and scoring hints from Spaln's alignment output is included
 in this distribution package.
@@ -110,7 +111,7 @@ case the included version is not working, download the executable from
 https://www.ncbi.nlm.nih.gov/sutils/static/prosplign/prosplign.html and
 replace the `prosplign` binary in ProtHint/dependencies folder.
 
-##### ProSplign intron scorer
+#### ProSplign intron scorer
 
 Binary for parsing and scoring introns from ProSplign's alignment output is included
 in this distribution package.
