@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 # ==============================================================
 # Tomas Bruna, Alex Lomsadze
 # Copyright 2019, Georgia Institute of Technology, USA
