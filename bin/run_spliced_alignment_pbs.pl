@@ -91,41 +91,35 @@ cd \$dir
 mkdir bin
 mkdir dependencies
 cp $bin/run_spliced_alignment.pl bin
-cp $bin/gff_from_region_to_contig.pl bin";
+cp $bin/gff_from_region_to_contig.pl bin
+cp $bin/../dependencies/blosum62.csv dependencies";
 
 	my $spalnPbs = "
 cp -r $bin/../dependencies/spaln_table dependencies
 cp $bin/../dependencies/spaln dependencies
 cp $bin/spaln_to_gff.py bin
-mkdir bin/spaln_parser
-cp $bin/spaln_parser/blosum62.csv bin/spaln_parser
-cp $bin/spaln_parser/spaln_parser bin/spaln_parser
+cp $bin/../dependencies/spaln_boundary_scorer dependencies
 
 ./bin/run_spliced_alignment.pl --nuc $name --prot $db --list $list --cores $K --aligner spaln --min_exon_score $min_exon_score
 
 mv $SPALN_OUT ${name}.gff
-rm bin/run_spliced_alignment.pl
-rm -r dependencies/spaln_table
-rm -r bin/spaln_parser
-rm dependencies/spaln bin/spaln_to_gff.py bin/gff_from_region_to_contig.pl
+cd ..
+rm -r \$dir
 ";
 
 	my $proSplignPbs = "
 # Move everything to the node
 cp $bin/../dependencies/prosplign dependencies
 cp $bin/asn_to_gff.pl bin
-mkdir bin/prosplign_parser
-cp $bin/prosplign_parser/blosum62.csv bin/prosplign_parser
-cp $bin/prosplign_parser/prosplign_parser bin/prosplign_parser
+cp $bin/../dependencies/prosplign_intron_scorer dependencies
 
 ./bin/run_spliced_alignment.pl --nuc $name  --prot $db  --list $list  --cores $K --aligner prosplign
 
 mv $PROSPLIGN_OUT ${name}.gff
 mv $PROSPLIGN_OUT_ASN ${name}.asn
 mv $PROSPLIGN_INTRONS_OUT ${name}.introns.gff
-rm bin/run_spliced_alignment.pl
-rm -r bin/prosplign_parser
-rm dependencies/prosplign bin/gff_from_region_to_contig.pl bin/asn_to_gff.pl
+cd ..
+rm -r \$dir
 ";
 
 	if ($aligner eq "spaln") {

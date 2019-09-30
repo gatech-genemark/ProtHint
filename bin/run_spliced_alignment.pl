@@ -220,7 +220,7 @@ sub alignWithProSplign
 
 	system("$bin/../dependencies/prosplign -o \"${tmp_out_file}_asn\" -eo \"${tmp_out_file}_ali\"  -nfa \"$tmp_nuc_file\" -pfa \"$tmp_prot_file\" -nogenbank -gaps_inf -two_stages");
 	# Parse and score introns from alignment file
-	system("$bin/prosplign_parser/prosplign_parser -i \"${tmp_out_file}_ali\" -o \"$tmp_out_file\" -w 10 -a -s $bin/prosplign_parser/blosum62.csv");
+	system("$bin/../dependencies/prosplign_intron_scorer -i \"${tmp_out_file}_ali\" -o \"$tmp_out_file\" -w 10 -a -s $bin/../dependencies/blosum62.csv");
 	# Convert asn output to gff
 	system("$bin/asn_to_gff.pl --asn \"${tmp_out_file}_asn\" --out \"${tmp_out_file}_asn_gff\" --exons");
 
@@ -255,7 +255,7 @@ sub alignWithSpaln
 
 	# Align and directly parse the output
 	system("$bin/../dependencies/spaln $mode -LS -pw -S1 -O1 -l $alignmentLength  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null | " .
-		"$bin/spaln_parser/spaln_parser -o \"$tmp_out_file\" -w 10 -s $bin/spaln_parser/blosum62.csv -e $min_exon_score");
+		"$bin/../dependencies/spaln_boundary_scorer -o \"$tmp_out_file\" -w 10 -s $bin/../dependencies/blosum62.csv -e $min_exon_score");
 }
 
 #------------------------------------------------
