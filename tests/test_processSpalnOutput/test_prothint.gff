@@ -459,122 +459,122 @@ X	ProtHint	Intron	14921078	14921259	1	-	.	al_score=0.210184; splice_sites=gt_ag;
 X	ProtHint	Intron	14274671	14275146	1	+	.	al_score=0.514461; splice_sites=gt_ag;
 3R	ProtHint	Intron	28865868	28865928	249	+	.	al_score=0.380582; splice_sites=gt_ag;
 3L	ProtHint	Intron	11651268	11653917	2	-	.	al_score=0.376627; splice_sites=gt_ag;
-3R	ProtHint	stop_codon	12208360	12208362	15	-	.	.
-2L	ProtHint	stop_codon	16295860	16295862	14	+	.	.
-2R	ProtHint	stop_codon	7950947	7950949	59	+	.	.
-3L	ProtHint	stop_codon	250510	250512	237	-	.	.
-2R	ProtHint	stop_codon	18235859	18235861	10	+	.	.
-2L	ProtHint	stop_codon	1707772	1707774	161	-	.	.
-3L	ProtHint	stop_codon	3184664	3184666	1	+	.	.
-X	ProtHint	stop_codon	15730969	15730971	1	+	.	.
-2R	ProtHint	stop_codon	24135168	24135170	78	+	.	.
-2R	ProtHint	stop_codon	11340635	11340637	24	-	.	.
-2R	ProtHint	stop_codon	13507381	13507383	1	+	.	.
-X	ProtHint	stop_codon	15731145	15731147	220	+	.	.
-3L	ProtHint	stop_codon	17803665	17803667	2	-	.	.
-2R	ProtHint	stop_codon	11339257	11339259	3	-	.	.
-2L	ProtHint	stop_codon	16296371	16296373	1	+	.	.
-X	ProtHint	stop_codon	6818505	6818507	2	+	.	.
-X	ProtHint	stop_codon	17640637	17640639	1	+	.	.
-2R	ProtHint	stop_codon	17732789	17732791	2	+	.	.
-2L	ProtHint	stop_codon	16296061	16296063	1	+	.	.
-3R	ProtHint	stop_codon	31791126	31791128	8	-	.	.
-3L	ProtHint	stop_codon	22068077	22068079	2	-	.	.
-X	ProtHint	stop_codon	14276629	14276631	1	+	.	.
-3R	ProtHint	stop_codon	21071013	21071015	114	-	.	.
-2L	ProtHint	stop_codon	20754556	20754558	3	+	.	.
-2L	ProtHint	stop_codon	7693908	7693910	3	-	.	.
-2R	ProtHint	stop_codon	12635824	12635826	2	-	.	.
-X	ProtHint	stop_codon	20421865	20421867	240	-	.	.
-2R	ProtHint	stop_codon	7950333	7950335	83	+	.	.
-X	ProtHint	stop_codon	21120256	21120258	5	+	.	.
-X	ProtHint	stop_codon	17638922	17638924	1	+	.	.
-X	ProtHint	stop_codon	10749791	10749793	11	-	.	.
-3L	ProtHint	stop_codon	22873686	22873688	64	+	.	.
-2L	ProtHint	stop_codon	19053597	19053599	77	+	.	.
-X	ProtHint	stop_codon	13213521	13213523	247	+	.	.
-3L	ProtHint	stop_codon	4257578	4257580	1	-	.	.
-X	ProtHint	stop_codon	14919610	14919612	2	-	.	.
-2L	ProtHint	start_codon	1709090	1709092	2	-	.	CDS_overlap=248;
-2L	ProtHint	start_codon	2213929	2213931	3	-	.	CDS_overlap=0;
-2L	ProtHint	start_codon	3047051	3047053	1	+	.	CDS_overlap=248;
-2L	ProtHint	start_codon	7703320	7703322	2	-	.	CDS_overlap=0;
-2L	ProtHint	start_codon	16292647	16292649	1	+	.	CDS_overlap=0;
-2L	ProtHint	start_codon	16294351	16294353	65	+	.	CDS_overlap=0;
-2L	ProtHint	start_codon	19052054	19052056	12	+	.	CDS_overlap=0;
-2L	ProtHint	start_codon	20752612	20752614	57	+	.	CDS_overlap=0;
-2R	ProtHint	start_codon	7948679	7948681	1	+	.	CDS_overlap=0;
-2R	ProtHint	start_codon	7949889	7949891	81	+	.	CDS_overlap=0;
-2R	ProtHint	start_codon	7950503	7950505	6	+	.	CDS_overlap=0;
-2R	ProtHint	start_codon	8893945	8893947	238	+	.	CDS_overlap=0;
-2R	ProtHint	start_codon	9409271	9409273	5	-	.	CDS_overlap=0;
-2R	ProtHint	start_codon	11340097	11340099	1	-	.	CDS_overlap=8;
-2R	ProtHint	start_codon	11341421	11341423	22	-	.	CDS_overlap=0;
-2R	ProtHint	start_codon	11526408	11526410	5	-	.	CDS_overlap=105;
-2R	ProtHint	start_codon	12635424	12635426	4	-	.	CDS_overlap=0;
-2R	ProtHint	start_codon	12636082	12636084	3	-	.	CDS_overlap=0;
-2R	ProtHint	start_codon	13501241	13501243	1	+	.	CDS_overlap=0;
-2R	ProtHint	start_codon	15999965	15999967	1	+	.	CDS_overlap=0;
-2R	ProtHint	start_codon	16000436	16000438	1	+	.	CDS_overlap=0;
-2R	ProtHint	start_codon	18235517	18235519	1	+	.	CDS_overlap=104;
-2R	ProtHint	start_codon	18403275	18403277	4	+	.	CDS_overlap=0;
-2R	ProtHint	start_codon	21658353	21658355	135	+	.	CDS_overlap=0;
-2R	ProtHint	start_codon	22378298	22378300	3	+	.	CDS_overlap=0;
-2R	ProtHint	start_codon	23376912	23376914	4	-	.	CDS_overlap=0;
-2R	ProtHint	start_codon	23387324	23387326	1	-	.	CDS_overlap=0;
-2R	ProtHint	start_codon	24134016	24134018	31	+	.	CDS_overlap=0;
-2R	ProtHint	start_codon	24134808	24134810	1	+	.	CDS_overlap=194;
-3L	ProtHint	start_codon	257623	257625	15	-	.	CDS_overlap=0;
-3L	ProtHint	start_codon	3167979	3167981	3	+	.	CDS_overlap=0;
-3L	ProtHint	start_codon	3169571	3169573	2	+	.	CDS_overlap=0;
-3L	ProtHint	start_codon	3179353	3179355	2	+	.	CDS_overlap=0;
-3L	ProtHint	start_codon	3351567	3351569	3	+	.	CDS_overlap=0;
-3L	ProtHint	start_codon	4260417	4260419	1	-	.	CDS_overlap=0;
-3L	ProtHint	start_codon	7111285	7111287	2	+	.	CDS_overlap=0;
-3L	ProtHint	start_codon	12159580	12159582	1	-	.	CDS_overlap=0;
-3L	ProtHint	start_codon	13843861	13843863	1	+	.	CDS_overlap=0;
-3L	ProtHint	start_codon	13844370	13844372	1	+	.	CDS_overlap=0;
-3L	ProtHint	start_codon	15568088	15568090	1	+	.	CDS_overlap=0;
-3L	ProtHint	start_codon	15978543	15978545	10	+	.	CDS_overlap=0;
-3L	ProtHint	start_codon	22871224	22871226	1	+	.	CDS_overlap=0;
-3L	ProtHint	start_codon	22872939	22872941	1	+	.	CDS_overlap=1;
-3R	ProtHint	start_codon	4175393	4175395	7	+	.	CDS_overlap=0;
-3R	ProtHint	start_codon	6908562	6908564	1	-	.	CDS_overlap=0;
-3R	ProtHint	start_codon	7187418	7187420	2	+	.	CDS_overlap=0;
-3R	ProtHint	start_codon	21073192	21073194	7	-	.	CDS_overlap=20;
-3R	ProtHint	start_codon	21073216	21073218	10	-	.	CDS_overlap=0;
-3R	ProtHint	start_codon	21074151	21074153	5	-	.	CDS_overlap=0;
-3R	ProtHint	start_codon	21116304	21116306	180	+	.	CDS_overlap=0;
-3R	ProtHint	start_codon	21116460	21116462	5	+	.	CDS_overlap=185;
-3R	ProtHint	start_codon	21116828	21116830	1	+	.	CDS_overlap=244;
-3R	ProtHint	start_codon	21579359	21579361	49	-	.	CDS_overlap=0;
-3R	ProtHint	start_codon	22531341	22531343	1	-	.	CDS_overlap=21;
-3R	ProtHint	start_codon	22533097	22533099	1	-	.	CDS_overlap=0;
-3R	ProtHint	start_codon	22533555	22533557	1	-	.	CDS_overlap=0;
-3R	ProtHint	start_codon	23927566	23927568	158	-	.	CDS_overlap=0;
-3R	ProtHint	start_codon	24648629	24648631	1	-	.	CDS_overlap=139;
-3R	ProtHint	start_codon	24649684	24649686	9	-	.	CDS_overlap=0;
-3R	ProtHint	start_codon	24650891	24650893	1	-	.	CDS_overlap=0;
-X	ProtHint	start_codon	2249443	2249445	1	-	.	CDS_overlap=246;
-X	ProtHint	start_codon	2249449	2249451	20	-	.	CDS_overlap=226;
-X	ProtHint	start_codon	5754239	5754241	1	+	.	CDS_overlap=0;
-X	ProtHint	start_codon	6812638	6812640	1	+	.	CDS_overlap=0;
-X	ProtHint	start_codon	6815183	6815185	1	+	.	CDS_overlap=0;
-X	ProtHint	start_codon	10757469	10757471	1	-	.	CDS_overlap=0;
-X	ProtHint	start_codon	13212589	13212591	2	+	.	CDS_overlap=0;
-X	ProtHint	start_codon	14268613	14268615	142	+	.	CDS_overlap=0;
-X	ProtHint	start_codon	14831780	14831782	3	-	.	CDS_overlap=0;
-X	ProtHint	start_codon	14921038	14921040	2	-	.	CDS_overlap=247;
-X	ProtHint	start_codon	14921604	14921606	1	-	.	CDS_overlap=0;
-X	ProtHint	start_codon	15714115	15714117	197	+	.	CDS_overlap=0;
-X	ProtHint	start_codon	15714834	15714836	1	+	.	CDS_overlap=216;
-X	ProtHint	start_codon	15716903	15716905	1	+	.	CDS_overlap=0;
-X	ProtHint	start_codon	15717077	15717079	1	+	.	CDS_overlap=1;
-X	ProtHint	start_codon	15718643	15718645	1	+	.	CDS_overlap=54;
-X	ProtHint	start_codon	17313060	17313062	1	+	.	CDS_overlap=0;
-X	ProtHint	start_codon	17314891	17314893	1	+	.	CDS_overlap=0;
-X	ProtHint	start_codon	17314969	17314971	2	+	.	CDS_overlap=0;
-X	ProtHint	start_codon	19642695	19642697	3	-	.	CDS_overlap=0;
-X	ProtHint	start_codon	20422613	20422615	11	-	.	CDS_overlap=231;
-X	ProtHint	start_codon	20422850	20422852	173	-	.	CDS_overlap=0;
-X	ProtHint	start_codon	21117496	21117498	128	+	.	CDS_overlap=0;
+3R	ProtHint	stop_codon	12208360	12208362	15	-	.	al_score=0.171901;
+2L	ProtHint	stop_codon	16295860	16295862	14	+	.	al_score=0.171901;
+2R	ProtHint	stop_codon	7950947	7950949	59	+	.	al_score=0.150413;
+3L	ProtHint	stop_codon	250510	250512	237	-	.	al_score=0.495868;
+2R	ProtHint	stop_codon	18235859	18235861	10	+	.	al_score=0.102479;
+2L	ProtHint	stop_codon	1707772	1707774	161	-	.	al_score=0.391736;
+3L	ProtHint	stop_codon	3184664	3184666	1	+	.	al_score=0.563636;
+X	ProtHint	stop_codon	15730969	15730971	1	+	.	al_score=0.535537;
+2R	ProtHint	stop_codon	24135168	24135170	78	+	.	al_score=0.127273;
+2R	ProtHint	stop_codon	11340635	11340637	24	-	.	al_score=0.112397;
+2R	ProtHint	stop_codon	13507381	13507383	1	+	.	al_score=0.209917;
+X	ProtHint	stop_codon	15731145	15731147	220	+	.	al_score=0.494215;
+3L	ProtHint	stop_codon	17803665	17803667	2	-	.	al_score=0.343802;
+2R	ProtHint	stop_codon	11339257	11339259	3	-	.	al_score=0.12562;
+2L	ProtHint	stop_codon	16296371	16296373	1	+	.	al_score=0.0595041;
+X	ProtHint	stop_codon	6818505	6818507	2	+	.	al_score=0.142149;
+X	ProtHint	stop_codon	17640637	17640639	1	+	.	al_score=0.0743802;
+2R	ProtHint	stop_codon	17732789	17732791	2	+	.	al_score=0.21157;
+2L	ProtHint	stop_codon	16296061	16296063	1	+	.	al_score=0.158678;
+3R	ProtHint	stop_codon	31791126	31791128	8	-	.	al_score=0.228099;
+3L	ProtHint	stop_codon	22068077	22068079	2	-	.	al_score=0.271074;
+X	ProtHint	stop_codon	14276629	14276631	1	+	.	al_score=0.0214876;
+3R	ProtHint	stop_codon	21071013	21071015	114	-	.	al_score=0.229752;
+2L	ProtHint	stop_codon	20754556	20754558	3	+	.	al_score=0.289256;
+2L	ProtHint	stop_codon	7693908	7693910	3	-	.	al_score=0.143802;
+2R	ProtHint	stop_codon	12635824	12635826	2	-	.	al_score=0.342149;
+X	ProtHint	stop_codon	20421865	20421867	240	-	.	al_score=0.492562;
+2R	ProtHint	stop_codon	7950333	7950335	83	+	.	al_score=0.295868;
+X	ProtHint	stop_codon	21120256	21120258	5	+	.	al_score=0.0793388;
+X	ProtHint	stop_codon	17638922	17638924	1	+	.	al_score=0.109091;
+X	ProtHint	stop_codon	10749791	10749793	11	-	.	al_score=0.0578512;
+3L	ProtHint	stop_codon	22873686	22873688	64	+	.	al_score=0.361983;
+2L	ProtHint	stop_codon	19053597	19053599	77	+	.	al_score=0.459504;
+X	ProtHint	stop_codon	13213521	13213523	247	+	.	al_score=0.424793;
+3L	ProtHint	stop_codon	4257578	4257580	1	-	.	al_score=0.241322;
+X	ProtHint	stop_codon	14919610	14919612	2	-	.	al_score=0.127273;
+2L	ProtHint	start_codon	1709090	1709092	2	-	.	al_score=0.471074; CDS_overlap=248;
+2L	ProtHint	start_codon	2213929	2213931	3	-	.	al_score=0.333884; CDS_overlap=0;
+2L	ProtHint	start_codon	3047051	3047053	1	+	.	al_score=0.335537; CDS_overlap=248;
+2L	ProtHint	start_codon	7703320	7703322	2	-	.	al_score=0.153719; CDS_overlap=0;
+2L	ProtHint	start_codon	16292647	16292649	1	+	.	al_score=0.102479; CDS_overlap=0;
+2L	ProtHint	start_codon	16294351	16294353	65	+	.	al_score=0.231405; CDS_overlap=0;
+2L	ProtHint	start_codon	19052054	19052056	12	+	.	al_score=0.135537; CDS_overlap=0;
+2L	ProtHint	start_codon	20752612	20752614	57	+	.	al_score=0.18843; CDS_overlap=0;
+2R	ProtHint	start_codon	7948679	7948681	1	+	.	al_score=0.158678; CDS_overlap=0;
+2R	ProtHint	start_codon	7949889	7949891	81	+	.	al_score=0.319008; CDS_overlap=0;
+2R	ProtHint	start_codon	7950503	7950505	6	+	.	al_score=0.234711; CDS_overlap=0;
+2R	ProtHint	start_codon	8893945	8893947	238	+	.	al_score=0.363636; CDS_overlap=0;
+2R	ProtHint	start_codon	9409271	9409273	5	-	.	al_score=0.170248; CDS_overlap=0;
+2R	ProtHint	start_codon	11340097	11340099	1	-	.	al_score=0.0760331; CDS_overlap=8;
+2R	ProtHint	start_codon	11341421	11341423	22	-	.	al_score=0.216529; CDS_overlap=0;
+2R	ProtHint	start_codon	11526408	11526410	5	-	.	al_score=0.479339; CDS_overlap=105;
+2R	ProtHint	start_codon	12635424	12635426	4	-	.	al_score=0.266116; CDS_overlap=0;
+2R	ProtHint	start_codon	12636082	12636084	3	-	.	al_score=0.22314; CDS_overlap=0;
+2R	ProtHint	start_codon	13501241	13501243	1	+	.	al_score=0.181818; CDS_overlap=0;
+2R	ProtHint	start_codon	15999965	15999967	1	+	.	al_score=0.0710744; CDS_overlap=0;
+2R	ProtHint	start_codon	16000436	16000438	1	+	.	al_score=0.120661; CDS_overlap=0;
+2R	ProtHint	start_codon	18235517	18235519	1	+	.	al_score=0.0958678; CDS_overlap=104;
+2R	ProtHint	start_codon	18403275	18403277	4	+	.	al_score=0.105785; CDS_overlap=0;
+2R	ProtHint	start_codon	21658353	21658355	135	+	.	al_score=0.371901; CDS_overlap=0;
+2R	ProtHint	start_codon	22378298	22378300	3	+	.	al_score=0.185124; CDS_overlap=0;
+2R	ProtHint	start_codon	23376912	23376914	4	-	.	al_score=0.305785; CDS_overlap=0;
+2R	ProtHint	start_codon	23387324	23387326	1	-	.	al_score=0.233058; CDS_overlap=0;
+2R	ProtHint	start_codon	24134016	24134018	31	+	.	al_score=0.158678; CDS_overlap=0;
+2R	ProtHint	start_codon	24134808	24134810	1	+	.	al_score=0.0198347; CDS_overlap=194;
+3L	ProtHint	start_codon	257623	257625	15	-	.	al_score=0.0479339; CDS_overlap=0;
+3L	ProtHint	start_codon	3167979	3167981	3	+	.	al_score=0.123967; CDS_overlap=0;
+3L	ProtHint	start_codon	3169571	3169573	2	+	.	al_score=0.18843; CDS_overlap=0;
+3L	ProtHint	start_codon	3179353	3179355	2	+	.	al_score=0.092562; CDS_overlap=0;
+3L	ProtHint	start_codon	3351567	3351569	3	+	.	al_score=0.104132; CDS_overlap=0;
+3L	ProtHint	start_codon	4260417	4260419	1	-	.	al_score=0.133884; CDS_overlap=0;
+3L	ProtHint	start_codon	7111285	7111287	2	+	.	al_score=0.180165; CDS_overlap=0;
+3L	ProtHint	start_codon	12159580	12159582	1	-	.	al_score=0.105785; CDS_overlap=0;
+3L	ProtHint	start_codon	13843861	13843863	1	+	.	al_score=0.153719; CDS_overlap=0;
+3L	ProtHint	start_codon	13844370	13844372	1	+	.	al_score=0.11405; CDS_overlap=0;
+3L	ProtHint	start_codon	15568088	15568090	1	+	.	al_score=0.297521; CDS_overlap=0;
+3L	ProtHint	start_codon	15978543	15978545	10	+	.	al_score=0.0942149; CDS_overlap=0;
+3L	ProtHint	start_codon	22871224	22871226	1	+	.	al_score=0.165289; CDS_overlap=0;
+3L	ProtHint	start_codon	22872939	22872941	1	+	.	al_score=0.0561983; CDS_overlap=1;
+3R	ProtHint	start_codon	4175393	4175395	7	+	.	al_score=0.21157; CDS_overlap=0;
+3R	ProtHint	start_codon	6908562	6908564	1	-	.	al_score=0.365289; CDS_overlap=0;
+3R	ProtHint	start_codon	7187418	7187420	2	+	.	al_score=0.375207; CDS_overlap=0;
+3R	ProtHint	start_codon	21073192	21073194	7	-	.	al_score=0.214876; CDS_overlap=20;
+3R	ProtHint	start_codon	21073216	21073218	10	-	.	al_score=0.228099; CDS_overlap=0;
+3R	ProtHint	start_codon	21074151	21074153	5	-	.	al_score=0.228099; CDS_overlap=0;
+3R	ProtHint	start_codon	21116304	21116306	180	+	.	al_score=0.241322; CDS_overlap=0;
+3R	ProtHint	start_codon	21116460	21116462	5	+	.	al_score=0.442975; CDS_overlap=185;
+3R	ProtHint	start_codon	21116828	21116830	1	+	.	al_score=0.178512; CDS_overlap=244;
+3R	ProtHint	start_codon	21579359	21579361	49	-	.	al_score=0.33719; CDS_overlap=0;
+3R	ProtHint	start_codon	22531341	22531343	1	-	.	al_score=0.0545455; CDS_overlap=21;
+3R	ProtHint	start_codon	22533097	22533099	1	-	.	al_score=0.2; CDS_overlap=0;
+3R	ProtHint	start_codon	22533555	22533557	1	-	.	al_score=0.0297521; CDS_overlap=0;
+3R	ProtHint	start_codon	23927566	23927568	158	-	.	al_score=0.363636; CDS_overlap=0;
+3R	ProtHint	start_codon	24648629	24648631	1	-	.	al_score=0.360331; CDS_overlap=139;
+3R	ProtHint	start_codon	24649684	24649686	9	-	.	al_score=0.472727; CDS_overlap=0;
+3R	ProtHint	start_codon	24650891	24650893	1	-	.	al_score=0.246281; CDS_overlap=0;
+X	ProtHint	start_codon	2249443	2249445	1	-	.	al_score=0.464463; CDS_overlap=246;
+X	ProtHint	start_codon	2249449	2249451	20	-	.	al_score=0.442975; CDS_overlap=226;
+X	ProtHint	start_codon	5754239	5754241	1	+	.	al_score=0.0793388; CDS_overlap=0;
+X	ProtHint	start_codon	6812638	6812640	1	+	.	al_score=0.157025; CDS_overlap=0;
+X	ProtHint	start_codon	6815183	6815185	1	+	.	al_score=0.0628099; CDS_overlap=0;
+X	ProtHint	start_codon	10757469	10757471	1	-	.	al_score=0.17686; CDS_overlap=0;
+X	ProtHint	start_codon	13212589	13212591	2	+	.	al_score=0.0892562; CDS_overlap=0;
+X	ProtHint	start_codon	14268613	14268615	142	+	.	al_score=0.282645; CDS_overlap=0;
+X	ProtHint	start_codon	14831780	14831782	3	-	.	al_score=0.0826446; CDS_overlap=0;
+X	ProtHint	start_codon	14921038	14921040	2	-	.	al_score=0.328926; CDS_overlap=247;
+X	ProtHint	start_codon	14921604	14921606	1	-	.	al_score=0.21157; CDS_overlap=0;
+X	ProtHint	start_codon	15714115	15714117	197	+	.	al_score=0.347107; CDS_overlap=0;
+X	ProtHint	start_codon	15714834	15714836	1	+	.	al_score=0.31405; CDS_overlap=216;
+X	ProtHint	start_codon	15716903	15716905	1	+	.	al_score=0.279339; CDS_overlap=0;
+X	ProtHint	start_codon	15717077	15717079	1	+	.	al_score=0.449587; CDS_overlap=1;
+X	ProtHint	start_codon	15718643	15718645	1	+	.	al_score=0.332231; CDS_overlap=54;
+X	ProtHint	start_codon	17313060	17313062	1	+	.	al_score=0.191736; CDS_overlap=0;
+X	ProtHint	start_codon	17314891	17314893	1	+	.	al_score=0.161983; CDS_overlap=0;
+X	ProtHint	start_codon	17314969	17314971	2	+	.	al_score=0.0429752; CDS_overlap=0;
+X	ProtHint	start_codon	19642695	19642697	3	-	.	al_score=0.158678; CDS_overlap=0;
+X	ProtHint	start_codon	20422613	20422615	11	-	.	al_score=0.494215; CDS_overlap=231;
+X	ProtHint	start_codon	20422850	20422852	173	-	.	al_score=0.398347; CDS_overlap=0;
+X	ProtHint	start_codon	21117496	21117498	128	+	.	al_score=0.226446; CDS_overlap=0;

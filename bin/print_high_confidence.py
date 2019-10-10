@@ -39,7 +39,7 @@ def intron(row, args):
 
 def stop(row, args):
     fullProtein = extractFeature(row[8], "fullProteinAligned")
-    stopScore = extractFeature(row[8], "score")
+    stopScore = extractFeature(row[8], "al_score")
     if (stopScore is None):
         stopScore = 1
     else:
@@ -59,7 +59,7 @@ def start(row, args):
 
     fullProtein = extractFeature(row[8], "fullProteinAligned")
 
-    startScore = extractFeature(row[8], "score")
+    startScore = extractFeature(row[8], "al_score")
     if (startScore is None):
         startScore = 1
     else:
