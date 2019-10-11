@@ -96,8 +96,7 @@ ProtHint/dependencies folder.
 Binary for parsing and scoring hints from Spaln's alignment output is included
 in this distribution package.
 
-In case the included binary is not working, compile it from source at
-**TODO: add link** and replace the `spaln_boundary_scorer` binary
+In case the included binary is not working, compile it from source at https://github.com/gatech-genemark/spaln-boundary-scorer and replace the `spaln_boundary_scorer` binary
 in ProtHint/dependencies folder.
 
 ### ProSplign (Optional Installation)
@@ -116,8 +115,7 @@ replace the `prosplign` binary in ProtHint/dependencies folder.
 Binary for parsing and scoring introns from ProSplign's alignment output is included
 in this distribution package.
 
-In case the included binary is not working, compile it from source at
-**TODO: add link** and replace the `prosplign_intron_scorer` binary
+In case the included binary is not working, compile it from source at https://github.com/gatech-genemark/prosplign-intron-scorer and replace the `prosplign_intron_scorer` binary
 in ProtHint/dependencies folder.
 
 # Usage
