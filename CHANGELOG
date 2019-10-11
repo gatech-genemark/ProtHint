@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.2.0] 2019-10-11
+
+### Major changes
+
+- Bug fix: Frameshifts are no longer reported as introns in the output
+
+### Other changes
+
+- Reorganized project structure: Spaln and ProSplign alignment scorers were
+  moved to separate repositories
+- Improved installation and run instructions
+
 ## [2.1.1] 2019-7-11
 
 - Added the option to run final alignment with ProSplign
