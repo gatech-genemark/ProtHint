@@ -59,13 +59,8 @@ sub PrintToFile
 			$ref->{$key}{'att'} = "al_score=$ref->{$key}{'al_score'};";
 		}
 
-		if ($ref->{$key}{'splice_sites'}) {
-			if ($ref->{$key}{'att'} eq ".") {
-				$ref->{$key}{'att'} = "splice_sites=$ref->{$key}{'splice_sites'};";
-			} else {
-				$ref->{$key}{'att'} .= " splice_sites=$ref->{$key}{'splice_sites'};";
-			}
-		}
+		addAttribute( $ref, $key, 'splice_sites' );
+		addAttribute( $ref, $key, 'topProt' );
 
 		$line = $ref->{$key}{'id'}     ."\t";
 		$line .= $ref->{$key}{'info'}  ."\t";
@@ -80,6 +75,18 @@ sub PrintToFile
 		print $OUT $line;
 	} 
 	close $OUT;
+}
+# ------------------------------------------------
+sub addAttribute
+{
+	my( $ref, $key, $attr ) = @_;
+	if ($ref->{$key}{$attr}) {
+		if ($ref->{$key}{'att'} eq ".") {
+			$ref->{$key}{'att'} = "$attr=$ref->{$key}{$attr};";
+		} else {
+			$ref->{$key}{'att'} .= " $attr=$ref->{$key}{$attr};";
+		}
+	}
 }
 # ------------------------------------------------
 sub ParseGFF
@@ -113,6 +120,10 @@ sub ParseGFF
 
 			if ($attribute =~ /splice_sites=([^;]+);.*/) {
 				$ref->{$key}{'splice_sites'} = $1;
+			}
+
+			if ($attribute =~ /topProt=([^;]+);.*/) {
+				$ref->{$key}{'topProt'} = $1;
 			}
 
 			if ( $current eq '.' )
