@@ -49,7 +49,7 @@ def main():
     runSpaln(diamondPairs, args.pbs, args.minExonScore)
 
     if (not args.ProSplign):
-        processSpalnOutput()
+        processSpalnOutput(diamondPairs)
     else:
         filterSpalnPairs(args.maxSpalnCoverage)
         prepareProSplignPairs(diamondPairs, args.ensureDiamondPairs)
@@ -190,12 +190,19 @@ def runSpaln(diamondPairs, pbs, minExonScore):
     subprocess.call(command, shell=True)
 
 
-def processSpalnOutput():
+def processSpalnOutput(diamondPairs):
     """Prepare the final output from Spaln result scored by spaln-boundary-scorer
        Convert the output to GeneMark and Augustus compatible formats
+
+    Args:
+        diamondPairs (filepath): Path to file with seed gene-protein pairs
     """
     sys.stderr.write("[" + time.ctime() + "] Processing the output\n")
     os.chdir(workDir)
+
+    # Label hints which were mapped from the best DIAMOND target
+    subprocess.call(binDir + "/flag_top_proteins.py Spaln/spaln.gff " + diamondPairs + " > tmp;"
+                    "mv tmp Spaln/spaln.gff", shell=True)
 
     processSpalnIntrons()
     processSpalnStops()
