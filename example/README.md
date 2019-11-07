@@ -3,7 +3,7 @@
 ## Description
 
 This folder contains an example input which serves to:
-  
+
   * Demonstrate the usage of ProtHint
   * To test whether the program is correctly configured
 
@@ -20,5 +20,5 @@ If everything is configured correctly, the results in the `test` folder should
 match the contents of the `output` folder. Note that the order of hints in gff
 files might differ.
 
-The expected runtime for this example on a system with 8 CPUs (each 2.66GHz)
-and 8GB of RAM is about **7 minutes**.
+The expected runtime for this example on a system with 8 CPUs (each 2.40GHz)
+and 8GB of RAM is about **1.5 minutes**.
