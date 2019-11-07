@@ -233,7 +233,7 @@ def processSpalnStops():
     subprocess.call("grep stop_codon Spaln/spaln.gff > stops.gff", shell=True)
 
     subprocess.call(binDir + "/print_high_confidence.py stops.gff "
-                    "--stopCoverage 0 --stopScore 0.01 > stops_01.gff;"
+                    "--stopCoverage 0 --stopAlignment 0.01 > stops_01.gff;"
                     "rm stops.gff", shell=True)
 
     subprocess.call(binDir + "/combine_gff_records.pl --in_gff stops_01.gff "
@@ -245,7 +245,7 @@ def processSpalnStarts():
     subprocess.call("grep start_codon Spaln/spaln.gff > starts.gff", shell=True)
 
     subprocess.call(binDir + "/print_high_confidence.py starts.gff "
-                    "--startCoverage 0 --startScore 0.01 > starts_01.gff;"
+                    "--startCoverage 0 --startAlignment 0.01 > starts_01.gff;"
                     "rm starts.gff", shell=True)
 
     subprocess.call(binDir + "/combine_gff_records.pl --in_gff starts_01.gff "

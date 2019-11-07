@@ -108,13 +108,13 @@ def parseCmd():
     parser.add_argument('--stopCoverage', type=int,
                         help='Stop coverage score threshold. Print all stops \
                         with coverage >= stopCoverage. Default = 4.', default=4)
-    parser.add_argument('--startScore', type=float,
+    parser.add_argument('--startAlignment', type=float,
                         help='Start alignment score threshold. Print all starts \
-                        with score >= startScore. Ignore if the field does not exist. \
+                        with al_score >= startAlignment. Ignore if the field does not exist. \
                         Default = 0.01.', default=0.01)
-    parser.add_argument('--stopScore', type=float,
+    parser.add_argument('--stopAlignment', type=float,
                         help='Stop alignment score threshold. Print all stops \
-                        with score >= stopScore. Ignore if the field does not exist. \
+                        with al_score >= stopAlignment. Ignore if the field does not exist. \
                         Default = 0.01.', default=0.01)
     parser.add_argument('--intronAlignment', type=float,
                         help='Intron alignment score threshold. Print all introns \
