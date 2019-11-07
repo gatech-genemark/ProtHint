@@ -21,7 +21,6 @@ def main():
         elif (row[2].lower() == "stop_codon"):
             row[2] = "stop"
         row[8] = "src=P;mult=" + row[5] + ";pri=4"
-        row[1] = "ProSplign"
         print("\t".join(row))
 
 
