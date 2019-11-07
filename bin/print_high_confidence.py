@@ -104,7 +104,7 @@ def parseCmd():
                         with coverage >= intronCoverage. Default = 4.', default=4)
     parser.add_argument('--startCoverage', type=int,
                         help='Start coverage score threshold. Print all starts \
-                        with coverage >= startCoverage. Default = 10.', default=10)
+                        with coverage >= startCoverage. Default = 4.', default=4)
     parser.add_argument('--stopCoverage', type=int,
                         help='Stop coverage score threshold. Print all stops \
                         with coverage >= stopCoverage. Default = 4.', default=4)
@@ -118,7 +118,7 @@ def parseCmd():
                         Default = 0.01.', default=0.01)
     parser.add_argument('--intronAlignment', type=float,
                         help='Intron alignment score threshold. Print all introns \
-                        with al_score >= intronAlignment. Default = 0.3.', default=0.3)
+                        with al_score >= intronAlignment. Default = 0.25.', default=0.25)
     parser.add_argument('--startOverlap', type=int,
                         help='Maximum alowed CDS overlap of a start. Print all starts \
                         with CDS overlap <= startOverlap. Default = 0', default=0)
