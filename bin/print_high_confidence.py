@@ -21,69 +21,98 @@ def extractFeature(text, feature):
         return None
 
 
-def intron(row, args):
-    al_score = float(extractFeature(row[8], "al_score"))
-    fullProtein = extractFeature(row[8], "fullProteinAligned")
+class Filter:
 
-    if not args.addAllSpliceSites:
-        spliceSites = extractFeature(row[8], "splice_sites")
-        if spliceSites is not None and spliceSites.lower() != "gt_ag":
-            if not args.addGCAG or spliceSites.lower() != "gc_ag":
-                return
+    def __init__(self, args):
+        self.args = args
 
-    if (((int(row[5]) >= args.intronCoverage) or
-        (args.addFullAligned and fullProtein == "TRUE")) and
-       (al_score >= args.intronAlignment)):
-        print("\t".join(row))
+    def decide(self, row):
+        self.al_score = float(extractFeature(row[8], "al_score"))
+        self.fullProtein = extractFeature(row[8], "fullProteinAligned")
+        self.topProtein = extractFeature(row[8], "topProt")
+        self.row = row
+        self.coverage = int(row[5])
 
+        self.__determineCoverageThreshod()
 
-def stop(row, args):
-    fullProtein = extractFeature(row[8], "fullProteinAligned")
-    stopScore = extractFeature(row[8], "al_score")
-    if (stopScore is None):
-        stopScore = 1
-    else:
-        stopScore = float(stopScore)
+        if (row[2].lower() == "intron"):
+            return self.__intron()
+        elif (row[2].lower() == "stop_codon"):
+            return self.__stop()
+        elif (row[2].lower() == "start_codon"):
+            return self.__start()
 
-    if ((int(row[5]) >= args.stopCoverage and stopScore >= args.stopScore) or
-       (args.addFullAligned and fullProtein == "TRUE")):
-        print("\t".join(row))
+    def __determineCoverageThreshod(self):
+        if (self.row[2].lower() == "intron"):
+            self.coverageThreshold = self.args.intronCoverage
+        elif (self.row[2].lower() == "stop_codon"):
+            self.coverageThreshold = self.args.stopCoverage
+        elif (self.row[2].lower() == "start_codon"):
+            self.coverageThreshold = self.args.startCoverage
 
+        if ((self.args.addTopProteins and self.topProtein == "TRUE") or
+           (self.args.addFullAligned and self.fullProtein == "TRUE")):
+            self.coverageThreshold = 1
 
-def start(row, args):
-    CDS_overlap = extractFeature(row[8], "CDS_overlap")
-    if (CDS_overlap is None):
-        CDS_overlap = 0
-    else:
-        CDS_overlap = float(CDS_overlap)
+    def __intron(self):
+        if not self.args.addAllSpliceSites:
+            spliceSites = extractFeature(self.row[8], "splice_sites")
+            if spliceSites is not None and spliceSites.lower() != "gt_ag":
+                if not self.args.addGCAG or spliceSites.lower() != "gc_ag":
+                    return False
 
-    fullProtein = extractFeature(row[8], "fullProteinAligned")
+        if (self.coverage >= self.coverageThreshold and
+           self.al_score >= self.args.intronAlignment):
+            return True
 
-    startScore = extractFeature(row[8], "al_score")
-    if (startScore is None):
-        startScore = 1
-    else:
-        startScore = float(startScore)
+        return False
 
-    if (((int(row[5]) >= args.startCoverage and startScore >= args.startScore) or
-        (args.addFullAligned and fullProtein == "TRUE")) and
-       (CDS_overlap <= args.startOverlap)):
-        print("\t".join(row))
+    def __stop(self):
+        coverageThreshold = self.args.stopCoverage
+        if self.args.addTopProteins and self.topProtein == "TRUE":
+            coverageThreshold = 1
+
+        if (self.al_score is None):
+            self.al_score = 1
+
+        if (self.coverage >= coverageThreshold and
+           self.al_score >= self.args.stopAlignment):
+            return True
+
+        return False
+
+    def __start(self):
+        coverageThreshold = self.args.startCoverage
+        if self.args.addTopProteins and self.topProtein == "TRUE":
+            coverageThreshold = 1
+
+        CDS_overlap = extractFeature(self.row[8], "CDS_overlap")
+        if (CDS_overlap is None):
+            CDS_overlap = 0
+        else:
+            CDS_overlap = int(CDS_overlap)
+
+        if (self.al_score is None):
+            self.al_score = 1
+
+        if (self.coverage >= coverageThreshold and
+           self.al_score >= self.args.startAlignment and
+           CDS_overlap <= self.args.startOverlap):
+            return True
+
+        return False
 
 
 def printHighConfidence(args):
+    filter = Filter(args)
     for row in csv.reader(open(args.input), delimiter='\t'):
         row[1] = "ProtHint"
 
         if row[5] == ".":
             row[5] = "1"
 
-        if (row[2].lower() == "intron"):
-            intron(row, args)
-        elif (row[2].lower() == "start_codon"):
-            start(row, args)
-        elif (row[2].lower() == "stop_codon"):
-            stop(row, args)
+        if filter.decide(row):
+            print("\t".join(row))
 
 
 def main():
@@ -131,6 +160,9 @@ def parseCmd():
     parser.add_argument('--addAllSpliceSites', action='store_true',
                         help='Add introns with any splice sites.  By default, \
                         only introns with canonical GT_AG splice sites are printed')
+    parser.add_argument('--addTopProteins', action='store_true',
+                        help='Add hints corresponding to the top protein, no matter \
+                        the coverage. Other scoring thresholds still apply.')
 
     return parser.parse_args()
 
