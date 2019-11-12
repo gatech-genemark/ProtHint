@@ -1,3 +1,6 @@
 *.o
 *.d
 *.pyc
+
+tests/test_Spaln/Spaln/
+tests/test_ProtHint/test_output/cmd.log
