@@ -131,7 +131,8 @@ def runDiamond(diamondBin, maxProteins, evalue):
     os.chdir(diamondDir)
 
     # Make DIAMOND db
-    command = diamondBin + " makedb --in " + proteins + " -d diamond_db"
+    command = diamondBin + " makedb --in " + proteins + " -d diamond_db \
+              --threads " + threads
     subprocess.call(command, shell=True)
 
     # Actual DIAMOND run
