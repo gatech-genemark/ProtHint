@@ -27,7 +27,9 @@ class Filter:
         self.args = args
 
     def decide(self, row):
-        self.al_score = float(extractFeature(row[8], "al_score"))
+        self.al_score = extractFeature(row[8], "al_score")
+        if self.al_score:
+            self.al_score = float(self.al_score)
         self.fullProtein = extractFeature(row[8], "fullProteinAligned")
         self.topProtein = extractFeature(row[8], "topProt")
         self.row = row
