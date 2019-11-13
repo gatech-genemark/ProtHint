@@ -48,7 +48,7 @@ These modules are available at CPAN and can be installed with
 
 ### Python dependencies
 
-Python 2.7 or higher is required. No libraries outside of the Python Standard
+Python 3.3 or higher is required. No libraries outside of the Python Standard
 Library are required.
 
 ### GeneMark-ES

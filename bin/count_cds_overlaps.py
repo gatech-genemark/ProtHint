@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # ==============================================================
 # Tomas Bruna
 # Copyright 2019, Georgia Institute of Technology, USA
