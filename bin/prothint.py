@@ -486,6 +486,7 @@ def systemCall(cmd):
     Args:
         cmd (string): Command to call
     """
+    sys.stderr.flush()
     if subprocess.call(cmd, shell=True) != 0:
         sys.exit('[' + time.ctime() + '] error: ProtHint exited due to an ' +
                  'error in command: ' + cmd)
