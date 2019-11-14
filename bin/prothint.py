@@ -484,6 +484,42 @@ def systemCall(cmd):
                  'error in command: ' + cmd)
 
 
+def callScript(name, args):
+    """Call a script located in the ProtHint bin folder
+
+    Args:
+        name (string): Name of the script
+        args (string): Command line arguments to use in the call
+    """
+    systemCall(binDir + '/' + name + ' ' + args)
+
+
+def callDependency(name, args, location=''):
+    """Call a dependency. ProtHint first looks for the dependency in the
+    dependencies folder. If not found there, it tries to find it in the path.
+
+    Args:
+        name (string): Name of the dependency
+        args (string): Command line arguments to use in the call
+        location (string): Location of the dependency within the dependencies
+                           folder
+    """
+    if location != '':
+        location = location + '/'
+
+    if os.path.isfile(binDir + '/../dependencies/' + location + name):
+        systemCall(binDir + '/../dependencies/' + location + name + ' ' + args)
+    else:
+        sys.stderr.write('[' + time.ctime() + '] warning: Could not find ' +
+                         name + ' in dependencies/' + location + ' folder.' +
+                         ' Attempting to use ' + name + ' in the PATH.\n')
+        if shutil.which(name) is not None:
+            systemCall(name + ' ' + args)
+        else:
+            sys.exit('[' + time.ctime() + '] error: Could not find ' + name +
+                     ' in the PATH')
+
+
 def parseCmd():
     """Parse command line arguments
 
