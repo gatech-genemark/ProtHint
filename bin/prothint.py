@@ -473,6 +473,17 @@ def checkFileAndMakeAbsolute(file):
     return os.path.abspath(file)
 
 
+def systemCall(cmd):
+    """Make a system call
+
+    Args:
+        cmd (string): Command to call
+    """
+    if subprocess.call(cmd, shell=True) != 0:
+        sys.exit('[' + time.ctime() + '] error: ProtHint exited due to an ' +
+                 'error in command: ' + cmd)
+
+
 def parseCmd():
     """Parse command line arguments
 
