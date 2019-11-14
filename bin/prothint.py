@@ -40,12 +40,13 @@ def main():
 
     diamondPairs = args.diamondPairs
     if not diamondPairs:
-        diamondPairs = runDiamond(args.diamondBin, args.maxProteinsPerSeed, args.evalue)
+        diamondPairs = runDiamond(args.maxProteinsPerSeed, args.evalue)
     else:
         sys.stderr.write("[" + time.ctime() + "] Skipping DIAMOND, using "
                          "the supplied DIAMOND output file instead\n")
 
     prepareSeedSequences(diamondPairs)
+
     runSpaln(diamondPairs, args.pbs, args.minExonScore)
 
     if (not args.ProSplign):
@@ -77,15 +78,14 @@ def runGeneMarkES(pbs):
         os.mkdir(ESDir)
     os.chdir(ESDir)
 
-    command = ""
-    if not pbs:
-        command = binDir + "/../dependencies/GeneMarkES/bin/gmes_petap.pl --verbose --cores " + threads + \
-                  " --max_intergenic 50000 --ES --seq " + genome + " --soft 1000"
-    else:
-        command = binDir + "/../dependencies/GeneMarkES/bin/gmes_petap.pl --verbose --pbs \
-                  --max_intergenic 50000 --ES --seq " + genome + " --soft 1000"
+    pbsFlag = ""
+    if pbs:
+        pbsFlag = " --pbs"
 
-    subprocess.call(command, shell=True)
+    callDependency("gmes_petap.pl", "--verbose --cores " + threads + pbsFlag +
+                   " --max_intergenic 50000 --ES --seq " + genome +
+                   " --soft 1000", "GeneMarkES/bin")
+
     sys.stderr.write("[" + time.ctime() + "] GeneMark-ES finished.\n")
     return os.path.abspath("genemark.gtf")
 
@@ -96,21 +96,21 @@ def translateSeeds(geneMarkGtf):
     Args:
         geneMarkGtf (filepath): Path to GeneMark.gtf prediction file
     """
-    sys.stderr.write("[" + time.ctime() + "] Translating GeneMark seeds to proteins\n")
+    sys.stderr.write("[" + time.ctime() + "] Translating GeneMark seeds to " +
+                     "proteins\n")
     os.chdir(workDir)
 
-    command = binDir + "/proteins_from_gtf.pl --stat gene_stat.yaml --seq " + \
-              genome + " --annot " + geneMarkGtf + " --out gmes_proteins.faa --format GTF"
-    subprocess.call(command, shell=True)
+    callScript("proteins_from_gtf.pl", "--stat gene_stat.yaml --seq " +
+               genome + " --annot " + geneMarkGtf + " --out " +
+               "gmes_proteins.faa --format GTF")
+
     sys.stderr.write("[" + time.ctime() + "] Translation of seeds finished\n")
 
 
-def runDiamond(diamondBin, maxProteins, evalue):
+def runDiamond(maxProteins, evalue):
     """Run DIAMOND protein search
 
     Args:
-        diamondBin (executable): Path to diamond binary. If none specified,
-                                 use the binary in dependencies folder
         maxProteins (int): Maximum number of protein hits per seed gene.
         evalue (float): Maximum e-value of DIAMOND hits
 
@@ -118,12 +118,6 @@ def runDiamond(diamondBin, maxProteins, evalue):
         string: Path to DIAMOND output
     """
     sys.stderr.write("[" + time.ctime() + "] Running DIAMOND\n")
-    if not diamondBin:
-        diamondBin = binDir + "/../dependencies/diamond"
-
-    if not os.path.isfile(diamondBin):
-        sys.stderr.write("error: DIAMOND binary was not found\n")
-        sys.exit()
 
     diamondDir = workDir + "/diamond"
     if not os.path.isdir(diamondDir):
@@ -131,16 +125,14 @@ def runDiamond(diamondBin, maxProteins, evalue):
     os.chdir(diamondDir)
 
     # Make DIAMOND db
-    command = diamondBin + " makedb --in " + proteins + " -d diamond_db \
-              --threads " + threads
-    subprocess.call(command, shell=True)
+    callDependency("diamond", "makedb --in " + proteins + " -d diamond_db " +
+                   "--threads " + threads)
 
     # Actual DIAMOND run
-    command = diamondBin + " blastp --query ../gmes_proteins.faa --db diamond_db \
-              --outfmt 6 qseqid sseqid --out diamond.out --max-target-seqs " + \
-              str(maxProteins) + " --max-hsps 1 --threads " + threads + \
-              " --evalue " + str(evalue)
-    subprocess.call(command, shell=True)
+    callDependency("diamond", "blastp --query ../gmes_proteins.faa --db " +
+                   "diamond_db --outfmt 6 qseqid sseqid --out diamond.out " +
+                   "--max-target-seqs " + str(maxProteins) + " --max-hsps 1 " +
+                   "--threads " + threads + " --evalue " + str(evalue))
 
     sys.stderr.write("[" + time.ctime() + "] DIAMOND finished\n")
     return os.path.abspath("diamond.out")
@@ -155,9 +147,9 @@ def prepareSeedSequences(diamondPairs):
     sys.stderr.write("[" + time.ctime() + "] Preparing pairs for alignments\n")
     os.chdir(workDir)
 
-    command = binDir + "/nucseq_for_selected_genes.pl --seq " + genome + \
-              " --out nuc.fasta --gene gene_stat.yaml --list " + diamondPairs
-    subprocess.call(command, shell=True)
+    callScript("nucseq_for_selected_genes.pl", "--seq " + genome + " --out " +
+               "nuc.fasta --gene gene_stat.yaml --list " + diamondPairs)
+
     sys.stderr.write("[" + time.ctime() + "] Preparation of pairs finished\n")
 
 
@@ -165,7 +157,8 @@ def runSpaln(diamondPairs, pbs, minExonScore):
     """Run Spaln spliced alignment and score the outputs with spaln-boundary-scorer
 
     Args:
-        diamondPairs (filePath): Path to file with seed gene-protein pairs to align
+        diamondPairs (filePath): Path to file with seed gene-protein pairs
+                                 to align
         pbs (boolean): Whether to run on pbs
         minExonScore (float): Discard all hints inside/neighboring exons with
                               score lower than minExonScore
@@ -175,20 +168,16 @@ def runSpaln(diamondPairs, pbs, minExonScore):
         os.mkdir(spalnDir)
     os.chdir(spalnDir)
 
-    command = ""
     if not pbs:
-        command = binDir + "/run_spliced_alignment.pl --cores " + threads + \
-                  " --nuc ../nuc.fasta --list " + diamondPairs + \
-                  " --prot " + proteins + " --v --aligner spaln " + \
-                  "--min_exon_score " + str(minExonScore)
-
+        callScript("run_spliced_alignment.pl", "--cores " + threads +
+                   " --nuc ../nuc.fasta --list " + diamondPairs + " --prot " +
+                   proteins + " --v --aligner spaln --min_exon_score " +
+                   str(minExonScore))
     else:
-        command = binDir + "/run_spliced_alignment_pbs.pl --N 120 --K " + threads + \
-                  " --seq ../nuc.fasta --list " + diamondPairs + " --db " + \
-                  proteins + " --v --aligner spaln " + \
-                  "--min_exon_score " + str(minExonScore)
-
-    subprocess.call(command, shell=True)
+        callScript("run_spliced_alignment_pbs.pl", "--N 120 --K " + threads +
+                   " --seq ../nuc.fasta --list " + diamondPairs + " --db " +
+                   proteins + " --v --aligner spaln --min_exon_score " +
+                   str(minExonScore))
 
 
 def processSpalnOutput(diamondPairs):
@@ -202,77 +191,91 @@ def processSpalnOutput(diamondPairs):
     os.chdir(workDir)
 
     # Label hints which were mapped from the best DIAMOND target
-    subprocess.call(binDir + "/flag_top_proteins.py Spaln/spaln.gff " + diamondPairs + " > tmp;"
-                    "mv tmp Spaln/spaln.gff", shell=True)
+    callScript("flag_top_proteins.py", "Spaln/spaln.gff " + diamondPairs +
+               " > tmp")
+    shutil.move("tmp", "Spaln/spaln.gff")
 
     processSpalnIntrons()
     processSpalnStops()
     processSpalnStarts()
 
     # High confidence
-    subprocess.call(binDir + "/print_high_confidence.py prothint.gff > evidence.gff", shell=True)
+    callScript("print_high_confidence.py", "prothint.gff > evidence.gff")
 
     # Augustus compatible format
-    subprocess.call(binDir + "/prothint2augustus.py prothint.gff > prothint_augustus.gff", shell=True)
-    subprocess.call(binDir + "/prothint2augustus.py evidence.gff > evidence_augustus.gff", shell=True)
+    callScript("prothint2augustus.py", "prothint.gff > prothint_augustus.gff")
+    callScript("prothint2augustus.py", "evidence.gff > evidence_augustus.gff")
 
     sys.stderr.write("[" + time.ctime() + "] Output processed\n")
 
 
 def processSpalnIntrons():
-    subprocess.call("grep Intron Spaln/spaln.gff > introns.gff", shell=True)
+    systemCall("grep Intron Spaln/spaln.gff > introns.gff")
 
-    subprocess.call(binDir + "/print_high_confidence.py introns.gff "
-                    "--intronCoverage 0 --intronAlignment 0.1 "
-                    "--addAllSpliceSites > introns_01.gff; rm introns.gff", shell=True)
+    # Filter out introns with alignment score < 0.1
+    callScript("print_high_confidence.py", "introns.gff --intronCoverage 0 " +
+               "--intronAlignment 0.1 --addAllSpliceSites > introns_01.gff")
+    os.remove("introns.gff")
 
-    subprocess.call(binDir + "/combine_gff_records.pl --in_gff introns_01.gff "
-                    "--out_gff prothint.gff; rm introns_01.gff", shell=True)
+    callScript("combine_gff_records.pl", "--in_gff introns_01.gff --out_gff " +
+               "prothint.gff")
+    os.remove("introns_01.gff")
 
 
 def processSpalnStops():
-    subprocess.call("grep stop_codon Spaln/spaln.gff > stops.gff", shell=True)
+    systemCall("grep stop_codon Spaln/spaln.gff > stops.gff")
 
-    subprocess.call(binDir + "/print_high_confidence.py stops.gff "
-                    "--stopCoverage 0 --stopAlignment 0.01 > stops_01.gff;"
-                    "rm stops.gff", shell=True)
+    # Filter out stops with alignment score < 0.01
+    callScript("print_high_confidence.py", "stops.gff --stopCoverage 0 " +
+               "--stopAlignment 0.01 > stops_01.gff")
+    os.remove("stops.gff")
 
-    subprocess.call(binDir + "/combine_gff_records.pl --in_gff stops_01.gff "
-                    "--out_gff stops_01_combined.gff; cat stops_01_combined.gff >> "
-                    "prothint.gff; rm stops_01.gff stops_01_combined.gff", shell=True)
+    callScript("combine_gff_records.pl", "--in_gff stops_01.gff --out_gff " +
+               "stops_01_combined.gff")
+    systemCall("cat stops_01_combined.gff >> prothint.gff")
+
+    os.remove("stops_01.gff")
+    os.remove("stops_01_combined.gff")
 
 
 def processSpalnStarts():
-    subprocess.call("grep start_codon Spaln/spaln.gff > starts.gff", shell=True)
+    systemCall("grep start_codon Spaln/spaln.gff > starts.gff")
 
-    subprocess.call(binDir + "/print_high_confidence.py starts.gff "
-                    "--startCoverage 0 --startAlignment 0.01 > starts_01.gff;"
-                    "rm starts.gff", shell=True)
+    # Filter out starts with alignment score < 0.01
+    callScript("print_high_confidence.py", "starts.gff --startCoverage 0 " +
+               "--startAlignment 0.01 > starts_01.gff")
+    os.remove("starts.gff")
 
-    subprocess.call(binDir + "/combine_gff_records.pl --in_gff starts_01.gff "
-                    "--out_gff starts_01_combined.gff; rm starts_01.gff", shell=True)
+    callScript("combine_gff_records.pl", "--in_gff starts_01.gff --out_gff " +
+               "starts_01_combined.gff")
+    os.remove("starts_01.gff")
 
-    subprocess.call("sort -k1,1 -k4,4n -k5,5n starts_01_combined.gff > "
-                    "starts_01_combined_sorted.gff; rm starts_01_combined.gff", shell=True)
+    # The rest of this function counts CDS overlap of starts
 
-    # Count CDS overlap of starts
-    subprocess.call("grep CDS Spaln/spaln.gff > cds.gff", shell=True)
+    systemCall("sort -k1,1 -k4,4n -k5,5n starts_01_combined.gff > " +
+               "starts_01_combined_sorted.gff")
+    os.remove("starts_01_combined.gff")
 
-    subprocess.call(binDir + "/combine_gff_records.pl --in_gff cds.gff "
-                    "--out_gff cds_combined.gff; rm cds.gff", shell=True)
+    systemCall("grep CDS Spaln/spaln.gff > cds.gff")
+    callScript("combine_gff_records.pl", "--in_gff cds.gff --out_gff " +
+               "cds_combined.gff")
+    os.remove("cds.gff")
 
     # Only count CDS regions which have an upstream support
     # (by start codon or intron) in hints
-    subprocess.call(binDir + "/cds_with_upstream_support.py cds_combined.gff "
-                    "starts_01_combined_sorted.gff prothint.gff > tmp; \
-                    mv tmp cds_combined.gff", shell=True)
+    callScript("cds_with_upstream_support.py", "cds_combined.gff " +
+               "starts_01_combined_sorted.gff prothint.gff > tmp")
+    shutil.move("tmp", "cds_combined.gff")
 
-    subprocess.call("sort -k1,1 -k4,4n -k5,5n cds_combined.gff > "
-                    "cds_combined_sorted.gff; rm cds_combined.gff", shell=True)
+    systemCall("sort -k1,1 -k4,4n -k5,5n cds_combined.gff > " +
+               "cds_combined_sorted.gff")
+    os.remove("cds_combined.gff")
 
-    subprocess.call(binDir + "/count_cds_overlaps.py starts_01_combined_sorted.gff "
-                    "cds_combined_sorted.gff >> prothint.gff;"
-                    "rm starts_01_combined_sorted.gff cds_combined_sorted.gff", shell=True)
+    callScript("count_cds_overlaps.py", "starts_01_combined_sorted.gff " +
+               "cds_combined_sorted.gff >> prothint.gff")
+
+    os.remove("starts_01_combined_sorted.gff")
+    os.remove("cds_combined_sorted.gff")
 
 
 def filterSpalnPairs(maxCoverage):
@@ -280,15 +283,16 @@ def filterSpalnPairs(maxCoverage):
        Kept pairs will be realigned with ProSplign.
 
     Args:
-        maxCoverage (int): number of proteins to keep for each intron/start/stop
+        maxCoverage (int): number of proteins to keep for each
+                           intron/start/stop
     """
-    sys.stderr.write("[" + time.ctime() + "] Selecting proteins for ProSplign alignment.\n")
+    sys.stderr.write("[" + time.ctime() + "] Selecting proteins for " +
+                     "ProSplign alignment.\n")
     spalnDir = workDir + "/Spaln"
     os.chdir(spalnDir)
 
-    command = binDir + "/select_best_proteins.py spaln.gff " + \
-        str(maxCoverage) + " > pairs_filtered.out"
-    subprocess.call(command, shell=True)
+    callScript("select_best_proteins.py", "spaln.gff " + str(maxCoverage) +
+               " > pairs_filtered.out")
 
 
 def prepareProSplignPairs(diamondPairs, k):
@@ -296,18 +300,20 @@ def prepareProSplignPairs(diamondPairs, k):
        and top k pairs from diamond pairs
 
     Args:
-        diamondPairs (filePath): Path to file with seed gene-protein pairs to align
+        diamondPairs (filePath): Path to file with seed gene-protein pairs
+                                 to align
         k (int): Number of best pairs to use from DIAMOND output
     """
     os.chdir(workDir)
 
-    command = binDir + "/combine_alignment_pairs.py  --spalnPairs Spaln/pairs_filtered.out  \
-              --diamondPairs " + diamondPairs + " --out pairs_for_prosplign.out --k " + str(k)
-    subprocess.call(command, shell=True)
+    callScript("combine_alignment_pairs.py", "--spalnPairs " +
+               "Spaln/pairs_filtered.out --diamondPairs " + diamondPairs +
+               " --out pairs_for_prosplign.out --k " + str(k))
 
 
 def runProSplign(pbs):
-    """Run ProSplign spliced alignment and score the outputs with prosplign-intron-scorer
+    """Run ProSplign spliced alignment and score the outputs with
+       prosplign-intron-scorer
 
     Args:
         closeThreshold (int): Percent identity threshold of ProSplign alignment
@@ -319,17 +325,14 @@ def runProSplign(pbs):
         os.mkdir(proSplignDir)
     os.chdir(proSplignDir)
 
-    command = ""
     if not pbs:
-        command = binDir + "/run_spliced_alignment.pl --cores " + threads + \
-                  " --nuc ../nuc.fasta --list ../pairs_for_prosplign.out \
-                  --prot " + proteins + " --v --aligner prosplign"
+        callScript("run_spliced_alignment.pl", "--cores " + threads +
+                   " --nuc ../nuc.fasta --list ../pairs_for_prosplign.out " +
+                   "--prot " + proteins + " --v --aligner prosplign")
     else:
-        command = binDir + "/run_spliced_alignment_pbs.pl --N 240 --K " + threads + \
-                  " --seq ../nuc.fasta --list ../pairs_for_prosplign.out \
-                  --db " + proteins + " --v --aligner prosplign"
-
-    subprocess.call(command, shell=True)
+        callScript("run_spliced_alignment_pbs.pl", "--N 240 --K " + threads +
+                   " --seq ../nuc.fasta --list ../pairs_for_prosplign.out " +
+                   "--db " + proteins + " --v --aligner prosplign")
 
 
 def processProSplignOutput():
@@ -341,40 +344,44 @@ def processProSplignOutput():
     os.chdir(workDir)
 
     # Collapse all scored introns, add them to the final output
-    subprocess.call(binDir + "/combine_gff_records.pl --in_gff \
-        ProSplign/scored_introns.gff --out_gff prothint.gff", shell=True)
+    callScript("combine_gff_records.pl", "--in_gff " +
+               "ProSplign/scored_introns.gff --out_gff prothint.gff")
 
     # Collapse full ProSplign output
-    subprocess.call(binDir + "/combine_gff_records.pl --in_gff ProSplign/prosplign.gff \
-                    --out_gff ProSplign/prosplign_combined.gff", shell=True)
+    callScript("combine_gff_records.pl", "--in_gff ProSplign/prosplign.gff " +
+               "--out_gff ProSplign/prosplign_combined.gff")
 
     # Add stops to output directly
-    subprocess.call("grep -P \"\t[Ss]top_codon\t\" ProSplign/prosplign_combined.gff >> \
-                    prothint.gff", shell=True)
+    systemCall("grep -P \"\t[Ss]top_codon\t\" " +
+               "ProSplign/prosplign_combined.gff >> prothint.gff")
 
     # Count CDS overlaps of starts before adding them to the output file
-    subprocess.call("grep -P \"\t[Ss]tart_codon\t\" ProSplign/prosplign_combined.gff | \
-                    sort -k1,1 -k4,4n -k5,5n > ProSplign/starts_sorted.gff", shell=True)
+    systemCall("grep -P \"\t[Ss]tart_codon\t\" " +
+               "ProSplign/prosplign_combined.gff | sort -k1,1 -k4,4n -k5,5n " +
+               "> ProSplign/starts_sorted.gff")
 
-    subprocess.call("grep -P \"\tCDS\t|\tCDS[Pp]art\t\" ProSplign/prosplign_combined.gff | \
-                    sort -k1,1 -k4,4n -k5,5n > ProSplign/cds_sorted.gff", shell=True)
+    systemCall("grep -P \"\tCDS\t|\tCDS[Pp]art\t\" " +
+               "ProSplign/prosplign_combined.gff | sort -k1,1 -k4,4n -k5,5n " +
+               "> ProSplign/cds_sorted.gff")
 
-    subprocess.call(binDir + "/count_cds_overlaps.py ProSplign/starts_sorted.gff \
-                    ProSplign/cds_sorted.gff >> prothint.gff", shell=True)
+    callScript("count_cds_overlaps.py", "ProSplign/starts_sorted.gff " +
+               "ProSplign/cds_sorted.gff >> prothint.gff")
+
     os.remove("ProSplign/cds_sorted.gff")
     os.remove("ProSplign/starts_sorted.gff")
 
     # Add info about full protein aligned
-    subprocess.call(binDir + "/combine_outputs.py prothint.gff ProSplign/prosplign.gff > \
-                    tmp.gff; mv tmp.gff prothint.gff", shell=True)
+    callScript("combine_outputs.py", "prothint.gff ProSplign/prosplign.gff " +
+               "> tmp.gff")
+    shutil.move("tmp.gff", "prothint.gff")
 
-    # Print high confidence hints
-    subprocess.call(binDir + "/print_high_confidence.py --startCoverage 4 "
-                    "--startOverlap 3 prothint.gff > evidence.gff", shell=True)
+    # Print high confidence hints.
+    callScript("print_high_confidence.py", "--startCoverage 4 " +
+               "--startOverlap 3 prothint.gff > evidence.gff")
 
     # Augustus compatible format
-    subprocess.call(binDir + "/prothint2augustus.py prothint.gff > prothint_augustus.gff", shell=True)
-    subprocess.call(binDir + "/prothint2augustus.py evidence.gff > evidence_augustus.gff", shell=True)
+    callScript("prothint2augustus.py", "prothint.gff > prothint_augustus.gff")
+    callScript("prothint2augustus.py", "evidence.gff > evidence_augustus.gff")
 
     sys.stderr.write("[" + time.ctime() + "] Output processed\n")
 
@@ -440,7 +447,7 @@ def setEnvironment(args):
                              "option) not specified. When using the --diamondPairs\n"
                              "option, a prediction file with seed genes corresponding\n"
                              "to seed genes in the DIAMOND pairs file must be specified.\n")
-            sys.exit()
+            sys.exit(2)
         args.diamondPairs = checkFileAndMakeAbsolute(args.diamondPairs)
 
     if not os.path.isdir(workDir):
@@ -545,8 +552,6 @@ def parseCmd():
                         help='File with "seed gene-protein" hits generated by DIAMOND. If this file is provided, DIAMOND search for protein hits is skipped.\
                         The seed genes in this file must correspond to seed genes passed by "--geneMarkGtf" option. All pairs in the file are used -- option \
                         "--maxProteinsPerSeed" is ignored.')
-    parser.add_argument('--diamondBin', type=str, default='',
-                        help='Path to DIAMOND executable. If not provided, the program looks for the executable in the dependencies folder.')
     parser.add_argument('--maxProteinsPerSeed', type=int, default=25,
                         help='Maximum number of protein hits per seed gene. Increasing this number leads to increased runtime and may improve the\
                         sensitivity of hints. Decreasing has an opposite effect. Default is set to 25.')
