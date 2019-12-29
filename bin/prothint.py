@@ -199,6 +199,8 @@ def processSpalnOutput(diamondPairs):
     processSpalnStops()
     processSpalnStarts()
 
+    printTopChains()
+
     # High confidence
     callScript("print_high_confidence.py", "prothint.gff > evidence.gff")
 
@@ -276,6 +278,19 @@ def processSpalnStarts():
 
     os.remove("starts_01_combined_sorted.gff")
     os.remove("cds_combined_sorted.gff")
+
+
+def printTopChains():
+    systemCall("grep topProt=TRUE Spaln/spaln.gff > topProteins.gff")
+
+    callScript("print_high_confidence.py", "topProteins.gff --startCoverage 0 " +
+               "--startAlignment 0.01 --stopCoverage 0 --stopAlignment 0.01 " +
+               "--intronCoverage 0 --intronAlignment 0.1 --addAllSpliceSites" +
+               " > topProteinsFiltered.gff")
+    os.remove("topProteins.gff")
+
+    callScript("make_chains.py", "topProteinsFiltered.gff > top_chains.gff")
+    os.remove("topProteinsFiltered.gff")
 
 
 def filterSpalnPairs(maxCoverage):
