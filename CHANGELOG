@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.3.0] 2020-1-3
+
+### Major changes
+
+- Updated the default maximum number of target proteins which are spliced
+  aligned per seed gene
+    - Changed from 250 to 25 based on the observation that using more than 25
+      protein targets does not lead to a significant increase in sensitivity
+      of hints
+    - The change leads to ~10x faster runtime
+- The default filtering thresholds for High-Confidence hints were updated to
+  accommodate for the change in the maximum number of target proteins
+- Transition from Python 2 to Python 3
+
+### Other changes
+
+- Refactored code for system and dependency calls
+    - Check whether system/dependency call finished successfully
+    - If a dependency is not found in the `dependency` folder, ProtHint looks
+      for the dependency in the `PATH`
+- Added output with chained hints corresponding to the best aligned protein
+  per gene seeds -- this output is used by [Augustus](https://github.com/Gaius-Augustus/Augustus)
+  in [BRAKER](https://github.com/Gaius-Augustus/BRAKER)
+
 ## [2.2.0] 2019-10-11
 
 ### Major changes
