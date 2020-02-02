@@ -50,9 +50,11 @@ The following non-Core Perl modules are required:
 * `threads`
 * `YAML`
 
-These modules are available at CPAN and can be installed with
+Core module `Thread::Queue` needs to be updated to a version `3.11` or higher.
 
-    cpan MCE::Mutex threads YAML
+These modules are available at CPAN and can be installed/updated with
+
+    cpan MCE::Mutex threads YAML Thread::Queue
 
 ### Python dependencies
 
