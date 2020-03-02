@@ -124,9 +124,17 @@ def translateSeeds(seedGenes):
                      "proteins\n")
     os.chdir(workDir)
 
+    callScript("print_longest_isoform.py", seedGenes +
+               " > longest_seed_isoforms.gtf")
+
+    systemCall("grep -P \tCDS\t longest_seed_isoforms.gtf > " +
+               "longest_seed_isoforms_cds.gtf")
+    os.remove("longest_seed_isoforms.gtf")
+
     callScript("proteins_from_gtf.pl", "--stat gene_stat.yaml --seq " +
-               genome + " --annot " + seedGenes + " --out " +
-               "gmes_proteins.faa --format GTF")
+               genome + " --annot longest_seed_isoforms_cds.gtf --out " +
+               "seed_proteins.faa --format GTF")
+    os.remove("longest_seed_isoforms_cds.gtf")
 
     sys.stderr.write("[" + time.ctime() + "] Translation of seeds finished\n")
 
@@ -153,7 +161,7 @@ def runDiamond(maxProteins, evalue):
                    "--threads " + threads)
 
     # Actual DIAMOND run
-    callDependency("diamond", "blastp --query ../gmes_proteins.faa --db " +
+    callDependency("diamond", "blastp --query ../seed_proteins.faa --db " +
                    "diamond_db --outfmt 6 qseqid sseqid --out diamond.out " +
                    "--max-target-seqs " + str(maxProteins) + " --max-hsps 1 " +
                    "--threads " + threads + " --evalue " + str(evalue))
@@ -432,7 +440,7 @@ def cleanup():
     os.chdir(workDir)
     try:
         os.remove("gene_stat.yaml")
-        os.remove("gmes_proteins.faa")
+        os.remove("seed_proteins.faa")
         os.remove("nuc.fasta")
     except OSError:
         pass
