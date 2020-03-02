@@ -385,7 +385,7 @@ sub ReadGTF
 #                       1       2      3     4      5     6       7        8                        9
 #                    seq_id   source type  left   right score   strand   phase                    gene_id
 
-		if( $line =~ /^(.+)\t(\S+)\t(\S+)\t(\d+)\t(\d+)\t(\S+)\t([\+-])\t([012.])\tgene_id\s+\"\s*(\S+)\s*\"\s*;/  )
+		if( $line =~ /^(.+)\t(\S+)\t(\S+)\t(\d+)\t(\d+)\t(\S+)\t([\+-])\t([012.])\t.*gene_id\s+\"\s*(\S+)\s*\"\s*;/  )
 		{
 			$seq_id  = $1;			
 			$type    = $3;
