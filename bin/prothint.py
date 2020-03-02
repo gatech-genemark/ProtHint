@@ -29,14 +29,14 @@ def main():
 
     setEnvironment(args)
 
-    geneMarkGtf = args.geneMarkGtf
-    if not geneMarkGtf:
-        geneMarkGtf = runGeneMarkES(args.pbs)
+    seedGenes = args.geneMarkGtf
+    if not seedGenes:
+        seedGenes = runGeneMarkES(args.pbs)
     else:
         sys.stderr.write("[" + time.ctime() + "] Skipping GeneMark-ES, using "
                          "the supplied genemark.gtf file instead\n")
 
-    translateSeeds(geneMarkGtf)
+    translateSeeds(seedGenes)
 
     diamondPairs = args.diamondPairs
     if not diamondPairs:
@@ -90,18 +90,18 @@ def runGeneMarkES(pbs):
     return os.path.abspath("genemark.gtf")
 
 
-def translateSeeds(geneMarkGtf):
+def translateSeeds(seedGenes):
     """Translate GeneMark-ES seeds to proteins
 
     Args:
-        geneMarkGtf (filepath): Path to GeneMark.gtf prediction file
+        seedGenes (filepath): Path to file with seed genes
     """
-    sys.stderr.write("[" + time.ctime() + "] Translating GeneMark seeds to " +
+    sys.stderr.write("[" + time.ctime() + "] Translating gene seeds to " +
                      "proteins\n")
     os.chdir(workDir)
 
     callScript("proteins_from_gtf.pl", "--stat gene_stat.yaml --seq " +
-               genome + " --annot " + geneMarkGtf + " --out " +
+               genome + " --annot " + seedGenes + " --out " +
                "gmes_proteins.faa --format GTF")
 
     sys.stderr.write("[" + time.ctime() + "] Translation of seeds finished\n")
@@ -456,13 +456,25 @@ def setEnvironment(args):
     if args.geneMarkGtf:
         args.geneMarkGtf = checkFileAndMakeAbsolute(args.geneMarkGtf)
 
+    if args.augustusGtf:
+        args.augustusGtf = checkFileAndMakeAbsolute(args.augustusGtf)
+
+    if args.spalnGff:
+        if not args.geneMarkGtf or not args.augustusGtf:
+            sys.exit("error: --geneMarkGtf and --augustusGtf options must\n"
+                     "be specified when using --spalnGff option")
+        args.spalnGff = checkFileAndMakeAbsolute(args.spalnGff)
+
+    if args.augustusGtf and args.geneMarkGtf and not args.spalnGff:
+        sys.exit("error: --spalnGff must be given when using --geneMarkGtf\n"
+                 "and --augustusGtf together.")
+
     if args.diamondPairs:
         if not args.geneMarkGtf:
-            sys.stderr.write("error: File with GeneMark predictions (--geneMarkGtf\n"
-                             "option) not specified. When using the --diamondPairs\n"
-                             "option, a prediction file with seed genes corresponding\n"
-                             "to seed genes in the DIAMOND pairs file must be specified.\n")
-            sys.exit(2)
+            sys.exit("error: File with GeneMark predictions (--geneMarkGtf\n"
+                     "option) not specified. When using the --diamondPairs\n"
+                     "option, a prediction file with seed genes corresponding\n"
+                     "to seed genes in the DIAMOND pairs file must be specified.")
         args.diamondPairs = checkFileAndMakeAbsolute(args.diamondPairs)
 
     if not os.path.isdir(workDir):
@@ -583,6 +595,14 @@ def parseCmd():
     parser.add_argument('--threads', type=int, default=-1,
                         help='Number of threads used by ES, DIAMOND, Spaln and ProSplign. By default, all available threads are used.')
     parser.add_argument('--version', action='version', version='%(prog)s ' + VERSION)
+
+    parser.add_argument('--augustusGtf', type=str, default='',
+                        help='File with Augustus predictions in gtf format.  If this file is provided, GeneMark-ES run is skipped and Augustus \
+                        predictions are used as genomic seeds. If both --geneMarkGtf and --augustusGtf options are used, Prothint runs a second \
+                        iteration using Augustus predictions, skipping all predictions which are the same between GeneMark and Augustus. In this mode, \
+                        --spalnGff option with results from the previous iteration must be given.')
+    parser.add_argument('--spalnGff', type=str, default='',
+                        help='Scored hints from previous iteration.')
 
     parser.add_argument('--ProSplign',  default=False, action='store_true',
                         help='Re-align hints discovered by Spaln with ProSplign and report ProSplign results. This is a legacy option which makes the pipeline \
