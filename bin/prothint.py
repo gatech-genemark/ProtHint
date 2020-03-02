@@ -29,12 +29,24 @@ def main():
 
     setEnvironment(args)
 
-    seedGenes = args.geneMarkGtf
+    if args.geneSeeds and args.prevGeneSeeds:
+        nextIteration(args)
+    else:
+        standardRun(args)
+
+
+def standardRun(args):
+    """Execute a standard ProtHint run
+
+    Args:
+        args: Command line arguments
+    """
+    seedGenes = args.geneSeeds
     if not seedGenes:
         seedGenes = runGeneMarkES(args.pbs)
     else:
         sys.stderr.write("[" + time.ctime() + "] Skipping GeneMark-ES, using "
-                         "the supplied genemark.gtf file instead\n")
+                         "the supplied gene seeds file instead\n")
 
     translateSeeds(seedGenes)
 
@@ -61,6 +73,18 @@ def main():
         cleanup()
 
     sys.stderr.write("[" + time.ctime() + "] ProtHint finished.\n")
+
+
+def nextIteration(args):
+    """Run a next iteration of ProtHint. ProtHint is only run for gene
+    seeds which are new or modified in the --geneSeeds file compared to
+    --prevGeneSeeds. Hints for genes which are the same are reused from the
+    --prevSpalnGff file.
+
+    Args:
+        args: Command line arguments
+    """
+    pass
 
 
 def runGeneMarkES(pbs):
