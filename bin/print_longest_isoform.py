@@ -15,7 +15,11 @@ import argparse
 
 def extractFeature(text, feature):
     regex = feature + ' "([^"]+)"'
-    return re.search(regex, text).groups()[0]
+    result = re.search(regex, text)
+    if result:
+        return result.groups()[0]
+    else:
+        return None
 
 
 def computeLengths(input):
@@ -24,6 +28,8 @@ def computeLengths(input):
         if (row[2] == 'CDS'):
             gene = extractFeature(row[8], 'gene_id')
             transcript = extractFeature(row[8], 'transcript_id')
+            if not gene or not transcript:
+                continue
             if gene not in transcriptLengths:
                 transcriptLengths[gene] = dict()
             if transcript not in transcriptLengths[gene]:
@@ -50,6 +56,8 @@ def printLongest(input, longestTranscripts):
     for row in csv.reader(open(input), delimiter='\t'):
         gene = extractFeature(row[8], 'gene_id')
         transcript = extractFeature(row[8], 'transcript_id')
+        if not gene or not transcript:
+            continue
         if (longestTranscripts[gene] == transcript):
             print('\t'.join(row))
 
