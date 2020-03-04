@@ -43,6 +43,8 @@ class Filter:
             return self.__stop()
         elif (row[2].lower() == "start_codon"):
             return self.__start()
+        else:
+            return True
 
     def __determineCoverageThreshod(self):
         if (self.row[2].lower() == "intron"):
