@@ -79,12 +79,65 @@ def nextIteration(args):
     """Run a next iteration of ProtHint. ProtHint is only run for gene
     seeds which are new or modified in the --geneSeeds file compared to
     --prevGeneSeeds. Hints for genes which are the same are reused from the
-    --prevSpalnGff file.
+    --prevSpalnGff file but their gene_ids are updated to match the new
+    seed file.
 
     Args:
         args: Command line arguments
     """
-    pass
+    sys.stderr.write("ProtHint is running in the iterative mode.\n")
+    prepareDataForNextIteration(args.geneSeeds, args.prevGeneSeeds,
+                                args.prevSpalnGff)
+
+    translateSeeds("uniqueSeeds.gtf")
+
+    diamondPairs = runDiamond(args.maxProteinsPerSeed, args.evalue)
+
+    prepareSeedSequences(diamondPairs)
+
+    runSpaln(diamondPairs, args.pbs, args.minExonScore)
+
+    # Append subset of hints from the previous iteration to the current result
+    os.chdir(workDir)
+    with open("Spaln/spaln.gff", "a") as new:
+        with open("prevHints.gff", "r") as prev:
+            for line in prev:
+                new.write(line)
+
+    processSpalnOutput(diamondPairs)
+
+    sys.stderr.write("[" + time.ctime() + "] ProtHint finished.\n")
+
+
+def prepareDataForNextIteration(geneSeeds, prevGeneSeeds, prevSpalnGff):
+    """Select gene seeds which are unique in this iteration and hints from
+    previous iteration of ProtHint which correspond to seeds which are
+    identical in both files (with gene ids updated to match the ids in the
+    new seed file.
+
+    Args:
+        geneSeeds (filepath): Path to current gene seeds
+        prevGeneSeeds (filepath): Path to previous genes seeds
+        prevSpalnGff (filepath): Path to previous scored hints
+    """
+    sys.stderr.write("[" + time.ctime() + "] Selecting a subset of data to run"
+                     " in the next iteration\n")
+
+    os.chdir(workDir)
+
+    callScript("print_longest_isoform.py", geneSeeds +
+               " > longest_seed_isoforms.gtf")
+
+    callScript("print_longest_isoform.py", prevGeneSeeds +
+               " > longest_prevSeed_isoforms.gtf")
+
+    callScript("select_for_next_iteration.py", "--geneSeeds " +
+               "longest_seed_isoforms.gtf --prevGeneSeeds " +
+               "longest_prevSeed_isoforms.gtf --prevSpalnGff " +
+               prevSpalnGff + " --uniqueNewSeedsOut uniqueSeeds.gtf " +
+               "--identicalSpalnGffOut prevHints.gff")
+    os.remove("longest_prevSeed_isoforms.gtf")
+    os.remove("longest_seed_isoforms.gtf")
 
 
 def runGeneMarkES(pbs):
@@ -639,7 +692,7 @@ def parseCmd():
     parser.add_argument('--prevGeneSeeds', type=str, default='',
                         help='File with gene seeds which were used in the previous iteration. Next iteration of ProtHint is only executed for --geneSeeds which \
                         differ from --prevGeneSeeds. --prevSpalnGff is required when this option is used since results from the previous iteration are reused \
-                        for seeds which do not differ.')
+                        for seeds which do not differ (Gene ids of such hints are updated to match the new seed genes).')
     parser.add_argument('--prevSpalnGff', type=str, default='',
                         help='Scored hints from previous iteration.')
 
