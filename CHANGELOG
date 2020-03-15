@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.4.0] 2020-3-14
+
+### Major changes
+
+- Implemented an iterative mode
+    - Next iteration of ProtHint is only executed for gene seeds which differ
+      from previous iteration's gene seeds. Gene IDs of hints which correspond
+      to identical gene seeds are updated to match the IDs of the new seed genes.
+
+### Other changes
+
+- Bug fix: Print CDSpart in top_chains.gff
+
 ## [2.3.0] 2020-1-3
 
 ### Major changes
