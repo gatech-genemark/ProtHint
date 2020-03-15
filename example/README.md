@@ -20,5 +20,10 @@ If everything is configured correctly, the results in the `test` folder should
 match the contents of the `output` folder. Note that the order of hints in gff
 files might differ.
 
+To check, use for example:
+
+    diff <(sort test/prothint.gff) <(sort output/prothint.gff)
+    diff <(sort test/evidence.gff) <(sort output/evidence.gff)
+
 The expected runtime for this example on a system with 8 CPUs (each 2.40GHz)
 and 8GB of RAM is about **1.5 minutes**.
