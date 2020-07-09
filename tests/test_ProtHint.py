@@ -18,7 +18,6 @@ class TestProtHint(unittest.TestCase):
 
         self.assertEqual(common.compareFiles("output/prothint.gff", "test_output/prothint.gff"), 0)
         self.assertEqual(common.compareFiles("output/evidence.gff", "test_output/evidence.gff"), 0)
-        self.assertEqual(common.compareFiles("output/diamond/diamond.out", "test_output/diamond/diamond.out"), 0)
 
         shutil.rmtree("output")
 
