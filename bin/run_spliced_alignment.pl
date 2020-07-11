@@ -45,8 +45,7 @@ my $min_exon_score = 25;
 my $PROSPLIGN_INTRONS_OUT = "scored_introns.gff";
 my $PROSPLIGN_OUT = "prosplign.gff";
 my $SPALN_OUT = "spaln.gff";
-my $LONG_GENE = 30000;
-my $LONG_PROTEIN = 15000;
+my $BATCH_SIZE = 100;
 # ------------------------------------------------
 
 Usage() if ( @ARGV < 1 );
@@ -69,7 +68,7 @@ my $mutex = MCE::Mutex->new;
 my $q = Thread::Queue->new();
 
 # Do not create too many temporary files
-$q->limit = $cores * 4;
+$q->limit = $cores * 2;
 for (1..$cores)
 {
 	threads->create(\&alignerThread);
@@ -116,6 +115,9 @@ my $prot_id;
 my $ref;
 
 my $counter = 0;
+my $batchCounter = 1;
+my $currentBatchCounter = 0;
+my $BATCH;
 my $nextPrint = 0;
 
 $ENV{ALN_TAB} = "$bin/../dependencies/spaln_table";
@@ -125,13 +127,14 @@ print STDERR "[" . localtime() . "] Pairs loaded. Number of pairs to align: $pai
 print STDERR "[" . localtime() . "] Starting the alignments\n" if $v;
 foreach $ref ( @list )
 {
-	my $permille = int(($counter * 1000) / $pairsCount);
-	if ($permille >= $nextPrint) {
-		printf STDERR "[" . localtime() . "] $counter/$pairsCount (%.1f%%) pairs aligned\n", $permille / 10 if $v;
-        $nextPrint = $permille + 1;
+
+	if ($currentBatchCounter == 0) {
+		open($BATCH, ">batch_$batchCounter") or die("$!, error on open file batch_$batchCounter");
 	}
 
 	$counter += 1;
+	$currentBatchCounter += 1;
+
 	$nuc_id = $ref->[0];
 	$prot_id = $ref->[1];
 
@@ -141,9 +144,20 @@ foreach $ref ( @list )
 
 	SaveSingleFasta( $tmp_nuc_file,  $nuc_id, $nuc{$nuc_id} );
 	SaveSingleFasta( $tmp_prot_file, $prot_id, $prot{$prot_id} );
+	addToBatch($tmp_nuc_file, $tmp_prot_file, $BATCH);
 
-	my @files = ($tmp_nuc_file, $tmp_prot_file, $tmp_out_file);
-	$q->enqueue(\@files);
+	if ($currentBatchCounter == $BATCH_SIZE) {
+		close $BATCH;
+		$q->enqueue("batch_$batchCounter");
+		$batchCounter += 1;
+		$currentBatchCounter = 0;
+	}
+}
+
+# Enqueue the last remaining batch
+if ($currentBatchCounter != 0) {
+	close $BATCH;
+	$q->enqueue("batch_$batchCounter");
 }
 
 # Finish and wait for threads
@@ -175,14 +189,10 @@ exit 0;
 # A single alignment, processed by a single thread
 sub alignerThread
 {
-	while (my $item = $q->dequeue()) {
-		
-		my $tmp_nuc_file = $$item[0];
-		my $tmp_prot_file = $$item[1];
-		my $tmp_out_file = $$item[2];
-
+	while (my $batchFile = $q->dequeue()) {
 		if ($aligner eq "spaln") {
-			alignWithSpaln($tmp_nuc_file, $tmp_prot_file, $tmp_out_file);
+			$tmp_out_file = "${batchFile}_out";
+			system("$bin/spalnBatch.sh $batchFile $tmp_out_file $min_exon_score");
 		} elsif (($aligner eq "prosplign")) {
 			alignWithProSplign($tmp_nuc_file, $tmp_prot_file, $tmp_out_file);
 			$mutex->lock;
@@ -198,9 +208,7 @@ sub alignerThread
 		AppendToFile ($out_file_regions, $tmp_out_file);
 		$mutex->unlock;
 
-		unlink $tmp_nuc_file;
-		unlink $tmp_prot_file;
-		unlink $tmp_out_file;
+		unlink $batchFile;
 	}
 }
 
@@ -225,37 +233,6 @@ sub alignWithProSplign
 	system("$bin/asn_to_gff.pl --asn \"${tmp_out_file}_asn\" --out \"${tmp_out_file}_asn_gff\" --exons");
 
 	unlink "${tmp_out_file}_ali";
-}
-
-
-sub alignWithSpaln
-{
-	my $tmp_nuc_file = shift;
-	my $tmp_prot_file = shift;
-	my $tmp_out_file = shift;
-
-	my $geneLength = (stat "$tmp_nuc_file")[7];
-	my $proteinLength = (stat "$tmp_prot_file")[7];
-	# Estimate the maximum possible possible length of the alignment, including gaps.
-	my $alignmentLength = $geneLength * 2;
-
-	# -Q3    Algorithm runs in the fast heuristic mod
-	# -pw    Report result even if alignment score is below threshold prot_id
-	# -S1    Dna is in the forward orientation
-	# -LS    Smith-Waterman-type local alignment. This option may prune out weakly matched terminal regions.
-	# -O1    Output alignment
-	# -l     Number of characters per line in alignment
-
-	my $mode = "-Q3";
-
-	# Mapping mode usually consumes less memory, use it for long alignments.
-	if ($geneLength > $LONG_GENE || $proteinLength > $LONG_PROTEIN) {
-		$mode = "-Q7";
-	}
-
-	# Align and directly parse the output
-	system("$bin/../dependencies/spaln $mode -LS -pw -S1 -O1 -l $alignmentLength  \"$tmp_nuc_file\" \"$tmp_prot_file\" 2> /dev/null | " .
-		"$bin/../dependencies/spaln_boundary_scorer -o \"$tmp_out_file\" -w 10 -s $bin/../dependencies/blosum62.csv -e $min_exon_score");
 }
 
 #------------------------------------------------
@@ -296,6 +273,12 @@ sub SaveSingleFasta
 	print $OUT ( ">". $id ."\n");
 	print $OUT ( $s  ."\n");
 	close $OUT;	
+}
+#------------------------------------------------
+sub addToBatch
+{
+	my($tmp_nuc_file, $tmp_prot_file, $BATCH) = @_;
+	print $BATCH ($tmp_nuc_file . "\t" . $tmp_prot_file  . "\n");
 }
 #------------------------------------------------
 sub ReadList
