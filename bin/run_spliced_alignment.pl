@@ -348,10 +348,10 @@ sub printProgress
 {
 	my $permille = int(($counter * 1000) / $pairsCount);
 	if ($permille >= $nextPrint) {
-		printf STDERR "[" . localtime() . "] $counter/$pairsCount (%.1f%%) pairs aligned", $permille / 10 if $v;
+		printf STDERR "[" . localtime() . "] Enqueueing pair $counter/$pairsCount (%.1f%%)", $permille / 10 if $v;
 		$nextPrint = $permille + 1;
 		my $elapsedTime = time() - $startTime;
-		if ($permille == 0) {
+		if ($counter < $BATCH_SIZE * $cores * 8) {
 			print STDERR "\n" if $v;
 		} else {
 			my $secondsPerPermille = $elapsedTime / $permille;
