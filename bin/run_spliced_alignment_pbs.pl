@@ -99,6 +99,7 @@ cp -r $bin/../dependencies/spaln_table dependencies
 cp $bin/../dependencies/spaln dependencies
 cp $bin/spaln_to_gff.py bin
 cp $bin/../dependencies/spaln_boundary_scorer dependencies
+cp $bin/spalnBatch.sh bin
 
 ./bin/run_spliced_alignment.pl --nuc $name --prot $db --list $list --cores $K --aligner spaln --min_exon_score $min_exon_score
 
