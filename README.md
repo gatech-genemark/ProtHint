@@ -75,11 +75,8 @@ There are two ways of using GeneMark-ES in ProtHint:
     up) into the `ProtHint/dependencies/GeneMarkES` folder. GeneMark-ES suite is
     available at http://exon.gatech.edu/GeneMark/license_download.cgi
  
-    To check that all the required Perl CPAN modules for GeneMark-ES are installed on
-    your system, run GeneMark-ES without parameters:
-    `ProtHint/dependencies/GeneMarkES/bin/gmes_petap.pl`. If this command
-    outputs usage information, all the required Perl modules are
-    installed.
+    To verify that GeneMark-ES is installed correctly, run the following command:
+    `ProtHint/dependencies/GeneMarkES/check_install.bash`.
 
 
 ### DIAMOND
