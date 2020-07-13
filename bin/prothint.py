@@ -538,6 +538,11 @@ def setEnvironment(args):
     genome = checkFileAndMakeAbsolute(args.genome)
     proteins = checkFileAndMakeAbsolute(args.proteins)
 
+    if args.ProSplign:
+        sys.exit("error: ProSplign is not supported in this version of ProtHint. "
+                 "For running ProtHint with ProSplign, use ProtHint release v2.4.0: "
+                 "https://github.com/gatech-genemark/ProtHint/releases/tag/v2.4.0")
+
     if args.geneMarkGtf:
         if args.geneSeeds:
             sys.exit("error: please specify either --geneSeeds or\n"
@@ -697,12 +702,7 @@ def parseCmd():
                         help='Scored hints from previous iteration.')
 
     parser.add_argument('--ProSplign',  default=False, action='store_true',
-                        help='Re-align hints discovered by Spaln with ProSplign and report ProSplign results. This is a legacy option which makes the pipeline \
-                        considerably (~20x) slower without a significant effect on the final accuracy.')
-    parser.add_argument('--maxSpalnCoverage', type=int, default=10,
-                        help='For each hint, select maxSpalnCoverage proteins for ProSplign realignment.')
-    parser.add_argument('--ensureDiamondPairs', type=int, default=5,
-                        help='Always align (with ProSplign) this many top proteins for each gene in DIAMOND output (no matter the Spaln result). Default = 5.')
+                        help=argparse.SUPPRESS)
 
     return parser.parse_args()
 
