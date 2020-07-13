@@ -211,6 +211,7 @@ sub alignerThread
 		AppendToFile ($out_file_regions, $tmp_out_file);
 		$mutex->unlock;
 
+		unlink $tmp_out_file;
 		unlink $batchFile;
 	}
 }
