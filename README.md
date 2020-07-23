@@ -49,12 +49,13 @@ The following non-Core Perl modules are required:
 * `MCE::Mutex`
 * `threads`
 * `YAML`
+* `Math::Utils`
 
 Core module `Thread::Queue` needs to be updated to a version `3.11` or higher.
 
 These modules are available at CPAN and can be installed/updated with
 
-    cpan MCE::Mutex threads YAML Thread::Queue
+    cpan MCE::Mutex threads YAML Thread::Queue Math::Utils
 
 ### Python dependencies
 
@@ -206,9 +207,9 @@ ProtHint generates two main outputs:
                  script. If you wish to use different filtering criteria, re-run
                  `print_high_confidence.py` script with custom thresholds.
 
-Corresponding Augustus-compatible files are also generated:
+An output which is ready to be used in [BRAKER](https://github.com/Gaius-Augustus/BRAKER) and [AUGUSTUS](https://github.com/Gaius-Augustus/Augustus) is also generated:
+
 * `prothint_augustus.gff`
-* `evidence_augustus.gff`
 
 # About
 

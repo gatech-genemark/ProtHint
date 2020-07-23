@@ -294,9 +294,8 @@ def processSpalnOutput(diamondPairs):
     callScript("print_high_confidence.py", "prothint.gff > evidence.gff")
 
     # Augustus compatible format
-    callScript("prothint2augustus.py", "prothint.gff > prothint_augustus.gff")
-    callScript("prothint2augustus.py", "evidence.gff > evidence_augustus.gff")
-
+    callScript("prothint2augustus.py", "prothint.gff evidence.gff "
+               "top_chains.gff prothint_augustus.gff")
     sys.stderr.write("[" + time.ctime() + "] Output processed\n")
 
 
