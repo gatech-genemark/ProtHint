@@ -21,12 +21,10 @@ class TestProcessSpalnOutput(unittest.TestCase):
         self.assertEqual(common.compareFiles("prothint.gff", "test_prothint.gff"), 0)
         self.assertEqual(common.compareFiles("evidence.gff", "test_evidence.gff"), 0)
         self.assertEqual(common.compareFiles("prothint_augustus.gff", "test_prothint_augustus.gff"), 0)
-        self.assertEqual(common.compareFiles("evidence_augustus.gff", "test_evidence_augustus.gff"), 0)
 
         os.remove("prothint.gff")
         os.remove("evidence.gff")
         os.remove("prothint_augustus.gff")
-        os.remove("evidence_augustus.gff")
 
 if __name__ == '__main__':
     testDir = os.path.abspath(os.path.dirname(__file__))
