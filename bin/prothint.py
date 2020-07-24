@@ -308,7 +308,7 @@ def processSpalnOutput(diamondPairs):
 
 
 def processSpalnIntrons():
-    systemCall("grep Intron Spaln/spaln.gff > introns.gff")
+    systemCall("grep Intron Spaln/spaln.gff > introns.gff || [[ $? == 1 ]]")
 
     # Filter out introns with alignment score < 0.1
     callScript("print_high_confidence.py", "introns.gff --intronCoverage 0 " +
@@ -321,7 +321,7 @@ def processSpalnIntrons():
 
 
 def processSpalnStops():
-    systemCall("grep stop_codon Spaln/spaln.gff > stops.gff")
+    systemCall("grep stop_codon Spaln/spaln.gff > stops.gff || [[ $? == 1 ]]")
 
     # Filter out stops with alignment score < 0.01
     callScript("print_high_confidence.py", "stops.gff --stopCoverage 0 " +
@@ -337,7 +337,7 @@ def processSpalnStops():
 
 
 def processSpalnStarts():
-    systemCall("grep start_codon Spaln/spaln.gff > starts.gff")
+    systemCall("grep start_codon Spaln/spaln.gff > starts.gff || [[ $? == 1 ]]")
 
     # Filter out starts with alignment score < 0.01
     callScript("print_high_confidence.py", "starts.gff --startCoverage 0 " +
@@ -354,7 +354,7 @@ def processSpalnStarts():
                "starts_01_combined_sorted.gff")
     os.remove("starts_01_combined.gff")
 
-    systemCall("grep CDS Spaln/spaln.gff > cds.gff")
+    systemCall("grep CDS Spaln/spaln.gff > cds.gff || [[ $? == 1 ]]")
     callScript("combine_gff_records.pl", "--in_gff cds.gff --out_gff " +
                "cds_combined.gff")
     os.remove("cds.gff")
@@ -377,7 +377,8 @@ def processSpalnStarts():
 
 
 def printTopChains():
-    systemCall("grep topProt=TRUE Spaln/spaln.gff > topProteins.gff")
+    systemCall("grep topProt=TRUE Spaln/spaln.gff > topProteins.gff " +
+               "|| [[ $? == 1 ]]")
 
     callScript("print_high_confidence.py", "topProteins.gff --startCoverage 0 " +
                "--startAlignment 0.01 --stopCoverage 0 --stopAlignment 0.01 " +
