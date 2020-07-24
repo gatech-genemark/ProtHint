@@ -21,8 +21,15 @@ class TestProtHint(unittest.TestCase):
         self.assertEqual(common.compareFiles("output/diamond/diamond.out", "test_output/diamond/diamond.out"), 0)
         self.assertEqual(common.compareFiles("output/uniqueSeeds.gtf", "test_output/uniqueSeeds.gtf"), 0)
         self.assertEqual(common.compareFiles("output/prevHints.gff", "test_output/prevHints.gff"), 0)
+        shutil.rmtree("output")
 
+    def testIterNoSeeChange(self):
+        # Test case in which the seed genes do not change, only their IDs change
+        os.chdir(testDir + "/test_iter")
+        subprocess.call("../../bin/prothint.py genome.fasta proteins.fasta --geneSeeds genemarkPrevIDChange.gtf \
+                        --prevGeneSeeds genemarkPrev.gtf --prevSpalnGff prevSpaln.gff --workdir output", shell=True)
 
+        self.assertEqual(common.compareFiles("output/prothint_augustus.gff", "test_output/prothint_augustus.gff"), 0)
         shutil.rmtree("output")
 
 

@@ -89,20 +89,27 @@ def nextIteration(args):
     prepareDataForNextIteration(args.geneSeeds, args.prevGeneSeeds,
                                 args.prevSpalnGff)
 
-    translateSeeds("uniqueSeeds.gtf")
+    diamondPairs = ""
+    if os.path.getsize("uniqueSeeds.gtf") != 0:
+        translateSeeds("uniqueSeeds.gtf")
+        diamondPairs = runDiamond(args.maxProteinsPerSeed, args.evalue)
+        prepareSeedSequences(diamondPairs)
+        runSpaln(diamondPairs, args.pbs, args.minExonScore)
+        # Append subset of hints from the previous iteration to the current result
+        os.chdir(workDir)
+        with open("Spaln/spaln.gff", "a") as new:
+            with open("prevHints.gff", "r") as prev:
+                for line in prev:
+                    new.write(line)
+    else:
+        sys.stderr.write("Warning: No unique gene seeds were detected in the " +
+                         args.geneSeeds + " input file. ProtHint will only " \
+                         "update seed gene IDs of hints to match the IDs in " \
+                         "the new seed gene file.\n")
+        if not os.path.isdir("Spaln"):
+            os.mkdir("Spaln")
+        shutil.move("prevHints.gff", "Spaln/spaln.gff")
 
-    diamondPairs = runDiamond(args.maxProteinsPerSeed, args.evalue)
-
-    prepareSeedSequences(diamondPairs)
-
-    runSpaln(diamondPairs, args.pbs, args.minExonScore)
-
-    # Append subset of hints from the previous iteration to the current result
-    os.chdir(workDir)
-    with open("Spaln/spaln.gff", "a") as new:
-        with open("prevHints.gff", "r") as prev:
-            for line in prev:
-                new.write(line)
 
     processSpalnOutput(diamondPairs)
 
@@ -280,9 +287,10 @@ def processSpalnOutput(diamondPairs):
     os.chdir(workDir)
 
     # Label hints which were mapped from the best DIAMOND target
-    callScript("flag_top_proteins.py", "Spaln/spaln.gff " + diamondPairs +
-               " > tmp")
-    shutil.move("tmp", "Spaln/spaln.gff")
+    if diamondPairs != "":
+        callScript("flag_top_proteins.py", "Spaln/spaln.gff " + diamondPairs +
+                   " > tmp")
+        shutil.move("tmp", "Spaln/spaln.gff")
 
     processSpalnIntrons()
     processSpalnStops()
