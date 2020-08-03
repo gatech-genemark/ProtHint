@@ -14,6 +14,7 @@ import subprocess
 import multiprocessing
 import time
 import shutil
+import tempfile
 
 
 VERSION = '2.4.0'
@@ -28,6 +29,8 @@ def main():
     args = parseCmd()
 
     setEnvironment(args)
+
+    processInputProteins(args)
 
     if args.geneSeeds and args.prevGeneSeeds:
         nextIteration(args)
@@ -72,6 +75,7 @@ def standardRun(args):
     if args.cleanup:
         cleanup()
 
+    os.remove(proteins)
     sys.stderr.write("[" + time.ctime() + "] ProtHint finished.\n")
 
 
@@ -113,6 +117,7 @@ def nextIteration(args):
 
     processSpalnOutput(diamondPairs)
 
+    os.remove(proteins)
     sys.stderr.write("[" + time.ctime() + "] ProtHint finished.\n")
 
 
@@ -503,6 +508,7 @@ def cleanup():
     """
     sys.stderr.write("[" + time.ctime() + "] Cleaning up\n")
     os.chdir(workDir)
+
     try:
         os.remove("gene_stat.yaml")
         os.remove("seed_proteins.faa")
@@ -534,6 +540,19 @@ def cleanup():
         shutil.rmtree("GeneMark_ES/output/gmhmm", ignore_errors=True)
 
 
+def processInputProteins(args):
+    """Remove dots from the input file with proteins.
+       OrhoDB protein sequences sometimes end with a dot. This format is not
+       compatible with DIAMOND.
+    """
+    global proteins
+    sys.stderr.write("[" + time.ctime() + "] Pre-processing protein input\n")
+    os.chdir(workDir)
+    protFile = tempfile.NamedTemporaryFile(delete=False, dir='.', prefix="prot")
+    systemCall('sed \"s/\.//\" ' + args.proteins + ' > ' + protFile.name)
+    proteins = checkFileAndMakeAbsolute(protFile.name)
+
+
 def setEnvironment(args):
     """Set up and check variables
 
@@ -543,12 +562,12 @@ def setEnvironment(args):
     """
     sys.stderr.write("ProtHint Version " + VERSION + "\n")
     sys.stderr.write("Copyright 2019, Georgia Institute of Technology, USA\n\n")
-    global workDir, binDir, genome, proteins, threads
+    global workDir, binDir, genome, threads
     workDir = os.path.abspath(args.workdir)
     binDir = os.path.abspath(os.path.dirname(__file__))
 
     genome = checkFileAndMakeAbsolute(args.genome)
-    proteins = checkFileAndMakeAbsolute(args.proteins)
+    args.proteins = checkFileAndMakeAbsolute(args.proteins)
 
     if args.ProSplign:
         sys.exit("error: ProSplign is not supported in this version of ProtHint. "

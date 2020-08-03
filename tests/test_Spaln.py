@@ -14,7 +14,9 @@ class TestSpaln(unittest.TestCase):
 
     def testSpaln(self, pbs=True):
         prothint.workDir = testDir + "/test_Spaln"
-        prothint.proteins = prothint.workDir + "/proteins.fasta"
+        # Proteins file is deleted at the end of prothint
+        shutil.copy(prothint.workDir + "/proteins.fasta", prothint.workDir + "/proteins_copy.fasta")
+        prothint.proteins = prothint.workDir + "/proteins_copy.fasta"
         prothint.runSpaln(prothint.workDir + "/pairs.out", pbs, 25)
 
         command = "diff <(sort " + prothint.workDir + "/Spaln/spaln.gff) \
@@ -29,7 +31,9 @@ class TestSpaln(unittest.TestCase):
 
     def testSpaln1000(self):
         prothint.workDir = testDir + "/test_Spaln"
-        prothint.proteins = prothint.workDir + "/proteins.fasta"
+        # Proteins file is deleted at the end of prothint
+        shutil.copy("prothint.workDir + /proteins.fasta", "prothint.workDir + /proteins_copy.fasta")
+        prothint.proteins = prothint.workDir + "/proteins_copy.fasta"
         prothint.runSpaln(prothint.workDir + "/pairs.out", True, 1000)
 
         command = "diff <(sort " + prothint.workDir + "/Spaln/spaln.gff) \
