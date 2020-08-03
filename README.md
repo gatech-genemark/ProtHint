@@ -158,17 +158,19 @@ proteins:
     wget https://v100.orthodb.org/download/odb10_arthropoda_fasta.tar.gz
     tar xvf odb10_arthropoda_fasta.tar.gz
 
-Concatenate proteins from all species into a single file:
+and concatenate proteins from all species into a single file:
 
     cat arthropoda/Rawdata/* > proteins.fasta
 
-OrhoDB protein sequences sometimes end with a dot. This format is not
-compatible with DIAMOND, therefore the dot needs to be removed:
+For other genomes of interest, you can select the most specific OrthoDB
+section from the list below and repeat the procedure desribed above.
 
-    sed -i "s/\.//" proteins.fasta
-
-For other genomes of interest, choose a corresponding taxonomic root at
-https://www.orthodb.org/?page=filelist and repeat the same procedure.
+* **Fungi**: https://v100.orthodb.org/download/odb10_fungi_fasta.tar.gz
+* **Metazoa**: https://v100.orthodb.org/download/odb10_metazoa_fasta.tar.gz
+    * **Arthropoda**: https://v100.orthodb.org/download/odb10_arthropoda_fasta.tar.gz
+    * **Vertebrata**: https://v100.orthodb.org/download/odb10_vertebrata_fasta.tar.gz
+* **Protozoa**: https://v100.orthodb.org/download/odb10_protozoa_fasta.tar.gz
+* **Viridiplantae**: https://v100.orthodb.org/download/odb10_plants_fasta.tar.gz
 
 ## Running ProtHint
 
