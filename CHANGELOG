@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.5.0] 2020-7-5
+
+### Major changes
+
+- Improved speed by running Spaln in batches
+    - This can lead to up to 90% speed improvement, depending on the genome
+- A single output file which is directly compatible with BRAKER and AUGUSTUS
+  is now produced
+- ProSplign is no longer supported
+
+### Other changes
+
+- Added a time left estimate
+- Added a fungal mode
+- Various edge case error fixes
+
 ## [2.4.0] 2020-3-14
 
 ### Major changes
