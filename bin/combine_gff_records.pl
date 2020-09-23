@@ -52,15 +52,15 @@ sub PrintToFile
 	open( my $OUT, ">$name" ) or die( "$!, error on open file $name" ); 
 	foreach my $key (keys %$ref) 
 	{
+		$ref->{$key}{'att'} = ".";
 
-		if ($ref->{$key}{'al_score'} == -1) {
-			$ref->{$key}{'att'} = ".";
-		} else {
-			$ref->{$key}{'att'} = "al_score=$ref->{$key}{'al_score'};";
-		}
-
+		addAttribute( $ref, $key, 'al_score' );
+		addAttribute( $ref, $key, 'eNScore' );
+		addAttribute( $ref, $key, 'eScore' );
 		addAttribute( $ref, $key, 'splice_sites' );
 		addAttribute( $ref, $key, 'topProt' );
+		addAttribute( $ref, $key, 'intronFound' );
+		addAttribute( $ref, $key, 'HC' );
 
 		$line = $ref->{$key}{'id'}     ."\t";
 		$line .= $ref->{$key}{'info'}  ."\t";
@@ -80,7 +80,7 @@ sub PrintToFile
 sub addAttribute
 {
 	my( $ref, $key, $attr ) = @_;
-	if ($ref->{$key}{$attr}) {
+	if (defined($ref->{$key}{$attr})) {
 		if ($ref->{$key}{'att'} eq ".") {
 			$ref->{$key}{'att'} = "$attr=$ref->{$key}{$attr};";
 		} else {
@@ -116,15 +116,15 @@ sub ParseGFF
 			$current = $6;
 			my $attribute = $9;
 
-			ParseAlignmentScore($attribute, $ref, $key);
+			ParseAndSelectMaximum('al_score', $attribute, $ref, $key);
+			ParseAndSelectMaximum('eNScore', $attribute, $ref, $key);
+			ParseAndSelectMaximum('eScore', $attribute, $ref, $key);
 
-			if ($attribute =~ /splice_sites=([^;]+);.*/) {
-				$ref->{$key}{'splice_sites'} = $1;
-			}
+			ParseFeature('splice_sites', $attribute, $ref, $key);
+			ParseFeature('topProt', $attribute, $ref, $key);
 
-			if ($attribute =~ /topProt=([^;]+);.*/) {
-				$ref->{$key}{'topProt'} = $1;
-			}
+			ParseAndSelectTrue('intronFound', $attribute, $ref, $key);
+			ParseAndSelectTrue('HC', $attribute, $ref, $key);
 
 			if ( $current eq '.' )
 			{
@@ -151,23 +151,42 @@ sub ParseGFF
 	print "in: $count_in_gff\n" if $debug;	
 }
 # ------------------------------------------------
-sub ParseAlignmentScore
+sub ParseAndSelectMaximum
 {
-	my( $att, $ref, $key) = @_;
+	my( $feature, $att, $ref, $key) = @_;
 
-	if (!defined $ref->{$key}{'al_score'})
+	if( $att =~ /$feature=([^;]+);.*/ )
 	{
-		$ref->{$key}{'al_score'} = -1;
-	}
-
-	if( $att =~ /al_score=([^;]+);.*/ )
-	{
-		if ($1 > $ref->{$key}{'al_score'})
+		if (!defined $ref->{$key}{$feature}) {
+			$ref->{$key}{$feature} = $1;
+		}
+		elsif ($1 > $ref->{$key}{$feature})
 		{
-			$ref->{$key}{'al_score'} = $1;
+			$ref->{$key}{$feature} = $1;
 		}
 	}
 }
+
+sub ParseFeature
+{
+	my( $feature, $att, $ref, $key) = @_;
+	if ($att =~ /$feature=([^;]+);.*/) {
+		$ref->{$key}{$feature} = $1;
+	}
+}
+
+sub ParseAndSelectTrue
+{
+	my( $feature, $att, $ref, $key) = @_;
+	if ($att =~ /$feature=([^;]+);.*/) {
+		if (!defined($ref->{$key}{$feature})) {
+			$ref->{$key}{$feature} = $1;
+		} elsif ($ref->{$key}{$feature} eq "False") {
+			$ref->{$key}{$feature} = $1;
+		}
+	}
+}
+
 # ------------------------------------------------
 sub CheckBeforeRun
 {
