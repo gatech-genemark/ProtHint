@@ -87,22 +87,57 @@ class Filter:
         return False
 
     def __start(self):
+        if (self.al_score is None):
+            self.al_score = 1
+        eScore = float(extractFeature(self.row[8], "eScore"))
+
+        self.CDS_overlap = extractFeature(self.row[8], "CDS_overlap")
+        if (self.CDS_overlap is None):
+            self.CDS_overlap = 0
+        else:
+            self.CDS_overlap = int(self.CDS_overlap)
+
+        if eScore >= self.args.shortStartThreshold:
+            return self.__regularStart()
+        else:
+            return self.__shortStart()
+
+    def __regularStart(self):
         coverageThreshold = self.args.startCoverage
         if self.args.addTopProteins and self.topProtein == "TRUE":
             coverageThreshold = 1
 
-        CDS_overlap = extractFeature(self.row[8], "CDS_overlap")
-        if (CDS_overlap is None):
-            CDS_overlap = 0
-        else:
-            CDS_overlap = int(CDS_overlap)
+        if (self.coverage >= coverageThreshold and
+           self.al_score >= self.args.startAlignment and
+           self.CDS_overlap <= self.args.startOverlap):
+            return True
 
-        if (self.al_score is None):
-            self.al_score = 1
+        return False
+
+    def __shortStart(self):
+        coverageThreshold = self.args.shortStartCoverage
+        if self.args.addTopProteins and self.topProtein == "TRUE":
+            coverageThreshold = 1
+
+        intronIBA = extractFeature(self.row[8], "nextIntronIBA")
+        if (intronIBA == "-"):
+            intronIBA = 0
+        else:
+            intronIBA = float(intronIBA)
+
+        intronIMC = extractFeature(self.row[8], "nextIntronIMC")
+        if (intronIMC == "-"):
+            intronIMC = 0
+        else:
+            intronIMC = int(intronIMC)
+
+        if intronIBA < self.args.intronAlignment or \
+           intronIMC < self.args.intronCoverage:
+            return False
 
         if (self.coverage >= coverageThreshold and
            self.al_score >= self.args.startAlignment and
-           CDS_overlap <= self.args.startOverlap):
+           self.CDS_overlap <= self.args.shortStartOverlap):
             return True
 
         return False
@@ -133,19 +168,34 @@ def parseCmd():
     parser.add_argument('input', metavar='prothint.gff', type=str,
                         help='ProtHint output file.')
 
+    parser.add_argument('--shortStartThreshold', type=int,
+                        help='Exon score threshold for treating starts as starts \
+                        in short initial exons. Different scoring thresholds are \
+                        applied to such low-scoring starts (starts with eScore < \
+                        shortStartThreshold). On top of the different scoring \
+                        thresholds, introns bordering the initial exons in \
+                        which the low-scoring starts are must pass the intron \
+                        filtering criteria for intronAlignment and intronCoverage. \
+                        Otherise, the "short" starts are not printed. \
+                        Default = 25.', default=25)
     parser.add_argument('--intronCoverage', type=int,
                         help='Intron coverage score threshold. Print all introns \
                         with coverage >= intronCoverage. Default = 4.', default=4)
     parser.add_argument('--startCoverage', type=int,
-                        help='Start coverage score threshold. Print all starts \
-                        with coverage >= startCoverage. Default = 4.', default=4)
+                        help='Start coverage score threshold. Print all regular \
+                        starts with coverage >= startCoverage. Default = 4.', default=4)
+    parser.add_argument('--shortStartCoverage', type=int,
+                        help='Start coverage score threshold for starts in short \
+                        initial exons, i. e. starts which have eScore < \
+                        shortStartThreshold. Print all "short" starts with \
+                        coverage >= shortStartCoverage. Default = 4.', default=4)
     parser.add_argument('--stopCoverage', type=int,
                         help='Stop coverage score threshold. Print all stops \
                         with coverage >= stopCoverage. Default = 4.', default=4)
     parser.add_argument('--startAlignment', type=float,
                         help='Start alignment score threshold. Print all starts \
-                        with al_score >= startAlignment. Ignore if the field does not exist. \
-                        Default = 0.01.', default=0.01)
+                        with al_score >= startAlignment. Ignore if the field \
+                        does not exist. Default = 0.01.', default=0.01)
     parser.add_argument('--stopAlignment', type=float,
                         help='Stop alignment score threshold. Print all stops \
                         with al_score >= stopAlignment. Ignore if the field does not exist. \
@@ -154,8 +204,14 @@ def parseCmd():
                         help='Intron alignment score threshold. Print all introns \
                         with al_score >= intronAlignment. Default = 0.25.', default=0.25)
     parser.add_argument('--startOverlap', type=int,
-                        help='Maximum alowed CDS overlap of a start. Print all starts \
-                        with CDS overlap <= startOverlap. Default = 0', default=0)
+                        help='Maximum allowed CDS overlap of a regular start \
+                        (eScore >= shortStartThreshold). Print all starts with \
+                        CDS overlap <= startOverlap. Default = 0', default=0)
+    parser.add_argument('--shortStartOverlap', type=int,
+                        help='Maximum allowed CDS overlap of a start in a short \
+                        initial exon (starts with eScore < shortStartThreshold). \
+                        Print all "short" starts with CDS overlap <= shortStartOverlap. \
+                        Default = 0', default=0)
     parser.add_argument('--addFullAligned', action='store_true',
                         help='Add hints with fullProteinAligned flag even if they do not \
                         satisfy the coverage threshold condition.')
