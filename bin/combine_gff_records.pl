@@ -159,9 +159,10 @@ sub ParseAndSelectMaximum
 		if (!defined $ref->{$key}{$feature}) {
 			$ref->{$key}{$feature} = $1;
 		}
-		elsif ($1 > $ref->{$key}{$feature})
-		{
-			$ref->{$key}{$feature} = $1;
+		elsif ($1 ne "-") {
+			if ($ref->{$key}{$feature} eq "-" || $1 > $ref->{$key}{$feature}) {
+				$ref->{$key}{$feature} = $1;
+			}
 		}
 	}
 }
