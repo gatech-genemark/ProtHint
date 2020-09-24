@@ -13,7 +13,8 @@ import re
 
 
 def extractFeature(text, feature):
-    regex = feature + '=([^;]+)'
+    regex = ";\s*" + feature + '=([^;]+)'
+    text = "; " + text
     search = re.search(regex, text)
     if search:
         return search.groups()[0]
