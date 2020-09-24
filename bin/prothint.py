@@ -62,10 +62,11 @@ def standardRun(args):
 
     prepareSeedSequences(diamondPairs)
 
-    runSpaln(diamondPairs, args.pbs, args.minExonScore)
+    runSpaln(diamondPairs, args.pbs, args.minExonScore,
+             args.minInitialExonScore)
 
     if (not args.ProSplign):
-        processSpalnOutput(diamondPairs)
+        processSpalnOutput(diamondPairs, args.minExonScore)
     else:
         filterSpalnPairs(args.maxSpalnCoverage)
         prepareProSplignPairs(diamondPairs, args.ensureDiamondPairs)
@@ -98,7 +99,8 @@ def nextIteration(args):
         translateSeeds("uniqueSeeds.gtf")
         diamondPairs = runDiamond(args.maxProteinsPerSeed, args.evalue)
         prepareSeedSequences(diamondPairs)
-        runSpaln(diamondPairs, args.pbs, args.minExonScore)
+        runSpaln(diamondPairs, args.pbs, args.minExonScore,
+                 args.minInitialExonScore)
         # Append subset of hints from the previous iteration to the current result
         os.chdir(workDir)
         with open("Spaln/spaln.gff", "a") as new:
@@ -114,8 +116,7 @@ def nextIteration(args):
             os.mkdir("Spaln")
         shutil.move("prevHints.gff", "Spaln/spaln.gff")
 
-
-    processSpalnOutput(diamondPairs)
+    processSpalnOutput(diamondPairs, args.minExonScore)
 
     os.remove(proteins)
     sys.stderr.write("[" + time.ctime() + "] ProtHint finished.\n")
@@ -254,15 +255,22 @@ def prepareSeedSequences(diamondPairs):
     sys.stderr.write("[" + time.ctime() + "] Preparation of pairs finished\n")
 
 
-def runSpaln(diamondPairs, pbs, minExonScore):
-    """Run Spaln spliced alignment and score the outputs with spaln-boundary-scorer
+def runSpaln(diamondPairs, pbs, minExonScore, minInitialExonScore):
+    """Run Spaln spliced alignment and score the outputs with
+       spaln-boundary-scorer. More details about minExonScore and
+       minInitialExonScore are given in the description of
+       spaln-boundary-scorer
 
     Args:
         diamondPairs (filePath): Path to file with seed gene-protein pairs
                                  to align
         pbs (boolean): Whether to run on pbs
         minExonScore (float): Discard all hints inside/neighboring exons with
-                              score lower than minExonScore
+                              score lower than minExonScore. Initial exons
+                              are treated separately.
+        minInitialExonScore (float): Discard all hints inside/neighboring
+                                     intital exons with score lower
+                                     than minInitialExonScore
     """
     spalnDir = workDir + "/Spaln"
     if not os.path.isdir(spalnDir):
@@ -273,20 +281,24 @@ def runSpaln(diamondPairs, pbs, minExonScore):
         callScript("run_spliced_alignment.pl", "--cores " + threads +
                    " --nuc ../nuc.fasta --list " + diamondPairs + " --prot " +
                    proteins + " --v --aligner spaln --min_exon_score " +
-                   str(minExonScore))
+                   str(minExonScore) + " --min_initial_exon_score " +
+                   str(minInitialExonScore))
     else:
         callScript("run_spliced_alignment_pbs.pl", "--N 120 --K " + threads +
                    " --seq ../nuc.fasta --list " + diamondPairs + " --db " +
                    proteins + " --v --aligner spaln --min_exon_score " +
-                   str(minExonScore))
+                   str(minExonScore) + " --min_initial_exon_score " +
+                   str(minInitialExonScore))
 
 
-def processSpalnOutput(diamondPairs):
+def processSpalnOutput(diamondPairs, shortStartThreshold):
     """Prepare the final output from Spaln result scored by spaln-boundary-scorer
        Convert the output to GeneMark and Augustus compatible formats
 
     Args:
         diamondPairs (filepath): Path to file with seed gene-protein pairs
+        shortStartThreshold (filepath): Exon score threshold for treating
+                                        starts as starts in short initial exons
     """
     sys.stderr.write("[" + time.ctime() + "] Processing the output\n")
     os.chdir(workDir)
@@ -299,12 +311,13 @@ def processSpalnOutput(diamondPairs):
 
     processSpalnIntrons()
     processSpalnStops()
-    processSpalnStarts()
+    processSpalnStarts(shortStartThreshold)
 
     printTopChains()
 
     # High confidence
-    callScript("print_high_confidence.py", "prothint.gff > evidence.gff")
+    callScript("print_high_confidence.py", "--shortStartThreshold " +
+               str(shortStartThreshold) + " prothint.gff > evidence.gff")
 
     # Augustus compatible format
     callScript("prothint2augustus.py", "prothint.gff evidence.gff "
@@ -342,7 +355,7 @@ def processSpalnStops():
     os.remove("stops_01_combined.gff")
 
 
-def processSpalnStarts():
+def processSpalnStarts(shortStartThreshold):
     systemCall("grep start_codon Spaln/spaln.gff > starts.gff || [[ $? == 1 ]]")
 
     # Filter out starts with alignment score < 0.01
@@ -389,7 +402,8 @@ def processSpalnStarts():
     # of all reported starts
     callScript("print_high_confidence.py", "prothint.gff --startCoverage 0 " +
                "--startOverlap 9999 --intronAlignment 0.1 " +
-               "--intronCoverage 0 --addAllSpliceSites --stopCoverage 0 > tmp")
+               "--intronCoverage 0 --addAllSpliceSites --stopCoverage 0 " +
+               "--shortStartThreshold " + str(shortStartThreshold) + " > tmp")
     shutil.move("tmp", "prothint.gff")
 
     os.remove("starts_01_combined_sorted.gff")
@@ -622,6 +636,9 @@ def setEnvironment(args):
                      "to seed genes in the DIAMOND pairs file must be specified.")
         args.diamondPairs = checkFileAndMakeAbsolute(args.diamondPairs)
 
+    if args.minExonScore < args.minInitialExonScore:
+        sys.exit("error: --minExonScore must be >= --minInitialExonScore\n")
+
     if not os.path.isdir(workDir):
         os.mkdir(workDir)
 
@@ -735,7 +752,13 @@ def parseCmd():
     parser.add_argument('--evalue', type=float, default=0.001,
                         help='Maximum e-value for DIAMOND alignments hits. Default = 0.001')
     parser.add_argument('--minExonScore', type=float, default=25,
-                        help='Discard all hints inside/neighboring exons with score lower than minExonScore. Default = 25')
+                        help='Discard all hints inside/neighboring exons with score lower than minExonScore. \
+                        Short initial exons (minInitialExonScore <= score < minExonScore) are treated \
+                        separately. See the option minInitialExonScore for details. Default = 25')
+    parser.add_argument('--minInitialExonScore', type=float, default=0,
+                        help='Discard all hints inside/neighboring initial exons with score lower than minInitialExonScore. \
+                        More details about parsing of initial exons are given in the description of "spaln_boundary_scorer" \
+                        binary (located in the dependencies folder). Default = 0')
     parser.add_argument('--cleanup', default=False, action='store_true',
                         help='Delete temporary files and intermediate results. Cleanup is turned off by default as it is useful to keep these files \
                         for troubleshooting and the intermediate results might be useful on their own.')

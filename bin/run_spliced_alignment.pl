@@ -41,6 +41,7 @@ my $cores = 1;
 my $aligner = '';
 my $tmp_dir = '';
 my $min_exon_score = 25;
+my $min_initial_exon_score = 0;
 # ------------------------------------------------
 my $PROSPLIGN_INTRONS_OUT = "scored_introns.gff";
 my $PROSPLIGN_OUT = "prosplign.gff";
@@ -195,7 +196,7 @@ sub alignerThread
 	while (my $batchFile = $q->dequeue()) {
 		if ($aligner eq "spaln") {
 			$tmp_out_file = "${batchFile}_out";
-			system("$bin/spalnBatch.sh $batchFile $tmp_out_file $min_exon_score");
+			system("$bin/spalnBatch.sh $batchFile $tmp_out_file $min_exon_score $min_initial_exon_score");
 		} elsif (($aligner eq "prosplign")) {
 			alignWithProSplign($tmp_nuc_file, $tmp_prot_file, $tmp_out_file);
 			$mutex->lock;
@@ -420,7 +421,8 @@ sub ParseCMD
 		'aligner=s' => \$aligner,
 		'verbose'   => \$v,
 		'debug'     => \$debug,
-		'min_exon_score=f' => \$min_exon_score
+		'min_exon_score=f' => \$min_exon_score,
+		'min_initial_exon_score=f' => \$min_initial_exon_score
 	);
 
 	if( !$opt_results ) { print STDERR "error on command line: $0\n"; exit 1; }
@@ -437,6 +439,7 @@ sub ParseCMD
 	$cfg->{'d'}->{'debug'} = $debug;
 	$cfg->{'d'}->{'cmd'}   = $cmd;
 	$cfg->{'d'}->{'min_exon_score'} = $min_exon_score;
+	$cfg->{'d'}->{'min_initial_exon_score'} = $min_initial_exon_score;
 	
 	print STDERR Dumper($cfg) if $debug;
 };
@@ -454,8 +457,9 @@ Required options:
 
 
  Optional parameters:
-  --cores            [number] number of threads to use
-  --min_exon_score   [number] discard all hints inside/neighboring exons with score lower than minExonScore. Spaln specific option.
+  --cores                    [number] number of threads to use
+  --min_exon_score           [number] discard all hints inside/neighboring exons with score lower than min_exon_score. Initial exons are treated separately.
+  --min_initial_exon_score   [number] discard all hints inside/neighboring initial exons with score lower than min_initial_exon_score.
 
 Developer options:
   --verbose

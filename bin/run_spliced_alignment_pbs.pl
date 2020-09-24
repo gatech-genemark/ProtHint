@@ -34,6 +34,7 @@ my $seq_file = '';      # input sequence
 my $list_file = '';     # file with pairs of gene_id and protein_id (blast output)
 my $out_file_gff = '';  # output in GFF
 my $min_exon_score = 25;
+my $min_initial_exon_score = 0;
 
 my $node_dir = '/tmp';  # use this directory on for holding tmp data on node
 my $PROSPLIGN_INTRONS_OUT = "scored_introns.gff";
@@ -101,7 +102,7 @@ cp $bin/spaln_to_gff.py bin
 cp $bin/../dependencies/spaln_boundary_scorer dependencies
 cp $bin/spalnBatch.sh bin
 
-./bin/run_spliced_alignment.pl --nuc $name --prot $db --list $list --cores $K --aligner spaln --min_exon_score $min_exon_score
+./bin/run_spliced_alignment.pl --nuc $name --prot $db --list $list --cores $K --aligner spaln --min_exon_score $min_exon_score --min_initial_exon_score $min_initial_exon_score
 
 mv $SPALN_OUT ${name}.gff
 cd ..
@@ -435,7 +436,8 @@ sub ParseCMD
 		'aligner=s' => \$aligner,
 		'verbose' => \$v,
 		'debug'   => \$debug,
-		'min_exon_score=f' => \$min_exon_score
+		'min_exon_score=f' => \$min_exon_score,
+		'min_initial_exon_score=f' => \$min_initial_exon_score
 	);
 
 	if( !$opt_results ) { print STDERR "error on command line: $0\n"; exit 1; }
@@ -454,6 +456,7 @@ sub ParseCMD
 	$cfg->{'d'}->{'debug'} = $debug;
 	$cfg->{'d'}->{'cmd'}   = $cmd;
 	$cfg->{'d'}->{'min_exon_score'} = $min_exon_score;
+	$cfg->{'d'}->{'min_initial_exon_score'} = $min_initial_exon_score;
 
 	print STDERR Dumper($cfg) if $debug;
 };
@@ -473,8 +476,9 @@ run blast on PBS
   --tmp  [s] name of temporary directory on node
   --N    [i] number of jobs to submit
   --K    [i] number of cores per job (on the same node)
+  --min_exon_score          [f] discard all hints inside/neighboring exons with score lower than min_exon_score. Initial exons are treated separately.
+  --min_initial_exon_score  [f] discard all hints inside/neighboring initial exons with score lower than min_initial_exon_score.
   --v        verbose
-  --min_exon_score [f] discard all hints inside/neighboring exons with score lower than minExonScore. Spaln specific option.
   --debug
 # -----------
 ";
