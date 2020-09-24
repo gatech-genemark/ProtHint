@@ -313,7 +313,8 @@ def processSpalnOutput(diamondPairs):
 
 
 def processSpalnIntrons():
-    systemCall("grep Intron Spaln/spaln.gff > introns.gff || [[ $? == 1 ]]")
+    systemCall("grep -P \"\tIntron\t\" Spaln/spaln.gff > introns.gff \
+               || [[ $? == 1 ]]")
 
     # Filter out introns with alignment score < 0.1
     callScript("print_high_confidence.py", "introns.gff --intronCoverage 0 " +
@@ -345,9 +346,16 @@ def processSpalnStarts():
     systemCall("grep start_codon Spaln/spaln.gff > starts.gff || [[ $? == 1 ]]")
 
     # Filter out starts with alignment score < 0.01
+    # shortStartThreshold is set to -9999 because here all starts should
+    # be treated in the same way. Short start features are not ready yet
     callScript("print_high_confidence.py", "starts.gff --startCoverage 0 " +
-               "--startAlignment 0.01 > starts_01.gff")
+               "--startAlignment 0.01 " +
+               "--shortStartThreshold -9999 > starts_01.gff")
     os.remove("starts.gff")
+
+    callScript("map_intron_scores_to_starts.py", "starts_01.gff \
+               prothint.gff > tmp")
+    shutil.move("tmp", "starts_01.gff")
 
     callScript("combine_gff_records.pl", "--in_gff starts_01.gff --out_gff " +
                "starts_01_combined.gff")
@@ -377,6 +385,13 @@ def processSpalnStarts():
     callScript("count_cds_overlaps.py", "starts_01_combined_sorted.gff " +
                "cds_combined_sorted.gff >> prothint.gff")
 
+    # Starts in short initial exons need extra filtering even for the set
+    # of all reported starts
+    callScript("print_high_confidence.py", "prothint.gff --startCoverage 0 " +
+               "--startOverlap 9999 --intronAlignment 0.1 " +
+               "--intronCoverage 0 --addAllSpliceSites --stopCoverage 0 > tmp")
+    shutil.move("tmp", "prothint.gff")
+
     os.remove("starts_01_combined_sorted.gff")
     os.remove("cds_combined_sorted.gff")
 
@@ -385,10 +400,13 @@ def printTopChains():
     systemCall("grep topProt=TRUE Spaln/spaln.gff > topProteins.gff " +
                "|| [[ $? == 1 ]]")
 
+    # shortStartThreshold is set to -9999 because here all starts should
+    # be treated in the same way. Short start features are not ready yet
     callScript("print_high_confidence.py", "topProteins.gff --startCoverage 0 " +
-               "--startAlignment 0.01 --stopCoverage 0 --stopAlignment 0.01 " +
-               "--intronCoverage 0 --intronAlignment 0.1 --addAllSpliceSites" +
-               " > topProteinsFiltered.gff")
+               "--shortStartThreshold -9999 --startAlignment 0.01 " +
+               "--stopCoverage 0 --stopAlignment 0.01 --intronCoverage 0 " +
+               " --intronAlignment 0.1 " +
+               "--addAllSpliceSites > topProteinsFiltered.gff")
     os.remove("topProteins.gff")
 
     callScript("make_chains.py", "topProteinsFiltered.gff > top_chains.gff")
