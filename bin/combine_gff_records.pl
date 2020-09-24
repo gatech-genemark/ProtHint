@@ -59,8 +59,8 @@ sub PrintToFile
 		addAttribute( $ref, $key, 'eScore' );
 		addAttribute( $ref, $key, 'splice_sites' );
 		addAttribute( $ref, $key, 'topProt' );
-		addAttribute( $ref, $key, 'intronFound' );
-		addAttribute( $ref, $key, 'HC' );
+		addAttribute( $ref, $key, 'nextIntronIBA' );
+		addAttribute( $ref, $key, 'nextIntronIMC' );
 
 		$line = $ref->{$key}{'id'}     ."\t";
 		$line .= $ref->{$key}{'info'}  ."\t";
@@ -119,12 +119,11 @@ sub ParseGFF
 			ParseAndSelectMaximum('al_score', $attribute, $ref, $key);
 			ParseAndSelectMaximum('eNScore', $attribute, $ref, $key);
 			ParseAndSelectMaximum('eScore', $attribute, $ref, $key);
+			ParseAndSelectMaximum('nextIntronIBA', $attribute, $ref, $key);
+			ParseAndSelectMaximum('nextIntronIMC', $attribute, $ref, $key);
 
 			ParseFeature('splice_sites', $attribute, $ref, $key);
 			ParseFeature('topProt', $attribute, $ref, $key);
-
-			ParseAndSelectTrue('intronFound', $attribute, $ref, $key);
-			ParseAndSelectTrue('HC', $attribute, $ref, $key);
 
 			if ( $current eq '.' )
 			{
