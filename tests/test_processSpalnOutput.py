@@ -15,16 +15,18 @@ class TestProcessSpalnOutput(unittest.TestCase):
         os.chdir(prothint.workDir)
 
         shutil.copyfile("Spaln/spaln.gff", "Spaln/spaln_orig.gff")
-        prothint.processSpalnOutput("diamond/diamond.out")
+        prothint.processSpalnOutput("diamond/diamond.out", 25)
         shutil.move("Spaln/spaln_orig.gff", "Spaln/spaln.gff")
 
         self.assertEqual(common.compareFiles("prothint.gff", "test_prothint.gff"), 0)
         self.assertEqual(common.compareFiles("evidence.gff", "test_evidence.gff"), 0)
         self.assertEqual(common.compareFiles("prothint_augustus.gff", "test_prothint_augustus.gff"), 0)
+        self.assertEqual(common.compareFiles("top_chains.gff", "test_top_chains.gff"), 0)
 
         os.remove("prothint.gff")
         os.remove("evidence.gff")
         os.remove("prothint_augustus.gff")
+        os.remove("top_chains.gff")
 
 if __name__ == '__main__':
     testDir = os.path.abspath(os.path.dirname(__file__))

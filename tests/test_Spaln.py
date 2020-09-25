@@ -12,36 +12,53 @@ import filecmp
 
 class TestSpaln(unittest.TestCase):
 
+    def testSpalnNoShortExons(self, pbs=True):
+        prothint.workDir = testDir + "/test_Spaln"
+        # Proteins file is deleted at the end of prothint
+        shutil.copy(prothint.workDir + "/proteins.fasta", prothint.workDir + "/proteins_copy.fasta")
+        prothint.proteins = prothint.workDir + "/proteins_copy.fasta"
+        prothint.runSpaln(prothint.workDir + "/pairs.out", pbs, 25, 25)
+
+        command = "diff <(sort " + prothint.workDir + "/Spaln/spaln.gff) \
+            <(sort " + prothint.workDir + "/result_spaln_no_short.gff)"
+        diffResult = subprocess.call(command, shell=True, executable='/bin/bash')
+        self.assertEqual(diffResult, 0)
+        os.remove(prothint.workDir + "/proteins_copy.fasta")
+        if (diffResult == 0):
+            shutil.rmtree(prothint.workDir + "/Spaln")
+
     def testSpaln(self, pbs=True):
         prothint.workDir = testDir + "/test_Spaln"
         # Proteins file is deleted at the end of prothint
         shutil.copy(prothint.workDir + "/proteins.fasta", prothint.workDir + "/proteins_copy.fasta")
         prothint.proteins = prothint.workDir + "/proteins_copy.fasta"
-        prothint.runSpaln(prothint.workDir + "/pairs.out", pbs, 25)
+        prothint.runSpaln(prothint.workDir + "/pairs.out", pbs, 25, 0)
 
         command = "diff <(sort " + prothint.workDir + "/Spaln/spaln.gff) \
             <(sort " + prothint.workDir + "/result_spaln.gff)"
         diffResult = subprocess.call(command, shell=True, executable='/bin/bash')
         self.assertEqual(diffResult, 0)
+        os.remove(prothint.workDir + "/proteins_copy.fasta")
         if (diffResult == 0):
             shutil.rmtree(prothint.workDir + "/Spaln")
-
-    def testSpalnNoPbs(self):
-        self.testSpaln(pbs=False)
 
     def testSpaln1000(self):
         prothint.workDir = testDir + "/test_Spaln"
         # Proteins file is deleted at the end of prothint
-        shutil.copy("prothint.workDir + /proteins.fasta", "prothint.workDir + /proteins_copy.fasta")
+        shutil.copy(prothint.workDir + "/proteins.fasta", prothint.workDir + "/proteins_copy.fasta")
         prothint.proteins = prothint.workDir + "/proteins_copy.fasta"
-        prothint.runSpaln(prothint.workDir + "/pairs.out", True, 1000)
+        prothint.runSpaln(prothint.workDir + "/pairs.out", True, 1000, 1000)
 
         command = "diff <(sort " + prothint.workDir + "/Spaln/spaln.gff) \
             <(sort " + prothint.workDir + "/result_spaln_1000.gff)"
         diffResult = subprocess.call(command, shell=True, executable='/bin/bash')
         self.assertEqual(diffResult, 0)
+        os.remove(prothint.workDir + "/proteins_copy.fasta")
         if (diffResult == 0):
             shutil.rmtree(prothint.workDir + "/Spaln")
+
+    def testSpalnNoPbs(self):
+        self.testSpaln(pbs=False)
 
 
 if __name__ == '__main__':
