@@ -385,6 +385,14 @@ def printTopChains():
     systemCall("grep topProt=TRUE Spaln/spaln.gff > topProteins.gff " +
                "|| [[ $? == 1 ]]")
 
+    if os.stat("topProteins.gff").st_size == 0:
+        sys.exit('error: The "topProt=TRUE" flag is missing in the '
+                 'Spaln/spaln.gff output file. This issue can be caused by '
+                 'the presence of special characters in the fasta headers of '
+                 'input files. Please remove any special characters and '
+                 're-run ProtHint. See https://github.com/gatech-genemark/ProtHint#input '
+                 'for more details about the input format.')
+
     callScript("print_high_confidence.py", "topProteins.gff --startCoverage 0 " +
                "--startAlignment 0.01 --stopCoverage 0 --stopAlignment 0.01 " +
                "--intronCoverage 0 --intronAlignment 0.1 --addAllSpliceSites" +
@@ -544,12 +552,14 @@ def processInputProteins(args):
     """Remove dots from the input file with proteins.
        OrhoDB protein sequences sometimes end with a dot. This format is not
        compatible with DIAMOND.
+       Clean fasta headers by removing pipe ("|") characters.
     """
     global proteins
     sys.stderr.write("[" + time.ctime() + "] Pre-processing protein input\n")
     os.chdir(workDir)
     protFile = tempfile.NamedTemporaryFile(delete=False, dir='.', prefix="prot")
-    systemCall('sed \"s/\.//\" ' + args.proteins + ' > ' + protFile.name)
+    systemCall('sed \"s/\.//\" ' + args.proteins + ' | sed \"s/|/_/g\" > ' +
+               protFile.name)
     proteins = checkFileAndMakeAbsolute(protFile.name)
 
 
