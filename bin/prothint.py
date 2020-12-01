@@ -65,7 +65,8 @@ def standardRun(args):
     runSpaln(diamondPairs, args.pbs, args.minExonScore)
 
     if (not args.ProSplign):
-        processSpalnOutput(diamondPairs)
+        flagTopProteins(diamondPairs)
+        processSpalnOutput()
     else:
         filterSpalnPairs(args.maxSpalnCoverage)
         prepareProSplignPairs(diamondPairs, args.ensureDiamondPairs)
@@ -99,6 +100,7 @@ def nextIteration(args):
         diamondPairs = runDiamond(args.maxProteinsPerSeed, args.evalue)
         prepareSeedSequences(diamondPairs)
         runSpaln(diamondPairs, args.pbs, args.minExonScore)
+        flagTopProteins(diamondPairs)
         # Append subset of hints from the previous iteration to the current result
         os.chdir(workDir)
         with open("Spaln/spaln.gff", "a") as new:
@@ -115,7 +117,7 @@ def nextIteration(args):
         shutil.move("prevHints.gff", "Spaln/spaln.gff")
 
 
-    processSpalnOutput(diamondPairs)
+    processSpalnOutput()
 
     os.remove(proteins)
     sys.stderr.write("[" + time.ctime() + "] ProtHint finished.\n")
@@ -281,21 +283,27 @@ def runSpaln(diamondPairs, pbs, minExonScore):
                    str(minExonScore))
 
 
-def processSpalnOutput(diamondPairs):
-    """Prepare the final output from Spaln result scored by spaln-boundary-scorer
-       Convert the output to GeneMark and Augustus compatible formats
+def flagTopProteins(diamondPairs):
+    """Label hints which were mapped from the best DIAMOND target
 
     Args:
         diamondPairs (filepath): Path to file with seed gene-protein pairs
     """
-    sys.stderr.write("[" + time.ctime() + "] Processing the output\n")
+    sys.stderr.write("[" + time.ctime() + "] Flagging top chains\n")
     os.chdir(workDir)
 
-    # Label hints which were mapped from the best DIAMOND target
     if diamondPairs != "":
         callScript("flag_top_proteins.py", "Spaln/spaln.gff " + diamondPairs +
                    " > tmp")
         shutil.move("tmp", "Spaln/spaln.gff")
+
+
+def processSpalnOutput():
+    """Prepare the final output from Spaln result scored by spaln-boundary-scorer
+       Convert the output to GeneMark and Augustus compatible formats
+    """
+    sys.stderr.write("[" + time.ctime() + "] Processing the output\n")
+    os.chdir(workDir)
 
     processSpalnIntrons()
     processSpalnStops()
