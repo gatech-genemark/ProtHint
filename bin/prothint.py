@@ -292,15 +292,15 @@ def flagTopProteins(diamondPairs):
     sys.stderr.write("[" + time.ctime() + "] Flagging top chains\n")
     os.chdir(workDir)
 
-    if diamondPairs != "":
-        callScript("flag_top_proteins.py", "Spaln/spaln.gff " + diamondPairs +
-                   " > tmp")
-        shutil.move("tmp", "Spaln/spaln.gff")
+    callScript("flag_top_proteins.py", "Spaln/spaln.gff " + diamondPairs +
+               " > tmp")
+    shutil.move("tmp", "Spaln/spaln.gff")
 
 
 def processSpalnOutput():
     """Prepare the final output from Spaln result scored by spaln-boundary-scorer
        Convert the output to GeneMark and Augustus compatible formats
+
     """
     sys.stderr.write("[" + time.ctime() + "] Processing the output\n")
     os.chdir(workDir)
