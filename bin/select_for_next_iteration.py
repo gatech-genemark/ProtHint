@@ -69,8 +69,8 @@ def loadGenes(gtf):
 
 def sortGenes(gtf):
     sortedGtf = tempfile.NamedTemporaryFile(delete=False).name
-    subprocess.call("sort -k1,1 -k4,4n -k5,5n " + gtf + " > " + sortedGtf,
-                    shell=True)
+    subprocess.call(["bash", "-c", "sort -k1,1 -k4,4n -k5,5n " + gtf +
+                    " > " + sortedGtf])
     return sortedGtf
 
 
