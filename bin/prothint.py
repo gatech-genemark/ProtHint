@@ -65,6 +65,7 @@ def standardRun(args):
     runSpaln(diamondPairs, args.pbs, args.minExonScore)
 
     if (not args.ProSplign):
+        checkOutputs(diamondPairs, seedGenes)
         flagTopProteins(diamondPairs)
         processSpalnOutput()
     else:
@@ -281,6 +282,32 @@ def runSpaln(diamondPairs, pbs, minExonScore):
                    " --seq ../nuc.fasta --list " + diamondPairs + " --db " +
                    proteins + " --v --aligner spaln --min_exon_score " +
                    str(minExonScore))
+
+
+def checkOutputs(diamondPairs, seedGenes):
+    """Check whether all intermediate outputs were correctly created
+
+    Args:
+        diamondPairs (filepath): Path to file with seed gene-protein pairs
+    """
+    os.chdir(workDir)
+
+    msg = 'This error can be caused by:\n' \
+          '    a) The set of input proteins is too small and/or the ' \
+          'proteins are too remote.\n' \
+          '    b) The gene seeds identified by GeneMark-ES (or the ' \
+          'supplied gene seeds in case the option "--geneSeeds" was ' \
+          'used) are incorrect. Please try running GeneMark-ES ' \
+          'separately to identify errors related to gene seeds (' \
+          'https://github.com/gatech-genemark/ProtHint#genemark-es).'
+
+    if os.stat(diamondPairs).st_size == 0:
+        sys.exit('error: No homologous proteins were found by DIAMOND (' +
+                 diamondPairs + ' is empty).\nThis error can be caused' + msg)
+
+    if os.stat("Spaln/spaln.gff").st_size == 0:
+        sys.exit('error: No spliced alignments were created by Spaln (' +
+                 workDir + '/Spaln/spaln.gff is empty).\n' + msg)
 
 
 def flagTopProteins(diamondPairs):
