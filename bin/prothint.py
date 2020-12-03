@@ -24,6 +24,10 @@ genome = ''
 proteins = ''
 threads = ''
 
+ProtHintRef = 'https://doi.org/10.1093/nargab/lqaa026'
+DIAMONDRef = 'https://doi.org/10.1038/nmeth.3176'
+SpalnRef = 'https://doi.org/10.1093/bioinformatics/btn460'
+
 
 def main():
     args = parseCmd()
@@ -607,6 +611,10 @@ def setEnvironment(args):
     """
     sys.stderr.write("ProtHint Version " + VERSION + "\n")
     sys.stderr.write("Copyright 2019, Georgia Institute of Technology, USA\n\n")
+    sys.stderr.write("Please cite\n")
+    sys.stderr.write("  - ProtHint: " + ProtHintRef + "\n")
+    sys.stderr.write("  - DIAMOND:  " + DIAMONDRef + "\n")
+    sys.stderr.write("  - Spaln:    " + SpalnRef + "\n\n")
     global workDir, binDir, genome, threads
     workDir = os.path.abspath(args.workdir)
     binDir = os.path.abspath(os.path.dirname(__file__))
