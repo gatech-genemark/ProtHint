@@ -25,6 +25,7 @@ def extractFeature(text, feature):
 def computeLengths(input):
     transcriptLengths = dict()
     for row in csv.reader(open(input), delimiter='\t'):
+        if len(row) == 0 or row[0].startswith('#'): continue
         if (row[2] == 'CDS'):
             gene = extractFeature(row[8], 'gene_id')
             transcript = extractFeature(row[8], 'transcript_id')
@@ -54,6 +55,7 @@ def getLongestTranscript(transcriptLengths):
 
 def printLongest(input, longestTranscripts):
     for row in csv.reader(open(input), delimiter='\t'):
+        if len(row) == 0 or row[0].startswith('#'): continue
         gene = extractFeature(row[8], 'gene_id')
         transcript = extractFeature(row[8], 'transcript_id')
         if not gene or not transcript:
