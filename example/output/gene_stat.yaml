@@ -5,217 +5,217 @@
   L: 147345
   R: 153106
   seq_id: 2L:1-3000000
-  start: 153106
-  stop: 147345
+  start: -1
+  stop: -1
   strand: '-'
 101_g:
   L: 153677
   R: 154849
   seq_id: 2L:1-3000000
-  start: 154849
-  stop: 153677
+  start: -1
+  stop: -1
   strand: '-'
 102_g:
   L: 155572
   R: 157541
   seq_id: 2L:1-3000000
-  start: 155572
-  stop: 157541
+  start: -1
+  stop: -1
   strand: +
 103_g:
   L: 183299
   R: 204717
   seq_id: 2L:1-3000000
-  start: 183299
-  stop: 204717
+  start: -1
+  stop: -1
   strand: +
 104_g:
   L: 205044
   R: 206044
   seq_id: 2L:1-3000000
-  start: 206044
-  stop: 205044
+  start: -1
+  stop: -1
   strand: '-'
 105_g:
   L: 207512
   R: 209858
   seq_id: 2L:1-3000000
-  start: 207512
-  stop: 209858
+  start: -1
+  stop: -1
   strand: +
 106_g:
   L: 212185
   R: 232171
   seq_id: 2L:1-3000000
-  start: 232171
-  stop: 212185
+  start: -1
+  stop: -1
   strand: '-'
 107_g:
   L: 232575
   R: 233965
   seq_id: 2L:1-3000000
-  start: 232575
-  stop: 233965
+  start: -1
+  stop: -1
   strand: +
 108_g:
   L: 233993
   R: 242266
   seq_id: 2L:1-3000000
-  start: 242266
-  stop: 233993
+  start: -1
+  stop: -1
   strand: '-'
 109_g:
   L: 251194
   R: 252317
   seq_id: 2L:1-3000000
-  start: 252317
-  stop: 251194
+  start: -1
+  stop: -1
   strand: '-'
 10_g:
   L: 2646686
   R: 2651708
   seq_id: 2L:1-3000000
-  start: 2651708
-  stop: 2646686
+  start: -1
+  stop: -1
   strand: '-'
 110_g:
   L: 252663
   R: 254379
   seq_id: 2L:1-3000000
-  start: 254379
-  stop: 252663
+  start: -1
+  stop: -1
   strand: '-'
 111_g:
   L: 263782
   R: 266688
   seq_id: 2L:1-3000000
-  start: 266688
-  stop: 263782
+  start: -1
+  stop: -1
   strand: '-'
 112_g:
   L: 269192
   R: 271314
   seq_id: 2L:1-3000000
-  start: 269192
-  stop: 271314
+  start: -1
+  stop: -1
   strand: +
 113_g:
   L: 272005
   R: 273634
   seq_id: 2L:1-3000000
-  start: 273634
-  stop: 272005
+  start: -1
+  stop: -1
   strand: '-'
 114_g:
   L: 273986
   R: 274704
   seq_id: 2L:1-3000000
-  start: 273986
-  stop: 274704
+  start: -1
+  stop: -1
   strand: +
 115_g:
   L: 274947
   R: 277142
   seq_id: 2L:1-3000000
-  start: 277142
-  stop: 274947
+  start: -1
+  stop: -1
   strand: '-'
 116_g:
   L: 277931
   R: 281514
   seq_id: 2L:1-3000000
-  start: 277931
-  stop: 281514
+  start: -1
+  stop: -1
   strand: +
 117_g:
   L: 282172
   R: 285633
   seq_id: 2L:1-3000000
-  start: 285633
-  stop: 282172
+  start: -1
+  stop: -1
   strand: '-'
 118_g:
   L: 287402
   R: 288919
   seq_id: 2L:1-3000000
-  start: 288919
-  stop: 287402
+  start: -1
+  stop: -1
   strand: '-'
 119_g:
   L: 292569
   R: 293002
   seq_id: 2L:1-3000000
-  start: 292569
-  stop: 293002
+  start: -1
+  stop: -1
   strand: +
 11_g:
   L: 2653147
   R: 2655333
   seq_id: 2L:1-3000000
-  start: 2653147
-  stop: 2655333
+  start: -1
+  stop: -1
   strand: +
 120_g:
   L: 293622
   R: 294484
   seq_id: 2L:1-3000000
-  start: 294484
-  stop: 293622
+  start: -1
+  stop: -1
   strand: '-'
 121_g:
   L: 295272
   R: 297049
   seq_id: 2L:1-3000000
-  start: 295272
-  stop: 297049
+  start: -1
+  stop: -1
   strand: +
 122_g:
   L: 299062
   R: 302659
   seq_id: 2L:1-3000000
-  start: 299062
-  stop: 302659
+  start: -1
+  stop: -1
   strand: +
 123_g:
   L: 318418
   R: 319233
   seq_id: 2L:1-3000000
-  start: 319233
-  stop: 318418
+  start: -1
+  stop: -1
   strand: '-'
 124_g:
   L: 320388
   R: 321221
   seq_id: 2L:1-3000000
-  start: 321221
-  stop: 320388
+  start: -1
+  stop: -1
   strand: '-'
 125_g:
   L: 322131
   R: 322985
   seq_id: 2L:1-3000000
-  start: 322131
-  stop: 322985
+  start: -1
+  stop: -1
   strand: +
 126_g:
   L: 327574
   R: 329625
   seq_id: 2L:1-3000000
-  start: 329625
-  stop: 327574
+  start: -1
+  stop: -1
   strand: '-'
 127_g:
   L: 329991
   R: 332132
   seq_id: 2L:1-3000000
-  start: 332132
-  stop: 329991
+  start: -1
+  stop: -1
   strand: '-'
 128_g:
   L: 333092
   R: 345444
   seq_id: 2L:1-3000000
-  start: 333092
+  start: -1
   stop: -1
   strand: +
 129_g:
@@ -223,2042 +223,2042 @@
   R: 1696149
   seq_id: 2L:1-3000000
   start: -1
-  stop: 1696149
+  stop: -1
   strand: +
 12_g:
   L: 2655460
   R: 2656154
   seq_id: 2L:1-3000000
-  start: 2655460
-  stop: 2656154
+  start: -1
+  stop: -1
   strand: +
 130_g:
   L: 1696183
   R: 1696857
   seq_id: 2L:1-3000000
-  start: 1696183
-  stop: 1696857
+  start: -1
+  stop: -1
   strand: +
 131_g:
   L: 1705112
   R: 1706227
   seq_id: 2L:1-3000000
-  start: 1705112
-  stop: 1706227
+  start: -1
+  stop: -1
   strand: +
 132_g:
   L: 1707772
   R: 1710315
   seq_id: 2L:1-3000000
-  start: 1710315
-  stop: 1707772
+  start: -1
+  stop: -1
   strand: '-'
 133_g:
   L: 1710526
   R: 1711285
   seq_id: 2L:1-3000000
-  start: 1710526
-  stop: 1711285
+  start: -1
+  stop: -1
   strand: +
 134_g:
   L: 1711752
   R: 1715556
   seq_id: 2L:1-3000000
-  start: 1715556
-  stop: 1711752
+  start: -1
+  stop: -1
   strand: '-'
 135_g:
   L: 1717103
   R: 1723928
   seq_id: 2L:1-3000000
-  start: 1723928
-  stop: 1717103
+  start: -1
+  stop: -1
   strand: '-'
 136_g:
   L: 1725341
   R: 1726642
   seq_id: 2L:1-3000000
-  start: 1726642
-  stop: 1725341
+  start: -1
+  stop: -1
   strand: '-'
 137_g:
   L: 1728829
   R: 1729527
   seq_id: 2L:1-3000000
-  start: 1728829
-  stop: 1729527
+  start: -1
+  stop: -1
   strand: +
 138_g:
   L: 1729984
   R: 1730949
   seq_id: 2L:1-3000000
-  start: 1729984
-  stop: 1730949
+  start: -1
+  stop: -1
   strand: +
 139_g:
   L: 1731403
   R: 1732263
   seq_id: 2L:1-3000000
-  start: 1732263
-  stop: 1731403
+  start: -1
+  stop: -1
   strand: '-'
 13_g:
   L: 2665143
   R: 2666195
   seq_id: 2L:1-3000000
-  start: 2665143
-  stop: 2666195
+  start: -1
+  stop: -1
   strand: +
 140_g:
   L: 1741701
   R: 1750086
   seq_id: 2L:1-3000000
-  start: 1741701
-  stop: 1750086
+  start: -1
+  stop: -1
   strand: +
 141_g:
   L: 1750871
   R: 1752025
   seq_id: 2L:1-3000000
-  start: 1752025
-  stop: 1750871
+  start: -1
+  stop: -1
   strand: '-'
 142_g:
   L: 1752383
   R: 1752769
   seq_id: 2L:1-3000000
-  start: 1752383
-  stop: 1752769
+  start: -1
+  stop: -1
   strand: +
 143_g:
   L: 1755253
   R: 1756445
   seq_id: 2L:1-3000000
-  start: 1756445
-  stop: 1755253
+  start: -1
+  stop: -1
   strand: '-'
 144_g:
   L: 1784062
   R: 1785286
   seq_id: 2L:1-3000000
-  start: 1784062
-  stop: 1785286
+  start: -1
+  stop: -1
   strand: +
 145_g:
   L: 1789141
   R: 1794917
   seq_id: 2L:1-3000000
-  start: 1794917
-  stop: 1789141
+  start: -1
+  stop: -1
   strand: '-'
 146_g:
   L: 1821270
   R: 1832454
   seq_id: 2L:1-3000000
-  start: 1832454
-  stop: 1821270
+  start: -1
+  stop: -1
   strand: '-'
 147_g:
   L: 1842999
   R: 1856810
   seq_id: 2L:1-3000000
-  start: 1842999
-  stop: 1856810
+  start: -1
+  stop: -1
   strand: +
 148_g:
   L: 1858828
   R: 1867387
   seq_id: 2L:1-3000000
-  start: 1867387
-  stop: 1858828
+  start: -1
+  stop: -1
   strand: '-'
 149_g:
   L: 1868643
   R: 1869414
   seq_id: 2L:1-3000000
-  start: 1868643
-  stop: 1869414
+  start: -1
+  stop: -1
   strand: +
 14_g:
   L: 2669823
   R: 2672159
   seq_id: 2L:1-3000000
-  start: 2669823
-  stop: 2672159
+  start: -1
+  stop: -1
   strand: +
 150_g:
   L: 1869912
   R: 1870829
   seq_id: 2L:1-3000000
-  start: 1869912
-  stop: 1870829
+  start: -1
+  stop: -1
   strand: +
 151_g:
   L: 1874908
   R: 1880105
   seq_id: 2L:1-3000000
-  start: 1880105
-  stop: 1874908
+  start: -1
+  stop: -1
   strand: '-'
 152_g:
   L: 1882415
   R: 1884056
   seq_id: 2L:1-3000000
-  start: 1884056
-  stop: 1882415
+  start: -1
+  stop: -1
   strand: '-'
 153_g:
   L: 1928510
   R: 1942965
   seq_id: 2L:1-3000000
-  start: 1928510
-  stop: 1942965
+  start: -1
+  stop: -1
   strand: +
 154_g:
   L: 1945305
   R: 1945652
   seq_id: 2L:1-3000000
-  start: 1945652
-  stop: 1945305
+  start: -1
+  stop: -1
   strand: '-'
 155_g:
   L: 1950927
   R: 1952834
   seq_id: 2L:1-3000000
-  start: 1952834
-  stop: 1950927
+  start: -1
+  stop: -1
   strand: '-'
 156_g:
   L: 1974236
   R: 1975187
   seq_id: 2L:1-3000000
-  start: 1974236
-  stop: 1975187
+  start: -1
+  stop: -1
   strand: +
 157_g:
   L: 1976542
   R: 1980612
   seq_id: 2L:1-3000000
-  start: 1980612
-  stop: 1976542
+  start: -1
+  stop: -1
   strand: '-'
 158_g:
   L: 1981310
   R: 1984393
   seq_id: 2L:1-3000000
-  start: 1981310
-  stop: 1984393
+  start: -1
+  stop: -1
   strand: +
 159_g:
   L: 1984706
   R: 1987652
   seq_id: 2L:1-3000000
-  start: 1987652
-  stop: 1984706
+  start: -1
+  stop: -1
   strand: '-'
 15_g:
   L: 2685413
   R: 2698845
   seq_id: 2L:1-3000000
-  start: 2698845
-  stop: 2685413
+  start: -1
+  stop: -1
   strand: '-'
 160_g:
   L: 1988389
   R: 1988835
   seq_id: 2L:1-3000000
-  start: 1988389
-  stop: 1988835
+  start: -1
+  stop: -1
   strand: +
 161_g:
   L: 1997774
   R: 2006031
   seq_id: 2L:1-3000000
-  start: 2006031
-  stop: 1997774
+  start: -1
+  stop: -1
   strand: '-'
 162_g:
   L: 2024043
   R: 2029938
   seq_id: 2L:1-3000000
-  start: 2024043
-  stop: 2029938
+  start: -1
+  stop: -1
   strand: +
 163_g:
   L: 2032635
   R: 2037019
   seq_id: 2L:1-3000000
-  start: 2037019
-  stop: 2032635
+  start: -1
+  stop: -1
   strand: '-'
 164_g:
   L: 2039992
   R: 2043183
   seq_id: 2L:1-3000000
-  start: 2039992
-  stop: 2043183
+  start: -1
+  stop: -1
   strand: +
 165_g:
   L: 2045824
   R: 2047577
   seq_id: 2L:1-3000000
-  start: 2045824
-  stop: 2047577
+  start: -1
+  stop: -1
   strand: +
 166_g:
   L: 2052894
   R: 2053304
   seq_id: 2L:1-3000000
-  start: 2053304
-  stop: 2052894
+  start: -1
+  stop: -1
   strand: '-'
 167_g:
   L: 2054589
   R: 2060050
   seq_id: 2L:1-3000000
-  start: 2054589
-  stop: 2060050
+  start: -1
+  stop: -1
   strand: +
 168_g:
   L: 2061564
   R: 2070610
   seq_id: 2L:1-3000000
-  start: 2070610
-  stop: 2061564
+  start: -1
+  stop: -1
   strand: '-'
 169_g:
   L: 2080077
   R: 2081170
   seq_id: 2L:1-3000000
-  start: 2080077
-  stop: 2081170
+  start: -1
+  stop: -1
   strand: +
 16_g:
   L: 2703787
   R: 2719342
   seq_id: 2L:1-3000000
-  start: 2703787
-  stop: 2719342
+  start: -1
+  stop: -1
   strand: +
 170_g:
   L: 2128596
   R: 2129207
   seq_id: 2L:1-3000000
-  start: 2129207
+  start: -1
   stop: -1
   strand: '-'
 171_g:
   L: 2131012
   R: 2136886
   seq_id: 2L:1-3000000
-  start: 2131012
-  stop: 2136886
+  start: -1
+  stop: -1
   strand: +
 172_g:
   L: 2137669
   R: 2145031
   seq_id: 2L:1-3000000
-  start: 2145031
-  stop: 2137669
+  start: -1
+  stop: -1
   strand: '-'
 173_g:
   L: 2145900
   R: 2147024
   seq_id: 2L:1-3000000
-  start: 2147024
-  stop: 2145900
+  start: -1
+  stop: -1
   strand: '-'
 174_g:
   L: 2147647
   R: 2151453
   seq_id: 2L:1-3000000
-  start: 2147647
-  stop: 2151453
+  start: -1
+  stop: -1
   strand: +
 175_g:
   L: 2152035
   R: 2156256
   seq_id: 2L:1-3000000
-  start: 2152035
-  stop: 2156256
+  start: -1
+  stop: -1
   strand: +
 176_g:
   L: 2158165
   R: 2160482
   seq_id: 2L:1-3000000
-  start: 2160482
-  stop: 2158165
+  start: -1
+  stop: -1
   strand: '-'
 177_g:
   L: 2184972
   R: 2185454
   seq_id: 2L:1-3000000
-  start: 2184972
-  stop: 2185454
+  start: -1
+  stop: -1
   strand: +
 178_g:
   L: 2190423
   R: 2192263
   seq_id: 2L:1-3000000
-  start: 2192263
-  stop: 2190423
+  start: -1
+  stop: -1
   strand: '-'
 179_g:
   L: 2196426
   R: 2208906
   seq_id: 2L:1-3000000
-  start: 2208906
-  stop: 2196426
+  start: -1
+  stop: -1
   strand: '-'
 17_g:
   L: 2736340
   R: 2739500
   seq_id: 2L:1-3000000
-  start: 2736340
-  stop: 2739500
+  start: -1
+  stop: -1
   strand: +
 180_g:
   L: 2210249
   R: 2212375
   seq_id: 2L:1-3000000
-  start: 2212375
-  stop: 2210249
+  start: -1
+  stop: -1
   strand: '-'
 181_g:
   L: 2212970
   R: 2213931
   seq_id: 2L:1-3000000
-  start: 2213931
-  stop: 2212970
+  start: -1
+  stop: -1
   strand: '-'
 182_g:
   L: 2214312
   R: 2214928
   seq_id: 2L:1-3000000
-  start: 2214312
-  stop: 2214928
+  start: -1
+  stop: -1
   strand: +
 183_g:
   L: 2215331
   R: 2216204
   seq_id: 2L:1-3000000
-  start: 2216204
-  stop: 2215331
+  start: -1
+  stop: -1
   strand: '-'
 184_g:
   L: 2216575
   R: 2217142
   seq_id: 2L:1-3000000
-  start: 2217142
-  stop: 2216575
+  start: -1
+  stop: -1
   strand: '-'
 185_g:
   L: 2217427
   R: 2220410
   seq_id: 2L:1-3000000
-  start: 2217427
-  stop: 2220410
+  start: -1
+  stop: -1
   strand: +
 186_g:
   L: 2223329
   R: 2225240
   seq_id: 2L:1-3000000
-  start: 2223329
-  stop: 2225240
+  start: -1
+  stop: -1
   strand: +
 187_g:
   L: 2225798
   R: 2226205
   seq_id: 2L:1-3000000
-  start: 2226205
-  stop: 2225798
+  start: -1
+  stop: -1
   strand: '-'
 188_g:
   L: 2227069
   R: 2230126
   seq_id: 2L:1-3000000
-  start: 2227069
-  stop: 2230126
+  start: -1
+  stop: -1
   strand: +
 189_g:
   L: 2232048
   R: 2240502
   seq_id: 2L:1-3000000
-  start: 2240502
-  stop: 2232048
+  start: -1
+  stop: -1
   strand: '-'
 18_g:
   L: 2740181
   R: 2743085
   seq_id: 2L:1-3000000
-  start: 2740181
-  stop: 2743085
+  start: -1
+  stop: -1
   strand: +
 190_g:
   L: 2242522
   R: 2244361
   seq_id: 2L:1-3000000
-  start: 2242522
-  stop: 2244361
+  start: -1
+  stop: -1
   strand: +
 191_g:
   L: 2244826
   R: 2245257
   seq_id: 2L:1-3000000
-  start: 2244826
-  stop: 2245257
+  start: -1
+  stop: -1
   strand: +
 192_g:
   L: 2250533
   R: 2251270
   seq_id: 2L:1-3000000
-  start: 2251270
-  stop: 2250533
+  start: -1
+  stop: -1
   strand: '-'
 193_g:
   L: 2251584
   R: 2252330
   seq_id: 2L:1-3000000
-  start: 2252330
-  stop: 2251584
+  start: -1
+  stop: -1
   strand: '-'
 194_g:
   L: 2253079
   R: 2264184
   seq_id: 2L:1-3000000
-  start: 2253079
-  stop: 2264184
+  start: -1
+  stop: -1
   strand: +
 195_g:
   L: 2268356
   R: 2275508
   seq_id: 2L:1-3000000
-  start: 2275508
-  stop: 2268356
+  start: -1
+  stop: -1
   strand: '-'
 196_g:
   L: 2285174
   R: 2285902
   seq_id: 2L:1-3000000
-  start: 2285174
-  stop: 2285902
+  start: -1
+  stop: -1
   strand: +
 197_g:
   L: 2288629
   R: 2290622
   seq_id: 2L:1-3000000
-  start: 2290622
-  stop: 2288629
+  start: -1
+  stop: -1
   strand: '-'
 198_g:
   L: 355939
   R: 357686
   seq_id: 2L:1-3000000
-  start: 357686
+  start: -1
   stop: -1
   strand: '-'
 199_g:
   L: 383202
   R: 387270
   seq_id: 2L:1-3000000
-  start: 383202
-  stop: 387270
+  start: -1
+  stop: -1
   strand: +
 19_g:
   L: 2743458
   R: 2744693
   seq_id: 2L:1-3000000
-  start: 2744693
-  stop: 2743458
+  start: -1
+  stop: -1
   strand: '-'
 1_g:
   L: 2571650
   R: 2573009
   seq_id: 2L:1-3000000
-  start: 2573009
+  start: -1
   stop: -1
   strand: '-'
 200_g:
   L: 396734
   R: 401663
   seq_id: 2L:1-3000000
-  start: 401663
-  stop: 396734
+  start: -1
+  stop: -1
   strand: '-'
 201_g:
   L: 404384
   R: 408496
   seq_id: 2L:1-3000000
-  start: 404384
-  stop: 408496
+  start: -1
+  stop: -1
   strand: +
 202_g:
   L: 409388
   R: 413459
   seq_id: 2L:1-3000000
-  start: 413459
-  stop: 409388
+  start: -1
+  stop: -1
   strand: '-'
 203_g:
   L: 415389
   R: 417634
   seq_id: 2L:1-3000000
-  start: 415389
-  stop: 417634
+  start: -1
+  stop: -1
   strand: +
 204_g:
   L: 418557
   R: 419600
   seq_id: 2L:1-3000000
-  start: 419600
-  stop: 418557
+  start: -1
+  stop: -1
   strand: '-'
 205_g:
   L: 420075
   R: 420558
   seq_id: 2L:1-3000000
-  start: 420075
-  stop: 420558
+  start: -1
+  stop: -1
   strand: +
 206_g:
   L: 420941
   R: 421366
   seq_id: 2L:1-3000000
-  start: 421366
-  stop: 420941
+  start: -1
+  stop: -1
   strand: '-'
 207_g:
   L: 421800
   R: 422435
   seq_id: 2L:1-3000000
-  start: 421800
-  stop: 422435
+  start: -1
+  stop: -1
   strand: +
 208_g:
   L: 423464
   R: 425291
   seq_id: 2L:1-3000000
-  start: 423464
-  stop: 425291
+  start: -1
+  stop: -1
   strand: +
 209_g:
   L: 438425
   R: 447249
   seq_id: 2L:1-3000000
-  start: 438425
-  stop: 447249
+  start: -1
+  stop: -1
   strand: +
 20_g:
   L: 2745199
   R: 2746881
   seq_id: 2L:1-3000000
-  start: 2745199
-  stop: 2746881
+  start: -1
+  stop: -1
   strand: +
 210_g:
   L: 449021
   R: 450794
   seq_id: 2L:1-3000000
-  start: 450794
-  stop: 449021
+  start: -1
+  stop: -1
   strand: '-'
 211_g:
   L: 453262
   R: 458390
   seq_id: 2L:1-3000000
-  start: 453262
-  stop: 458390
+  start: -1
+  stop: -1
   strand: +
 212_g:
   L: 460515
   R: 466725
   seq_id: 2L:1-3000000
-  start: 466725
-  stop: 460515
+  start: -1
+  stop: -1
   strand: '-'
 213_g:
   L: 473113
   R: 475802
   seq_id: 2L:1-3000000
-  start: 473113
-  stop: 475802
+  start: -1
+  stop: -1
   strand: +
 214_g:
   L: 476987
   R: 487333
   seq_id: 2L:1-3000000
-  start: 487333
-  stop: 476987
+  start: -1
+  stop: -1
   strand: '-'
 215_g:
   L: 535327
   R: 539956
   seq_id: 2L:1-3000000
-  start: 535327
-  stop: 539956
+  start: -1
+  stop: -1
   strand: +
 216_g:
   L: 541768
   R: 542247
   seq_id: 2L:1-3000000
-  start: 542247
-  stop: 541768
+  start: -1
+  stop: -1
   strand: '-'
 217_g:
   L: 543241
   R: 544542
   seq_id: 2L:1-3000000
-  start: 544542
-  stop: 543241
+  start: -1
+  stop: -1
   strand: '-'
 218_g:
   L: 545192
   R: 546953
   seq_id: 2L:1-3000000
-  start: 545192
-  stop: 546953
+  start: -1
+  stop: -1
   strand: +
 219_g:
   L: 547414
   R: 549215
   seq_id: 2L:1-3000000
-  start: 549215
-  stop: 547414
+  start: -1
+  stop: -1
   strand: '-'
 21_g:
   L: 2747012
   R: 2748381
   seq_id: 2L:1-3000000
-  start: 2748381
-  stop: 2747012
+  start: -1
+  stop: -1
   strand: '-'
 220_g:
   L: 549572
   R: 551758
   seq_id: 2L:1-3000000
-  start: 551758
-  stop: 549572
+  start: -1
+  stop: -1
   strand: '-'
 221_g:
   L: 553937
   R: 558762
   seq_id: 2L:1-3000000
-  start: 558762
-  stop: 553937
+  start: -1
+  stop: -1
   strand: '-'
 222_g:
   L: 559699
   R: 560315
   seq_id: 2L:1-3000000
-  start: 559699
-  stop: 560315
+  start: -1
+  stop: -1
   strand: +
 223_g:
   L: 560794
   R: 563181
   seq_id: 2L:1-3000000
-  start: 563181
-  stop: 560794
+  start: -1
+  stop: -1
   strand: '-'
 224_g:
   L: 564227
   R: 566329
   seq_id: 2L:1-3000000
-  start: 564227
-  stop: 566329
+  start: -1
+  stop: -1
   strand: +
 225_g:
   L: 566494
   R: 568064
   seq_id: 2L:1-3000000
-  start: 568064
-  stop: 566494
+  start: -1
+  stop: -1
   strand: '-'
 226_g:
   L: 568428
   R: 572650
   seq_id: 2L:1-3000000
-  start: 568428
-  stop: 572650
+  start: -1
+  stop: -1
   strand: +
 227_g:
   L: 573206
   R: 574135
   seq_id: 2L:1-3000000
-  start: 574135
-  stop: 573206
+  start: -1
+  stop: -1
   strand: '-'
 228_g:
   L: 574641
   R: 575102
   seq_id: 2L:1-3000000
-  start: 574641
-  stop: 575102
+  start: -1
+  stop: -1
   strand: +
 229_g:
   L: 575777
   R: 576586
   seq_id: 2L:1-3000000
-  start: 576586
-  stop: 575777
+  start: -1
+  stop: -1
   strand: '-'
 22_g:
   L: 2753415
   R: 2756294
   seq_id: 2L:1-3000000
-  start: 2753415
-  stop: 2756294
+  start: -1
+  stop: -1
   strand: +
 230_g:
   L: 577250
   R: 580568
   seq_id: 2L:1-3000000
-  start: 577250
-  stop: 580568
+  start: -1
+  stop: -1
   strand: +
 231_g:
   L: 584179
   R: 595066
   seq_id: 2L:1-3000000
-  start: 595066
-  stop: 584179
+  start: -1
+  stop: -1
   strand: '-'
 232_g:
   L: 611313
   R: 621182
   seq_id: 2L:1-3000000
-  start: 621182
-  stop: 611313
+  start: -1
+  stop: -1
   strand: '-'
 233_g:
   L: 640959
   R: 657348
   seq_id: 2L:1-3000000
-  start: 657348
-  stop: 640959
+  start: -1
+  stop: -1
   strand: '-'
 234_g:
   L: 7574
   R: 9276
   seq_id: 2L:1-3000000
   start: -1
-  stop: 9276
+  stop: -1
   strand: +
 235_g:
   L: 21919
   R: 22515
   seq_id: 2L:1-3000000
-  start: 22515
-  stop: 21919
+  start: -1
+  stop: -1
   strand: '-'
 236_g:
   L: 22739
   R: 39857
   seq_id: 2L:1-3000000
   start: -1
-  stop: 22739
+  stop: -1
   strand: '-'
 237_g:
   L: 2307259
   R: 2308671
   seq_id: 2L:1-3000000
-  start: 2307259
-  stop: 2308671
+  start: -1
+  stop: -1
   strand: +
 238_g:
   L: 2308883
   R: 2310427
   seq_id: 2L:1-3000000
-  start: 2310427
-  stop: 2308883
+  start: -1
+  stop: -1
   strand: '-'
 239_g:
   L: 2323766
   R: 2357877
   seq_id: 2L:1-3000000
-  start: 2323766
-  stop: 2357877
+  start: -1
+  stop: -1
   strand: +
 23_g:
   L: 2758550
   R: 2759647
   seq_id: 2L:1-3000000
-  start: 2759647
-  stop: 2758550
+  start: -1
+  stop: -1
   strand: '-'
 240_g:
   L: 2359626
   R: 2361428
   seq_id: 2L:1-3000000
-  start: 2361428
-  stop: 2359626
+  start: -1
+  stop: -1
   strand: '-'
 241_g:
   L: 2366381
   R: 2368981
   seq_id: 2L:1-3000000
-  start: 2366381
-  stop: 2368981
+  start: -1
+  stop: -1
   strand: +
 242_g:
   L: 2370269
   R: 2371426
   seq_id: 2L:1-3000000
-  start: 2371426
-  stop: 2370269
+  start: -1
+  stop: -1
   strand: '-'
 243_g:
   L: 2372510
   R: 2373701
   seq_id: 2L:1-3000000
-  start: 2373701
-  stop: 2372510
+  start: -1
+  stop: -1
   strand: '-'
 244_g:
   L: 2374637
   R: 2375639
   seq_id: 2L:1-3000000
-  start: 2374637
-  stop: 2375639
+  start: -1
+  stop: -1
   strand: +
 245_g:
   L: 2377202
   R: 2380177
   seq_id: 2L:1-3000000
-  start: 2377202
-  stop: 2380177
+  start: -1
+  stop: -1
   strand: +
 246_g:
   L: 2381334
   R: 2383004
   seq_id: 2L:1-3000000
-  start: 2381334
-  stop: 2383004
+  start: -1
+  stop: -1
   strand: +
 247_g:
   L: 2383299
   R: 2384731
   seq_id: 2L:1-3000000
-  start: 2383299
-  stop: 2384731
+  start: -1
+  stop: -1
   strand: +
 248_g:
   L: 2384832
   R: 2385702
   seq_id: 2L:1-3000000
-  start: 2385702
-  stop: 2384832
+  start: -1
+  stop: -1
   strand: '-'
 249_g:
   L: 2402245
   R: 2407698
   seq_id: 2L:1-3000000
-  start: 2402245
-  stop: 2407698
+  start: -1
+  stop: -1
   strand: +
 24_g:
   L: 2760033
   R: 2763211
   seq_id: 2L:1-3000000
-  start: 2760033
-  stop: 2763211
+  start: -1
+  stop: -1
   strand: +
 250_g:
   L: 2410884
   R: 2419924
   seq_id: 2L:1-3000000
-  start: 2419924
-  stop: 2410884
+  start: -1
+  stop: -1
   strand: '-'
 251_g:
   L: 2420896
   R: 2422415
   seq_id: 2L:1-3000000
-  start: 2420896
-  stop: 2422415
+  start: -1
+  stop: -1
   strand: +
 252_g:
   L: 2423757
   R: 2425978
   seq_id: 2L:1-3000000
-  start: 2423757
-  stop: 2425978
+  start: -1
+  stop: -1
   strand: +
 253_g:
   L: 2455071
   R: 2458560
   seq_id: 2L:1-3000000
-  start: 2455071
-  stop: 2458560
+  start: -1
+  stop: -1
   strand: +
 254_g:
   L: 2489754
   R: 2492520
   seq_id: 2L:1-3000000
-  start: 2492520
-  stop: 2489754
+  start: -1
+  stop: -1
   strand: '-'
 255_g:
   L: 2493030
   R: 2499528
   seq_id: 2L:1-3000000
-  start: 2493030
-  stop: 2499528
+  start: -1
+  stop: -1
   strand: +
 256_g:
   L: 2517196
   R: 2517956
   seq_id: 2L:1-3000000
-  start: 2517956
-  stop: 2517196
+  start: -1
+  stop: -1
   strand: '-'
 257_g:
   L: 2551397
   R: 2552754
   seq_id: 2L:1-3000000
-  start: 2552754
-  stop: 2551397
+  start: -1
+  stop: -1
   strand: '-'
 258_g:
   L: 2562905
   R: 2565500
   seq_id: 2L:1-3000000
   start: -1
-  stop: 2562905
+  stop: -1
   strand: '-'
 259_g:
   L: 705808
   R: 707766
   seq_id: 2L:1-3000000
-  start: 707766
-  stop: 705808
+  start: -1
+  stop: -1
   strand: '-'
 25_g:
   L: 2764306
   R: 2765416
   seq_id: 2L:1-3000000
-  start: 2765416
-  stop: 2764306
+  start: -1
+  stop: -1
   strand: '-'
 260_g:
   L: 728562
   R: 734126
   seq_id: 2L:1-3000000
-  start: 728562
-  stop: 734126
+  start: -1
+  stop: -1
   strand: +
 261_g:
   L: 738074
   R: 740947
   seq_id: 2L:1-3000000
-  start: 740947
-  stop: 738074
+  start: -1
+  stop: -1
   strand: '-'
 262_g:
   L: 747126
   R: 760913
   seq_id: 2L:1-3000000
-  start: 747126
-  stop: 760913
+  start: -1
+  stop: -1
   strand: +
 263_g:
   L: 773595
   R: 773918
   seq_id: 2L:1-3000000
-  start: 773595
-  stop: 773918
+  start: -1
+  stop: -1
   strand: +
 264_g:
   L: 776542
   R: 776841
   seq_id: 2L:1-3000000
-  start: 776542
-  stop: 776841
+  start: -1
+  stop: -1
   strand: +
 265_g:
   L: 779204
   R: 779563
   seq_id: 2L:1-3000000
-  start: 779204
-  stop: 779563
+  start: -1
+  stop: -1
   strand: +
 266_g:
   L: 781297
   R: 782824
   seq_id: 2L:1-3000000
-  start: 781297
-  stop: 782824
+  start: -1
+  stop: -1
   strand: +
 267_g:
   L: 784421
   R: 786139
   seq_id: 2L:1-3000000
-  start: 784421
-  stop: 786139
+  start: -1
+  stop: -1
   strand: +
 268_g:
   L: 786260
   R: 790629
   seq_id: 2L:1-3000000
-  start: 790629
-  stop: 786260
+  start: -1
+  stop: -1
   strand: '-'
 269_g:
   L: 810646
   R: 813311
   seq_id: 2L:1-3000000
-  start: 810646
-  stop: 813311
+  start: -1
+  stop: -1
   strand: +
 26_g:
   L: 2766315
   R: 2767090
   seq_id: 2L:1-3000000
-  start: 2766315
-  stop: 2767090
+  start: -1
+  stop: -1
   strand: +
 270_g:
   L: 813457
   R: 815831
   seq_id: 2L:1-3000000
-  start: 815831
-  stop: 813457
+  start: -1
+  stop: -1
   strand: '-'
 271_g:
   L: 816083
   R: 816976
   seq_id: 2L:1-3000000
-  start: 816083
-  stop: 816976
+  start: -1
+  stop: -1
   strand: +
 272_g:
   L: 817046
   R: 817898
   seq_id: 2L:1-3000000
-  start: 817898
-  stop: 817046
+  start: -1
+  stop: -1
   strand: '-'
 273_g:
   L: 818507
   R: 819334
   seq_id: 2L:1-3000000
-  start: 819334
-  stop: 818507
+  start: -1
+  stop: -1
   strand: '-'
 274_g:
   L: 820079
   R: 820969
   seq_id: 2L:1-3000000
-  start: 820079
-  stop: 820969
+  start: -1
+  stop: -1
   strand: +
 275_g:
   L: 821552
   R: 823776
   seq_id: 2L:1-3000000
-  start: 821552
-  stop: 823776
+  start: -1
+  stop: -1
   strand: +
 276_g:
   L: 824433
   R: 825797
   seq_id: 2L:1-3000000
-  start: 825797
-  stop: 824433
+  start: -1
+  stop: -1
   strand: '-'
 277_g:
   L: 825869
   R: 831923
   seq_id: 2L:1-3000000
-  start: 825869
-  stop: 831923
+  start: -1
+  stop: -1
   strand: +
 278_g:
   L: 834545
   R: 852769
   seq_id: 2L:1-3000000
-  start: 852769
-  stop: 834545
+  start: -1
+  stop: -1
   strand: '-'
 279_g:
   L: 852936
   R: 854383
   seq_id: 2L:1-3000000
-  start: 852936
-  stop: 854383
+  start: -1
+  stop: -1
   strand: +
 27_g:
   L: 2767337
   R: 2767777
   seq_id: 2L:1-3000000
-  start: 2767777
-  stop: 2767337
+  start: -1
+  stop: -1
   strand: '-'
 280_g:
   L: 855550
   R: 856107
   seq_id: 2L:1-3000000
-  start: 855550
-  stop: 856107
+  start: -1
+  stop: -1
   strand: +
 281_g:
   L: 860321
   R: 861696
   seq_id: 2L:1-3000000
-  start: 860321
-  stop: 861696
+  start: -1
+  stop: -1
   strand: +
 282_g:
   L: 862166
   R: 864745
   seq_id: 2L:1-3000000
-  start: 864745
-  stop: 862166
+  start: -1
+  stop: -1
   strand: '-'
 283_g:
   L: 868739
   R: 869776
   seq_id: 2L:1-3000000
-  start: 869776
-  stop: 868739
+  start: -1
+  stop: -1
   strand: '-'
 284_g:
   L: 871574
   R: 876737
   seq_id: 2L:1-3000000
-  start: 871574
-  stop: 876737
+  start: -1
+  stop: -1
   strand: +
 285_g:
   L: 877362
   R: 878173
   seq_id: 2L:1-3000000
-  start: 877362
-  stop: 878173
+  start: -1
+  stop: -1
   strand: +
 286_g:
   L: 878281
   R: 885052
   seq_id: 2L:1-3000000
-  start: 885052
-  stop: 878281
+  start: -1
+  stop: -1
   strand: '-'
 287_g:
   L: 898732
   R: 901169
   seq_id: 2L:1-3000000
-  start: 898732
-  stop: 901169
+  start: -1
+  stop: -1
   strand: +
 288_g:
   L: 901588
   R: 917736
   seq_id: 2L:1-3000000
-  start: 901588
-  stop: 917736
+  start: -1
+  stop: -1
   strand: +
 289_g:
   L: 950493
   R: 957452
   seq_id: 2L:1-3000000
-  start: 950493
-  stop: 957452
+  start: -1
+  stop: -1
   strand: +
 28_g:
   L: 2767981
   R: 2768543
   seq_id: 2L:1-3000000
-  start: 2767981
-  stop: 2768543
+  start: -1
+  stop: -1
   strand: +
 290_g:
   L: 1013953
   R: 1019589
   seq_id: 2L:1-3000000
-  start: 1019589
-  stop: 1013953
+  start: -1
+  stop: -1
   strand: '-'
 291_g:
   L: 1026276
   R: 1026785
   seq_id: 2L:1-3000000
-  start: 1026785
-  stop: 1026276
+  start: -1
+  stop: -1
   strand: '-'
 292_g:
   L: 1031610
   R: 1037040
   seq_id: 2L:1-3000000
-  start: 1037040
-  stop: 1031610
+  start: -1
+  stop: -1
   strand: '-'
 293_g:
   L: 1037379
   R: 1038422
   seq_id: 2L:1-3000000
-  start: 1037379
-  stop: 1038422
+  start: -1
+  stop: -1
   strand: +
 294_g:
   L: 1052038
   R: 1062146
   seq_id: 2L:1-3000000
-  start: 1062146
-  stop: 1052038
+  start: -1
+  stop: -1
   strand: '-'
 295_g:
   L: 1078035
   R: 1082871
   seq_id: 2L:1-3000000
-  start: 1078035
-  stop: 1082871
+  start: -1
+  stop: -1
   strand: +
 296_g:
   L: 1084019
   R: 1096748
   seq_id: 2L:1-3000000
-  start: 1096748
-  stop: 1084019
+  start: -1
+  stop: -1
   strand: '-'
 297_g:
   L: 1103691
   R: 1108202
   seq_id: 2L:1-3000000
-  start: 1108202
-  stop: 1103691
+  start: -1
+  stop: -1
   strand: '-'
 298_g:
   L: 1108701
   R: 1112643
   seq_id: 2L:1-3000000
-  start: 1108701
-  stop: 1112643
+  start: -1
+  stop: -1
   strand: +
 299_g:
   L: 1112988
   R: 1113907
   seq_id: 2L:1-3000000
-  start: 1112988
-  stop: 1113907
+  start: -1
+  stop: -1
   strand: +
 29_g:
   L: 2768645
   R: 2769565
   seq_id: 2L:1-3000000
-  start: 2769565
-  stop: 2768645
+  start: -1
+  stop: -1
   strand: '-'
 2_g:
   L: 2573483
   R: 2574981
   seq_id: 2L:1-3000000
-  start: 2574981
-  stop: 2573483
+  start: -1
+  stop: -1
   strand: '-'
 300_g:
   L: 1115734
   R: 1128345
   seq_id: 2L:1-3000000
-  start: 1128345
-  stop: 1115734
+  start: -1
+  stop: -1
   strand: '-'
 301_g:
   L: 1129489
   R: 1131953
   seq_id: 2L:1-3000000
-  start: 1129489
-  stop: 1131953
+  start: -1
+  stop: -1
   strand: +
 302_g:
   L: 1132478
   R: 1134073
   seq_id: 2L:1-3000000
-  start: 1134073
-  stop: 1132478
+  start: -1
+  stop: -1
   strand: '-'
 303_g:
   L: 1134859
   R: 1139956
   seq_id: 2L:1-3000000
-  start: 1134859
-  stop: 1139956
+  start: -1
+  stop: -1
   strand: +
 304_g:
   L: 1143371
   R: 1147075
   seq_id: 2L:1-3000000
-  start: 1143371
-  stop: 1147075
+  start: -1
+  stop: -1
   strand: +
 305_g:
   L: 1147865
   R: 1149376
   seq_id: 2L:1-3000000
-  start: 1147865
-  stop: 1149376
+  start: -1
+  stop: -1
   strand: +
 306_g:
   L: 1149514
   R: 1150647
   seq_id: 2L:1-3000000
-  start: 1150647
-  stop: 1149514
+  start: -1
+  stop: -1
   strand: '-'
 307_g:
   L: 1150863
   R: 1151411
   seq_id: 2L:1-3000000
-  start: 1150863
-  stop: 1151411
+  start: -1
+  stop: -1
   strand: +
 308_g:
   L: 1152032
   R: 1155968
   seq_id: 2L:1-3000000
-  start: 1155968
-  stop: 1152032
+  start: -1
+  stop: -1
   strand: '-'
 309_g:
   L: 1158976
   R: 1160100
   seq_id: 2L:1-3000000
-  start: 1158976
-  stop: 1160100
+  start: -1
+  stop: -1
   strand: +
 30_g:
   L: 2770290
   R: 2770729
   seq_id: 2L:1-3000000
-  start: 2770290
-  stop: 2770729
+  start: -1
+  stop: -1
   strand: +
 310_g:
   L: 1160444
   R: 1162565
   seq_id: 2L:1-3000000
-  start: 1162565
-  stop: 1160444
+  start: -1
+  stop: -1
   strand: '-'
 311_g:
   L: 1164540
   R: 1166361
   seq_id: 2L:1-3000000
-  start: 1164540
-  stop: 1166361
+  start: -1
+  stop: -1
   strand: +
 312_g:
   L: 1166560
   R: 1167162
   seq_id: 2L:1-3000000
-  start: 1166560
-  stop: 1167162
+  start: -1
+  stop: -1
   strand: +
 313_g:
   L: 1167243
   R: 1172619
   seq_id: 2L:1-3000000
-  start: 1172619
-  stop: 1167243
+  start: -1
+  stop: -1
   strand: '-'
 314_g:
   L: 1172765
   R: 1177372
   seq_id: 2L:1-3000000
-  start: 1172765
-  stop: 1177372
+  start: -1
+  stop: -1
   strand: +
 315_g:
   L: 1177950
   R: 1182286
   seq_id: 2L:1-3000000
-  start: 1177950
-  stop: 1182286
+  start: -1
+  stop: -1
   strand: +
 316_g:
   L: 1182495
   R: 1183919
   seq_id: 2L:1-3000000
-  start: 1183919
-  stop: 1182495
+  start: -1
+  stop: -1
   strand: '-'
 317_g:
   L: 1184166
   R: 1185517
   seq_id: 2L:1-3000000
-  start: 1184166
-  stop: 1185517
+  start: -1
+  stop: -1
   strand: +
 318_g:
   L: 1185968
   R: 1186343
   seq_id: 2L:1-3000000
-  start: 1186343
-  stop: 1185968
+  start: -1
+  stop: -1
   strand: '-'
 319_g:
   L: 1191684
   R: 1196443
   seq_id: 2L:1-3000000
-  start: 1191684
-  stop: 1196443
+  start: -1
+  stop: -1
   strand: +
 31_g:
   L: 2770938
   R: 2771605
   seq_id: 2L:1-3000000
   start: -1
-  stop: 2770938
+  stop: -1
   strand: '-'
 320_g:
   L: 1198599
   R: 1199138
   seq_id: 2L:1-3000000
-  start: 1199138
-  stop: 1198599
+  start: -1
+  stop: -1
   strand: '-'
 321_g:
   L: 1200240
   R: 1201102
   seq_id: 2L:1-3000000
-  start: 1200240
-  stop: 1201102
+  start: -1
+  stop: -1
   strand: +
 322_g:
   L: 1204316
   R: 1204975
   seq_id: 2L:1-3000000
-  start: 1204316
-  stop: 1204975
+  start: -1
+  stop: -1
   strand: +
 323_g:
   L: 1219363
   R: 1220035
   seq_id: 2L:1-3000000
-  start: 1219363
+  start: -1
   stop: -1
   strand: +
 32_g:
   L: 1240068
   R: 1242145
   seq_id: 2L:1-3000000
-  start: 1240068
-  stop: 1242145
+  start: -1
+  stop: -1
   strand: +
 33_g:
   L: 1267542
   R: 1293686
   seq_id: 2L:1-3000000
-  start: 1267542
-  stop: 1293686
+  start: -1
+  stop: -1
   strand: +
 34_g:
   L: 1329178
   R: 1334763
   seq_id: 2L:1-3000000
-  start: 1329178
-  stop: 1334763
+  start: -1
+  stop: -1
   strand: +
 35_g:
   L: 1351860
   R: 1352755
   seq_id: 2L:1-3000000
-  start: 1352755
-  stop: 1351860
+  start: -1
+  stop: -1
   strand: '-'
 36_g:
   L: 1353039
   R: 1353581
   seq_id: 2L:1-3000000
-  start: 1353581
-  stop: 1353039
+  start: -1
+  stop: -1
   strand: '-'
 37_g:
   L: 1354181
   R: 1354891
   seq_id: 2L:1-3000000
-  start: 1354891
-  stop: 1354181
+  start: -1
+  stop: -1
   strand: '-'
 38_g:
   L: 1354974
   R: 1359783
   seq_id: 2L:1-3000000
-  start: 1359783
-  stop: 1354974
+  start: -1
+  stop: -1
   strand: '-'
 39_g:
   L: 1360147
   R: 1361657
   seq_id: 2L:1-3000000
-  start: 1361657
-  stop: 1360147
+  start: -1
+  stop: -1
   strand: '-'
 3_g:
   L: 2575451
   R: 2576645
   seq_id: 2L:1-3000000
-  start: 2576645
-  stop: 2575451
+  start: -1
+  stop: -1
   strand: '-'
 40_g:
   L: 1368242
   R: 1368964
   seq_id: 2L:1-3000000
-  start: 1368242
-  stop: 1368964
+  start: -1
+  stop: -1
   strand: +
 41_g:
   L: 1381444
   R: 1407109
   seq_id: 2L:1-3000000
-  start: 1407109
-  stop: 1381444
+  start: -1
+  stop: -1
   strand: '-'
 42_g:
   L: 1460752
   R: 1469376
   seq_id: 2L:1-3000000
-  start: 1469376
-  stop: 1460752
+  start: -1
+  stop: -1
   strand: '-'
 43_g:
   L: 1492314
   R: 1493570
   seq_id: 2L:1-3000000
-  start: 1492314
-  stop: 1493570
+  start: -1
+  stop: -1
   strand: +
 44_g:
   L: 1494146
   R: 1496979
   seq_id: 2L:1-3000000
-  start: 1494146
-  stop: 1496979
+  start: -1
+  stop: -1
   strand: +
 45_g:
   L: 1497254
   R: 1498435
   seq_id: 2L:1-3000000
-  start: 1497254
-  stop: 1498435
+  start: -1
+  stop: -1
   strand: +
 46_g:
   L: 1498666
   R: 1500192
   seq_id: 2L:1-3000000
-  start: 1500192
-  stop: 1498666
+  start: -1
+  stop: -1
   strand: '-'
 47_g:
   L: 1501093
   R: 1502628
   seq_id: 2L:1-3000000
-  start: 1502628
-  stop: 1501093
+  start: -1
+  stop: -1
   strand: '-'
 48_g:
   L: 1517732
   R: 1518061
   seq_id: 2L:1-3000000
-  start: 1518061
-  stop: 1517732
+  start: -1
+  stop: -1
   strand: '-'
 49_g:
   L: 1520847
   R: 1523533
   seq_id: 2L:1-3000000
-  start: 1520847
-  stop: 1523533
+  start: -1
+  stop: -1
   strand: +
 4_g:
   L: 2577938
   R: 2579008
   seq_id: 2L:1-3000000
-  start: 2577938
-  stop: 2579008
+  start: -1
+  stop: -1
   strand: +
 50_g:
   L: 1584990
   R: 1587032
   seq_id: 2L:1-3000000
-  start: 1587032
-  stop: 1584990
+  start: -1
+  stop: -1
   strand: '-'
 51_g:
   L: 1595043
   R: 1596366
   seq_id: 2L:1-3000000
-  start: 1596366
-  stop: 1595043
+  start: -1
+  stop: -1
   strand: '-'
 52_g:
   L: 1600634
   R: 1607617
   seq_id: 2L:1-3000000
-  start: 1600634
-  stop: 1607617
+  start: -1
+  stop: -1
   strand: +
 53_g:
   L: 1609482
   R: 1611071
   seq_id: 2L:1-3000000
-  start: 1611071
-  stop: 1609482
+  start: -1
+  stop: -1
   strand: '-'
 54_g:
   L: 1611508
   R: 1612400
   seq_id: 2L:1-3000000
-  start: 1611508
-  stop: 1612400
+  start: -1
+  stop: -1
   strand: +
 55_g:
   L: 1612770
   R: 1614076
   seq_id: 2L:1-3000000
-  start: 1614076
-  stop: 1612770
+  start: -1
+  stop: -1
   strand: '-'
 56_g:
   L: 2783072
   R: 2793888
   seq_id: 2L:1-3000000
-  start: 2793888
+  start: -1
   stop: -1
   strand: '-'
 57_g:
   L: 2809311
   R: 2811759
   seq_id: 2L:1-3000000
-  start: 2809311
-  stop: 2811759
+  start: -1
+  stop: -1
   strand: +
 58_g:
   L: 2812538
   R: 2814208
   seq_id: 2L:1-3000000
-  start: 2812538
-  stop: 2814208
+  start: -1
+  stop: -1
   strand: +
 59_g:
   L: 2814634
   R: 2815486
   seq_id: 2L:1-3000000
-  start: 2815486
-  stop: 2814634
+  start: -1
+  stop: -1
   strand: '-'
 5_g:
   L: 2579356
   R: 2579954
   seq_id: 2L:1-3000000
-  start: 2579954
-  stop: 2579356
+  start: -1
+  stop: -1
   strand: '-'
 60_g:
   L: 2816342
   R: 2821305
   seq_id: 2L:1-3000000
-  start: 2821305
-  stop: 2816342
+  start: -1
+  stop: -1
   strand: '-'
 61_g:
   L: 2823600
   R: 2837788
   seq_id: 2L:1-3000000
-  start: 2837788
-  stop: 2823600
+  start: -1
+  stop: -1
   strand: '-'
 62_g:
   L: 2838474
   R: 2839453
   seq_id: 2L:1-3000000
-  start: 2838474
-  stop: 2839453
+  start: -1
+  stop: -1
   strand: +
 63_g:
   L: 2840994
   R: 2842167
   seq_id: 2L:1-3000000
-  start: 2840994
-  stop: 2842167
+  start: -1
+  stop: -1
   strand: +
 64_g:
   L: 2842673
   R: 2847080
   seq_id: 2L:1-3000000
-  start: 2847080
-  stop: 2842673
+  start: -1
+  stop: -1
   strand: '-'
 65_g:
   L: 2847641
   R: 2848734
   seq_id: 2L:1-3000000
-  start: 2847641
-  stop: 2848734
+  start: -1
+  stop: -1
   strand: +
 66_g:
   L: 2849732
   R: 2853262
   seq_id: 2L:1-3000000
-  start: 2853262
-  stop: 2849732
+  start: -1
+  stop: -1
   strand: '-'
 67_g:
   L: 2864984
   R: 2867667
   seq_id: 2L:1-3000000
-  start: 2864984
-  stop: 2867667
+  start: -1
+  stop: -1
   strand: +
 68_g:
   L: 2869746
   R: 2870600
   seq_id: 2L:1-3000000
-  start: 2869746
-  stop: 2870600
+  start: -1
+  stop: -1
   strand: +
 69_g:
   L: 2870680
   R: 2873672
   seq_id: 2L:1-3000000
-  start: 2873672
-  stop: 2870680
+  start: -1
+  stop: -1
   strand: '-'
 6_g:
   L: 2580369
   R: 2580886
   seq_id: 2L:1-3000000
-  start: 2580369
-  stop: 2580886
+  start: -1
+  stop: -1
   strand: +
 70_g:
   L: 2875388
   R: 2876362
   seq_id: 2L:1-3000000
-  start: 2875388
-  stop: 2876362
+  start: -1
+  stop: -1
   strand: +
 71_g:
   L: 2877188
   R: 2878137
   seq_id: 2L:1-3000000
-  start: 2878137
-  stop: 2877188
+  start: -1
+  stop: -1
   strand: '-'
 72_g:
   L: 2878593
   R: 2878958
   seq_id: 2L:1-3000000
-  start: 2878593
-  stop: 2878958
+  start: -1
+  stop: -1
   strand: +
 73_g:
   L: 2879264
   R: 2880471
   seq_id: 2L:1-3000000
-  start: 2879264
-  stop: 2880471
+  start: -1
+  stop: -1
   strand: +
 74_g:
   L: 2881228
   R: 2885022
   seq_id: 2L:1-3000000
-  start: 2885022
-  stop: 2881228
+  start: -1
+  stop: -1
   strand: '-'
 75_g:
   L: 2914111
   R: 2915406
   seq_id: 2L:1-3000000
-  start: 2914111
-  stop: 2915406
+  start: -1
+  stop: -1
   strand: +
 76_g:
   L: 2945617
   R: 2964121
   seq_id: 2L:1-3000000
-  start: 2945617
-  stop: 2964121
+  start: -1
+  stop: -1
   strand: +
 77_g:
   L: 2968605
   R: 2969570
   seq_id: 2L:1-3000000
-  start: 2969570
-  stop: 2968605
+  start: -1
+  stop: -1
   strand: '-'
 78_g:
   L: 2969992
   R: 2972297
   seq_id: 2L:1-3000000
-  start: 2972297
-  stop: 2969992
+  start: -1
+  stop: -1
   strand: '-'
 79_g:
   L: 2973059
   R: 2974604
   seq_id: 2L:1-3000000
-  start: 2973059
-  stop: 2974604
+  start: -1
+  stop: -1
   strand: +
 7_g:
   L: 2581782
   R: 2585271
   seq_id: 2L:1-3000000
-  start: 2585271
-  stop: 2581782
+  start: -1
+  stop: -1
   strand: '-'
 80_g:
   L: 2975178
   R: 2976785
   seq_id: 2L:1-3000000
-  start: 2976785
-  stop: 2975178
+  start: -1
+  stop: -1
   strand: '-'
 81_g:
   L: 2977242
   R: 2978353
   seq_id: 2L:1-3000000
-  start: 2977242
-  stop: 2978353
+  start: -1
+  stop: -1
   strand: +
 82_g:
   L: 2978546
   R: 2979205
   seq_id: 2L:1-3000000
-  start: 2979205
-  stop: 2978546
+  start: -1
+  stop: -1
   strand: '-'
 83_g:
   L: 2980176
   R: 2987520
   seq_id: 2L:1-3000000
-  start: 2987520
-  stop: 2980176
+  start: -1
+  stop: -1
   strand: '-'
 84_g:
   L: 2988245
   R: 2989511
   seq_id: 2L:1-3000000
-  start: 2988245
-  stop: 2989511
+  start: -1
+  stop: -1
   strand: +
 85_g:
   L: 2990067
   R: 2992709
   seq_id: 2L:1-3000000
-  start: 2992709
-  stop: 2990067
+  start: -1
+  stop: -1
   strand: '-'
 86_g:
   L: 2993735
   R: 2998238
   seq_id: 2L:1-3000000
-  start: 2993735
+  start: -1
   stop: -1
   strand: +
 87_g:
   L: 64321
   R: 70553
   seq_id: 2L:1-3000000
-  start: 64321
-  stop: 70553
+  start: -1
+  stop: -1
   strand: +
 88_g:
   L: 83268
   R: 91183
   seq_id: 2L:1-3000000
-  start: 91183
-  stop: 83268
+  start: -1
+  stop: -1
   strand: '-'
 89_g:
   L: 96642
   R: 103936
   seq_id: 2L:1-3000000
-  start: 96642
-  stop: 103936
+  start: -1
+  stop: -1
   strand: +
 8_g:
   L: 2591349
   R: 2592698
   seq_id: 2L:1-3000000
-  start: 2591349
-  stop: 2592698
+  start: -1
+  stop: -1
   strand: +
 90_g:
   L: 104473
   R: 104901
   seq_id: 2L:1-3000000
-  start: 104901
-  stop: 104473
+  start: -1
+  stop: -1
   strand: '-'
 91_g:
   L: 105566
   R: 106642
   seq_id: 2L:1-3000000
-  start: 106642
-  stop: 105566
+  start: -1
+  stop: -1
   strand: '-'
 92_g:
   L: 108686
   R: 113542
   seq_id: 2L:1-3000000
-  start: 108686
-  stop: 113542
+  start: -1
+  stop: -1
   strand: +
 93_g:
   L: 115713
   R: 120032
   seq_id: 2L:1-3000000
-  start: 120032
-  stop: 115713
+  start: -1
+  stop: -1
   strand: '-'
 94_g:
   L: 123129
   R: 128983
   seq_id: 2L:1-3000000
-  start: 128983
-  stop: 123129
+  start: -1
+  stop: -1
   strand: '-'
 95_g:
   L: 132483
   R: 133682
   seq_id: 2L:1-3000000
-  start: 132483
-  stop: 133682
+  start: -1
+  stop: -1
   strand: +
 96_g:
   L: 138695
   R: 139336
   seq_id: 2L:1-3000000
-  start: 139336
-  stop: 138695
+  start: -1
+  stop: -1
   strand: '-'
 97_g:
   L: 139471
   R: 142487
   seq_id: 2L:1-3000000
-  start: 142487
-  stop: 139471
+  start: -1
+  stop: -1
   strand: '-'
 98_g:
   L: 143426
   R: 144094
   seq_id: 2L:1-3000000
-  start: 143426
-  stop: 144094
+  start: -1
+  stop: -1
   strand: +
 99_g:
   L: 144374
   R: 145795
   seq_id: 2L:1-3000000
-  start: 145795
-  stop: 144374
+  start: -1
+  stop: -1
   strand: '-'
 9_g:
   L: 2610167
   R: 2611050
   seq_id: 2L:1-3000000
-  start: 2610167
-  stop: 2611050
+  start: -1
+  stop: -1
   strand: +

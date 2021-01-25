@@ -229,11 +229,11 @@ sub GetTranscripts
 			}
 			elsif( $ph == 1 )
 			{
-				$g->{$gid}{'mrna'} =~ s/^..//;
+				$g->{$gid}{'mrna'} =~ s/^.//;
 			}
 			elsif( $ph == 2 )
 			{
-				$g->{$gid}{'mrna'} =~ s/^.//;
+				$g->{$gid}{'mrna'} =~ s/^..//;
 			}
 			else {die;}
 			
@@ -265,10 +265,10 @@ sub GetTranscripts
 			elsif( $ph == 1 )
 			{
 				chop $g->{$gid}{'mrna'};
-				chop $g->{$gid}{'mrna'};
 			}
 			elsif( $ph == 2 )
 			{
+				chop $g->{$gid}{'mrna'};
 				chop $g->{$gid}{'mrna'};
 			}
 			else {die;}
