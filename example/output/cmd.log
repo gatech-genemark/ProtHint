@@ -1,3 +1,3 @@
 Called from: /storage3/w/tomas/ProtHint/example
-Cmd: ../bin/prothint.py input/genome.fasta input/proteins.fasta --geneMarkGtf input/genemark.gtf --workdir output
+Cmd: ../bin/prothint.py input/genome.fasta input/proteins.fasta --geneMarkGtf input/genemark.gtf --workdir test
 

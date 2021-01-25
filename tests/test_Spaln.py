@@ -32,7 +32,7 @@ class TestSpaln(unittest.TestCase):
     def testSpaln1000(self):
         prothint.workDir = testDir + "/test_Spaln"
         # Proteins file is deleted at the end of prothint
-        shutil.copy("prothint.workDir + /proteins.fasta", "prothint.workDir + /proteins_copy.fasta")
+        shutil.copy(prothint.workDir + "/proteins.fasta", prothint.workDir + "/proteins_copy.fasta")
         prothint.proteins = prothint.workDir + "/proteins_copy.fasta"
         prothint.runSpaln(prothint.workDir + "/pairs.out", True, 1000)
 
