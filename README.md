@@ -21,8 +21,6 @@ spliced aligning predicted genes to a database of reference protein sequences.
     * [DIAMOND](#diamond)
     * [Spaln](#spaln)
         * [Spaln boundary scorer](#spaln-boundary-scorer)
-    * [ProSplign](#prosplign-optional-installation)
-        * [ProSplign intron scorer](#prosplign-intron-scorer)
 * [Usage](#usage)
     * [Input](#input)
     * [Protein Database Preparation](#protein-database-preparation)
@@ -105,25 +103,6 @@ Binary for parsing and scoring hints from Spaln's alignment output is included
 in this distribution package.
 
 In case the included binary is not working, compile it from source at https://github.com/gatech-genemark/spaln-boundary-scorer and replace the `spaln_boundary_scorer` binary
-in ProtHint/dependencies folder.
-
-### ProSplign (Optional Installation)
-
-ProSplign program from NCBI – with the standard NCBI license
-(http://www.ncbi.nlm.nih.gov/sutils/static/prosplign/prosplign.html) is
-included in this distribution package.
-
-This tool is only used when ProtHint is run with `--ProSplign` option. In
-case the included version is not working, download the executable from
-https://www.ncbi.nlm.nih.gov/sutils/static/prosplign/prosplign.html and
-replace the `prosplign` binary in ProtHint/dependencies folder.
-
-#### ProSplign intron scorer
-
-Binary for parsing and scoring introns from ProSplign's alignment output is included
-in this distribution package.
-
-In case the included binary is not working, compile it from source at https://github.com/gatech-genemark/prosplign-intron-scorer and replace the `prosplign_intron_scorer` binary
 in ProtHint/dependencies folder.
 
 # Usage
