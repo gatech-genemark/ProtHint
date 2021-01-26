@@ -36,9 +36,6 @@ my $out_file_gff = '';  # output in GFF
 my $min_exon_score = 25;
 
 my $node_dir = '/tmp';  # use this directory on for holding tmp data on node
-my $PROSPLIGN_INTRONS_OUT = "scored_introns.gff";
-my $PROSPLIGN_OUT = "prosplign.gff";
-my $PROSPLIGN_OUT_ASN = "prosplign.regions.asn";
 my $SPALN_OUT = "spaln.gff";
 # ------------------------------------------------
 
@@ -108,26 +105,7 @@ cd ..
 rm -r \$dir
 ";
 
-	my $proSplignPbs = "
-# Move everything to the node
-cp $bin/../dependencies/prosplign dependencies
-cp $bin/asn_to_gff.pl bin
-cp $bin/../dependencies/prosplign_intron_scorer dependencies
-
-./bin/run_spliced_alignment.pl --nuc $name  --prot $db  --list $list  --cores $K --aligner prosplign
-
-mv $PROSPLIGN_OUT ${name}.gff
-mv $PROSPLIGN_OUT_ASN ${name}.asn
-mv $PROSPLIGN_INTRONS_OUT ${name}.introns.gff
-cd ..
-rm -r \$dir
-";
-
-	if ($aligner eq "spaln") {
-		$text .= $spalnPbs;
-	} elsif ($aligner eq "prosplign") {
-		$text .= $proSplignPbs;
-	}
+	$text .= $spalnPbs;
 
 	open( OUT, ">$pbs" )||die;
 	print OUT $text;
@@ -143,8 +121,6 @@ rm -r \$dir
 	$jobs{ $id }{'seq'} = $name;
 	$jobs{ $id }{'list'} = $list;
 	$jobs{ $id }{'out_gff'} = "${name}.gff";
-	$jobs{ $id }{'out_asn'} = "${name}.asn";
-	$jobs{ $id }{'out_introns'} = "${name}.introns.gff";
 	$jobs{ $id }{'script'} = $pbs;
 	$jobs{ $id }{'log'} = $pbs_log;
 };
@@ -153,16 +129,8 @@ sub CreateOutput
 {
 	print STDERR "creating output\n" if $debug;
 	my $OUT_GFF;
-	my $OUT_ASN;
-	my $OUT_INTRONS;
 
-	if ($aligner eq "spaln") {
-		open( $OUT_GFF, ">$SPALN_OUT" ) or die "error on open file: $SPALN_OUT $!\n";
-	} elsif ($aligner eq "prosplign") {
-		open( $OUT_GFF, ">$PROSPLIGN_OUT" ) or die "error on open file: $PROSPLIGN_OUT $!\n";
-		open( $OUT_ASN, ">$PROSPLIGN_OUT_ASN" ) or die "error on open file: $PROSPLIGN_OUT_ASN $!\n";
-		open( $OUT_INTRONS, ">$PROSPLIGN_INTRONS_OUT" ) or die "error on open file: $PROSPLIGN_INTRONS_OUT $!\n";
-	}
+	open( $OUT_GFF, ">$SPALN_OUT" ) or die "error on open file: $SPALN_OUT $!\n";
 
 	foreach my $id ( sort keys %jobs )
 	{
@@ -175,22 +143,6 @@ sub CreateOutput
 		}
 		close $IN_GFF;
 
-		if ($aligner eq "prosplign") {
-			open( my $IN_ASN, $jobs{$id}{'out_asn'} ) or die "error on open file: $jobs{$id}{'out_asn'} $!\n";
-			while( <$IN_ASN> )
-			{
-				print $OUT_ASN $_;
-			}
-			close $IN_ASN;
-
-			open( my $IN_INTRONS, $jobs{$id}{'out_introns'} ) or die "error on open file: $jobs{$id}{'out_introns'} $!\n";
-			while( <$IN_INTRONS> )
-			{
-				print $OUT_INTRONS $_;
-			}
-			close $IN_INTRONS;
-		}
-
 		# clean tmp files
 		if ( -s $jobs{$id}{'log'} )
 		{
@@ -200,10 +152,6 @@ sub CreateOutput
 		{
 			unlink $jobs{ $id }{'seq'};
 			unlink $jobs{ $id }{'list'};
-			if ($aligner eq "prosplign") {
-				unlink $jobs{ $id }{'out_asn'};
-				unlink $jobs{ $id }{'out_introns'};
-			}
 			unlink $jobs{ $id }{'out_gff'};
 			unlink $jobs{ $id }{'script'};
 			unlink $jobs{ $id }{'log'};
@@ -211,10 +159,6 @@ sub CreateOutput
 	}
 
 	close $OUT_GFF;
-	if ($aligner eq "prosplign") {
-		close $OUT_ASN;
-		close $OUT_INTRONS;
-	}
 };
 # ------------------------------------------------
 sub WaitForIt
@@ -389,16 +333,21 @@ sub CheckBeforeRun
 	if( !$db ) { print STDERR "error, database name is missing $0:  option --db\n"; exit 1; }
 
 	$aligner = lc $aligner;
+
 	if ( !$aligner ) {
-		print STDERR "Required option --aligner is missing. Please specify the aligner. Valid options are: \"Spaln\", \"ProSplign\".\n";
-		exit 1;
+		print STDERR "Reuqired option --aligner is missing.\n"; exit 1;
 	}
 
-	if ( $aligner ne "spaln" && $aligner ne "prosplign" ) {
-		print STDERR "error, invalid aligner specified: $aligner. Valid options are: \"Spaln\", \"ProSplign\".\n";
-		exit 1;
+	if ( $aligner ne "spaln" ) {
+		if ( $aligner eq "prosplign" ) {
+				print STDERR "error, ProSplign is not supported in the current version of this script. A version with ProSplign support ";
+				print STDERR "is available in https://github.com/gatech-genemark/ProtHint/releases/tag/v2.4.0.\n";
+				exit 1;
+			} else {
+				print STDERR "error, invalid aligner specified: $aligner. In the current version of this script, only \"Spaln\" is supported.\n";
+				exit 1;
+			}
 	}
-
 
 	mkdir $store;
 	if( ! -e $store ) { print STDERR "error, directory not found: $store\n"; exit 1; }
@@ -464,11 +413,11 @@ sub Usage
 "# ----------
 Usage: $0 options
 
-run blast on PBS
+run spliced alignment on PBS
 
   --seq  [s] FASTA file with nucleotide sequences
   --list [s] list with  dna-to-protein mappings pair names
-  --aligner [s]  Which spliced alignment tool to use. Valid options are: \"Spaln, ProSplign\"
+  --aligner [s]  Which spliced alignment tool to use. Current version only supports \"Spaln\"
   --db   [s] proteins are here
   --tmp  [s] name of temporary directory on node
   --N    [i] number of jobs to submit

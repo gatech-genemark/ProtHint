@@ -198,7 +198,7 @@ sub Usage
 Usage:  $0
 
 Required options:
-  --in_gff   [name] name of file with ProSplign output in GFF format
+  --in_gff   [name] name of file with coordinates on the region level
   --seq      [name] name of file with regions of sequence in FASTA format
   --out_gff  [name] output
  

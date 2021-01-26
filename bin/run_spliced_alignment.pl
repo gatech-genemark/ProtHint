@@ -35,15 +35,11 @@ my $nuc_file  = '';
 my $prot_file = '';
 my $list_file = '';
 my $out_file_regions  = '';
-my $out_file_asn_regions  = '';
-my $out_file_asn_gff_regions  = '';
 my $cores = 1;
 my $aligner = '';
 my $tmp_dir = '';
 my $min_exon_score = 25;
 # ------------------------------------------------
-my $PROSPLIGN_INTRONS_OUT = "scored_introns.gff";
-my $PROSPLIGN_OUT = "prosplign.gff";
 my $SPALN_OUT = "spaln.gff";
 my $BATCH_SIZE = 100;
 # ------------------------------------------------
@@ -54,13 +50,7 @@ CheckBeforeRun();
 
 print STDERR "[" . localtime() . "] Starting spliced alignment with $aligner\n" if $v;
 
-if ($aligner eq "spaln") {
-	$out_file_regions = "spaln.regions.gff";
-} elsif ($aligner eq "prosplign") {
-	$out_file_regions = "scored_introns.regions.gff";
-	$out_file_asn_regions = "prosplign.regions.asn";
-	$out_file_asn_gff_regions = "prosplign.regions.gff";
-}
+$out_file_regions = "spaln.regions.gff";
 
 # It is important to create threads before calling ReadSequence as
 # threads have a copy of all variables
@@ -99,12 +89,6 @@ if ( $debug )
 my $OUT;
 open( $OUT, ">$out_file_regions" ) or die( "$!, error on open file $out_file_regions" );
 close $OUT;
-if ($aligner eq "prosplign") {
-	open( $OUT, ">$out_file_asn_regions" ) or die( "$!, error on open file $out_file_asn_regions" );
-	close $OUT;
-	open( $OUT, ">$out_file_asn_gff_regions" ) or die( "$!, error on open file $out_file_asn_gff_regions" );
-	close $OUT;
-}
 
 my $tmp_prot_file;
 my $tmp_nuc_file;
@@ -175,13 +159,7 @@ print STDERR "[" . localtime() . "] Alignment of pairs finished\n" if $v;
 print STDERR "[" . localtime() . "] Translating coordinates from local pair level to contig level\n" if $v;
 
 # Cerate final output with correct coordinates
-if ($aligner eq "spaln") {
-	system("$bin/gff_from_region_to_contig.pl --in_gff $out_file_regions --seq $nuc_file --out_gff $SPALN_OUT");
-} elsif ($aligner eq "prosplign") {
-	system("$bin/gff_from_region_to_contig.pl --in_gff $out_file_regions --seq $nuc_file --out_gff $PROSPLIGN_INTRONS_OUT");
-	system("$bin/gff_from_region_to_contig.pl --in_gff $out_file_asn_gff_regions --seq $nuc_file --out_gff $PROSPLIGN_OUT");
-	unlink $out_file_asn_gff_regions;
-}
+system("$bin/gff_from_region_to_contig.pl --in_gff $out_file_regions --seq $nuc_file --out_gff $SPALN_OUT");
 
 unlink $out_file_regions;
 
@@ -193,18 +171,8 @@ exit 0;
 sub alignerThread
 {
 	while (my $batchFile = $q->dequeue()) {
-		if ($aligner eq "spaln") {
-			$tmp_out_file = "${batchFile}_out";
-			system("$bin/spalnBatch.sh $batchFile $tmp_out_file $min_exon_score");
-		} elsif (($aligner eq "prosplign")) {
-			alignWithProSplign($tmp_nuc_file, $tmp_prot_file, $tmp_out_file);
-			$mutex->lock;
-			AppendToFile ($out_file_asn_regions, "${tmp_out_file}_asn");
-			AppendToFile ($out_file_asn_gff_regions, "${tmp_out_file}_asn_gff");
-			$mutex->unlock;
-			unlink "${tmp_out_file}_asn";
-			unlink "${tmp_out_file}_asn_gff";
-		}
+		$tmp_out_file = "${batchFile}_out";
+		system("$bin/spalnBatch.sh $batchFile $tmp_out_file $min_exon_score");
 
 		# Safe write
 		$mutex->lock;
@@ -214,29 +182,6 @@ sub alignerThread
 		unlink $tmp_out_file;
 		unlink $batchFile;
 	}
-}
-
-sub alignWithProSplign
-{
-	my $tmp_nuc_file = shift;
-	my $tmp_prot_file = shift;
-	my $tmp_out_file = shift;
-
-	# -o     Output file in asn format
-	# -eo    Output file with full alignment
-	# -nfa   Single nucleotide sequence to read from a FASTA file
-	# -pfa   Single protein sequence to read from a FASTA file
-	# -nogenbank   Do not use GenBank data loader.
-	# -gaps_inf    Show all gaps in info output (if not set, show frameshifts only)
-	# -two_stages
-
-	system("$bin/../dependencies/prosplign -o \"${tmp_out_file}_asn\" -eo \"${tmp_out_file}_ali\"  -nfa \"$tmp_nuc_file\" -pfa \"$tmp_prot_file\" -nogenbank -gaps_inf -two_stages");
-	# Parse and score introns from alignment file
-	system("$bin/../dependencies/prosplign_intron_scorer -i \"${tmp_out_file}_ali\" -o \"$tmp_out_file\" -w 10 -a -s $bin/../dependencies/blosum62.csv");
-	# Convert asn output to gff
-	system("$bin/asn_to_gff.pl --asn \"${tmp_out_file}_asn\" --out \"${tmp_out_file}_asn_gff\" --exons");
-
-	unlink "${tmp_out_file}_ali";
 }
 
 #------------------------------------------------
@@ -385,13 +330,18 @@ sub CheckBeforeRun
 	$aligner = lc $aligner;
 
 	if ( !$aligner ) {
-		print STDERR "Reuqired option --aligner is missing. Please specify the aligner. Valid options are: \"Spaln\", \"ProSplign\".\n"; exit 1;
+		print STDERR "Reuqired option --aligner is missing.\n"; exit 1;
 	} 
 
-	if ( $aligner ne "spaln" && $aligner ne "prosplign" ) 
-	{
-		print STDERR "error, invalid aligner specified: $aligner. Valid options are: \"Spaln\", \"ProSplign\".\n";
-		exit 1;
+	if ( $aligner ne "spaln" ) {
+		if ( $aligner eq "prosplign" ) {
+				print STDERR "error, ProSplign is not supported in the current version of this script. A version with ProSplign support ";
+				print STDERR "is available in https://github.com/gatech-genemark/ProtHint/releases/tag/v2.4.0.\n";
+				exit 1;
+			} else {
+				print STDERR "error, invalid aligner specified: $aligner. In the current version of this script, only \"Spaln\" is supported.\n";
+				exit 1;
+			}
 	}
 };
 # ------------------------------------------------
@@ -450,7 +400,7 @@ Required options:
   --nuc       [name] name of file with nucleotide sequences
   --prot      [name] name of file with protein sequences
   --list      [name] list of nuc to prot mapping
-  --aligner   [name] Which spliced alignment tool to use. Valid options are: \"Spaln, ProSplign\"
+  --aligner   [name] Which spliced alignment tool to use. Current version only supports \"Spaln\"
 
 
  Optional parameters:
