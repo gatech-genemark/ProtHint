@@ -14,7 +14,7 @@ melanogaster's_ 2L chromosome.
 
 To run ProtHint, use the following command
 
-    ../bin/prothint.py input/genome.fasta input/proteins.fasta --geneMarkGtf input/genemark.gtf --workdir test
+    ../bin/prothint.py input/genome.fasta input/proteins.fasta --geneSeeds input/genemark.gtf --workdir test
 
 If everything is configured correctly, the results in the `test` folder should
 match the contents of the `output` folder. Note that the order of hints in gff
