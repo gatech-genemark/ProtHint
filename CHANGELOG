@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.6.0] 2021-2-22
+
+### Major changes
+
+- Fixed translation of incomplete seed genes
+
+### Other changes
+
+- Several bug fixes, mostly for the iterative mode
+- Removed all ProSplign-related code
+
 ## [2.5.0] 2020-7-5
 
 ### Major changes

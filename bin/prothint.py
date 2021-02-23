@@ -17,7 +17,7 @@ import shutil
 import tempfile
 
 
-VERSION = '2.5.0'
+VERSION = '2.6.0'
 workDir = ''
 binDir = ''
 genome = ''
