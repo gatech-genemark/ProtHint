@@ -332,6 +332,7 @@ def processSpalnOutput():
     processSpalnIntrons()
     processSpalnStops()
     processSpalnStarts()
+    systemCall("sort -k1,1 -k4,4n -k5,5n -o prothint.gff prothint.gff")
 
     printTopChains()
 
