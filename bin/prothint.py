@@ -196,7 +196,7 @@ def translateSeeds(seedGenes):
     callScript("print_longest_isoform.py", seedGenes +
                " > longest_seed_isoforms.gtf")
 
-    systemCall("grep -P \tCDS\t longest_seed_isoforms.gtf > " +
+    systemCall("grep \tCDS\t longest_seed_isoforms.gtf > " +
                "longest_seed_isoforms_cds.gtf")
     os.remove("longest_seed_isoforms.gtf")
 

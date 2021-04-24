@@ -18,7 +18,7 @@ batchFile=$1
 output=$2
 min_exon_score=$3
 
-binDir="$(readlink -e $(dirname "$0"))"
+binDir="$(readlink -f $(dirname "$0"))"
 
 export ALN_TAB="$binDir/../dependencies/spaln_table"
 # Reset output
@@ -31,8 +31,8 @@ while read -r -a pair; do
   nuc=${pair[0]}
   prot=${pair[1]}
 
-  geneLength=$(stat --printf "%s" "$nuc")
-  proteinLength=$(stat --printf "%s" "$prot")
+  geneLength=$(stat -c "%s" "$nuc")
+  proteinLength=$(stat -c "%s" "$prot")
   # Estimate the maximum possible possible length of the alignment, including gaps.
   alignmentLength="$(($geneLength*2))"
 
