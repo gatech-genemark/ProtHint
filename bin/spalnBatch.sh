@@ -53,7 +53,7 @@ while read -r -a pair; do
   # Align and directly parse the output
   "$binDir/../dependencies/spaln" $mode -LS -pw -S1 -O1 -l $alignmentLength "$nuc" "$prot" \
     2> /dev/null | "$binDir/../dependencies/spaln_boundary_scorer" -o "${nuc}_${prot}" -w 10 \
-    -s "$binDir/../dependencies/blosum62.csv" -e $min_exon_score
+    -s "$binDir/../dependencies/blosum62.csv" -e $min_exon_score -x $min_exon_score
 
   cat "${nuc}_${prot}" >> $output
   rm "${nuc}_${prot}" "$nuc" "$prot"
