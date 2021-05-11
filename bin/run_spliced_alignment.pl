@@ -39,6 +39,7 @@ my $cores = 1;
 my $aligner = '';
 my $tmp_dir = '';
 my $min_exon_score = 25;
+my $nonCanonical = 0;
 # ------------------------------------------------
 my $SPALN_OUT = "spaln.gff";
 my $BATCH_SIZE = 100;
@@ -172,7 +173,7 @@ sub alignerThread
 {
 	while (my $batchFile = $q->dequeue()) {
 		$tmp_out_file = "${batchFile}_out";
-		system("$bin/spalnBatch.sh $batchFile $tmp_out_file $min_exon_score");
+		system("$bin/spalnBatch.sh $batchFile $tmp_out_file $min_exon_score $nonCanonical");
 
 		# Safe write
 		$mutex->lock;
@@ -370,7 +371,8 @@ sub ParseCMD
 		'aligner=s' => \$aligner,
 		'verbose'   => \$v,
 		'debug'     => \$debug,
-		'min_exon_score=f' => \$min_exon_score
+		'min_exon_score=f' => \$min_exon_score,
+		'nonCanonical' => \$nonCanonical
 	);
 
 	if( !$opt_results ) { print STDERR "error on command line: $0\n"; exit 1; }
@@ -387,6 +389,7 @@ sub ParseCMD
 	$cfg->{'d'}->{'debug'} = $debug;
 	$cfg->{'d'}->{'cmd'}   = $cmd;
 	$cfg->{'d'}->{'min_exon_score'} = $min_exon_score;
+	$cfg->{'d'}->{'nonCanonical'} = $nonCanonical;
 	
 	print STDERR Dumper($cfg) if $debug;
 };
@@ -406,6 +409,7 @@ Required options:
  Optional parameters:
   --cores            [number] number of threads to use
   --min_exon_score   [number] discard all hints inside/neighboring exons with score lower than minExonScore. Spaln specific option.
+  --nonCanonical     Allow non-canonical introns
 
 Developer options:
   --verbose

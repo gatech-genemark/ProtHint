@@ -16,7 +16,7 @@ class TestProcessSpalnOutput(unittest.TestCase):
 
         shutil.copyfile("Spaln/spaln.gff", "Spaln/spaln_orig.gff")
         prothint.flagTopProteins("diamond/diamond.out")
-        prothint.processSpalnOutput()
+        prothint.processSpalnOutput(False)
         shutil.move("Spaln/spaln_orig.gff", "Spaln/spaln.gff")
 
         self.assertEqual(common.compareFiles("prothint.gff", "test_prothint.gff"), 0)

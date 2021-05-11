@@ -20,6 +20,7 @@ use Data::Dumper;
 # ------------------------------------------------
 my $v = 0;
 my $debug = 0;
+my $nonCanonical = 0;
 my $cfg;
 my $log;
 my $bin = $RealBin;
@@ -75,6 +76,10 @@ sub RunOnPBS
  	my $pbs = UniqTmpFile();
 	my $pbs_log = $pbs.".log";
 	my $label = $name;
+	my $nonCanonicalFlag = "";
+	if ($nonCanonical) {
+		$nonCanonicalFlag = " --nonCanonical "
+	}
 
 	my $text = "#!/bin/bash
 #PBS -N $label
@@ -98,7 +103,7 @@ cp $bin/spaln_to_gff.py bin
 cp $bin/../dependencies/spaln_boundary_scorer dependencies
 cp $bin/spalnBatch.sh bin
 
-./bin/run_spliced_alignment.pl --nuc $name --prot $db --list $list --cores $K --aligner spaln --min_exon_score $min_exon_score
+./bin/run_spliced_alignment.pl --nuc $name --prot $db --list $list --cores $K --aligner spaln --min_exon_score $min_exon_score $nonCanonicalFlag
 
 mv $SPALN_OUT ${name}.gff
 cd ..
@@ -382,6 +387,7 @@ sub ParseCMD
 		'N=i'     => \$N,
 		'K=i'     => \$K,
 		'aligner=s' => \$aligner,
+		'nonCanonical' => \$nonCanonical,
 		'verbose' => \$v,
 		'debug'   => \$debug,
 		'min_exon_score=f' => \$min_exon_score
@@ -399,6 +405,7 @@ sub ParseCMD
 	$cfg->{'d'}->{'N'}     = $N;
 	$cfg->{'d'}->{'K'}     = $K;
 	$cfg->{'d'}->{'aligner'} = $aligner;
+	$cfg->{'d'}->{'nonCanonical'} = $nonCanonical;
 	$cfg->{'d'}->{'v'}     = $v;
 	$cfg->{'d'}->{'debug'} = $debug;
 	$cfg->{'d'}->{'cmd'}   = $cmd;
@@ -422,6 +429,7 @@ run spliced alignment on PBS
   --tmp  [s] name of temporary directory on node
   --N    [i] number of jobs to submit
   --K    [i] number of cores per job (on the same node)
+  --nonCanonical Allow non-canonical introns
   --v        verbose
   --min_exon_score [f] discard all hints inside/neighboring exons with score lower than minExonScore. Spaln specific option.
   --debug
