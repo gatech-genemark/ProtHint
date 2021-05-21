@@ -35,7 +35,7 @@ while read -r -a pair; do
   geneLength=$(stat -c "%s" "$nuc")
   proteinLength=$(stat -c "%s" "$prot")
   # Estimate the maximum possible possible length of the alignment, including gaps.
-  alignmentLength="$(($geneLength*2))"
+  alignmentLength=$((2*(geneLength+proteinLength)))
 
   # -Q3    Algorithm runs in the fast heuristic mod
   # -pw    Report result even if alignment score is below threshold prot_id
