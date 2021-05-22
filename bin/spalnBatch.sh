@@ -9,14 +9,15 @@
 LONG_GENE=30000
 LONG_PROTEIN=15000
 
-if [ ! "$#" -eq 3 ]; then
-  echo "Usage: $0 input_batch output min_exon_score"
+if [ ! "$#" -eq 4 ]; then
+  echo "Usage: $0 input_batch output min_exon_score nonCanonicalIntrons"
   exit
 fi
 
 batchFile=$1
 output=$2
 min_exon_score=$3
+nonCanonicalIntrons=$4
 
 binDir="$(readlink -f $(dirname "$0"))"
 
@@ -34,7 +35,7 @@ while read -r -a pair; do
   geneLength=$(stat -c "%s" "$nuc")
   proteinLength=$(stat -c "%s" "$prot")
   # Estimate the maximum possible possible length of the alignment, including gaps.
-  alignmentLength="$(($geneLength*2))"
+  alignmentLength=$((2*(geneLength+proteinLength)))
 
   # -Q3    Algorithm runs in the fast heuristic mod
   # -pw    Report result even if alignment score is below threshold prot_id
@@ -50,8 +51,13 @@ while read -r -a pair; do
     mode="-Q7"
   fi
 
+  nonCanonicalFlag=""
+  if [ "$nonCanonicalIntrons" -ne 0 ]; then
+    nonCanonicalFlag="-ya3"
+  fi
+
   # Align and directly parse the output
-  "$binDir/../dependencies/spaln" $mode -LS -pw -S1 -O1 -l $alignmentLength "$nuc" "$prot" \
+  "$binDir/../dependencies/spaln" $mode $nonCanonicalFlag -LS -pw -S1 -O1 -l $alignmentLength "$nuc" "$prot" \
     2> /dev/null | "$binDir/../dependencies/spaln_boundary_scorer" -o "${nuc}_${prot}" -w 10 \
     -s "$binDir/../dependencies/blosum62.csv" -e $min_exon_score -x $min_exon_score
 
