@@ -21,22 +21,6 @@ def systemCall(cmd):
                  'error in command: ' + cmd)
 
 
-def splitSeeds(diamond):
-    seeds = {}
-    lastRows = {}
-    for row in csv.reader(open(diamond), delimiter='\t'):
-        protein = row[1]
-        if protein not in seeds:
-            seeds[protein] = 1
-        else:
-            if int(lastRows[protein][8]) >= int(row[8]):
-                seeds[protein] += 1
-
-        lastRows[protein] = row
-        row[1] = row[1] + "_" + str(seeds[protein])
-        print("\t".join(row))
-
-
 def preprocessInput(diamond):
     """ Reverse order of start and end coordinates for hits on the negative
     strand and sort the output by coordinates.
@@ -70,6 +54,8 @@ def mergeOverlappingQueryRegions(preprocessedDiamond):
     Args:
         diamond: Pre-processed DIAMOND output
     """
+    mergedQueries = tempfile.NamedTemporaryFile(mode="w", prefix="mergedQ",
+                                                dir=".", delete=False)
     targets = {}
     for row in csv.reader(open(preprocessedDiamond), delimiter='\t'):
 
@@ -115,27 +101,85 @@ def mergeOverlappingQueryRegions(preprocessedDiamond):
                 targets[target] = row
         else:
             # Print the previous hit, it cannot be overlapped anymore
-            print("\t".join(targets[target]))
+            mergedQueries.write("\t".join(targets[target]) + "\n")
             targets[target] = row
 
     for key in targets:
-        print("\t".join(targets[key]))
+        mergedQueries.write("\t".join(targets[key]) + "\n")
+
+    mergedQueries.close()
+    return mergedQueries.name
+
+
+def splitTargets(mergedQueries, args):
+    """Split hits to duplicated genes (or conserved regions) into
+    distinct seeds. The split criteria are explained in the help of
+    --maxTargetHitOverlap and --maxIntron cmd arguments.
+
+    Args:
+        mergedQueries: Processed DIAMOND output
+        args: Cmd arguments
+    """
+    output = tempfile.NamedTemporaryFile(mode="w", prefix="splitT",
+                                         dir=".", delete=False)
+    seeds = {}
+    prevRows = {}
+    for row in csv.reader(open(mergedQueries), delimiter='\t'):
+        if row[13] == "-":
+            continue
+        target = row[0] + "_" + row[1] + "_" + row[13]
+        if target not in seeds:
+            seeds[target] = 1
+        else:
+            overlap = int(prevRows[target][9]) - int(row[8]) + 1
+            if overlap > 0:
+                prevLen = int(prevRows[target][9]) - \
+                          int(prevRows[target][8]) + 1
+                currLen = int(row[9]) - int(row[8]) + 1
+
+                if overlap / prevLen > args.maxTargetHitOverlap or \
+                   overlap / currLen > args.maxTargetHitOverlap:
+                    seeds[target] += 1
+
+        prevRows[target] = row
+        row[1] = target + "_" + str(seeds[target])
+        output.write("\t".join(row) + "\n")
+
+    output.close()
+    return output.name
+
+
+def diamond2gff(preprocessedDiamond):
+    """Convert the DIAMOND output to gff and print the result to stdout
+
+    Args:
+        diamond: Pre-processed DIAMOND output
+    """
+    for row in csv.reader(open(preprocessedDiamond), delimiter='\t'):
+        print("\t".join([row[0], "DIAMOND", "CDS", row[6], row[7], "1",
+                         row[13], ".", "gene_id=" + row[1] + ";" +
+                         " transcript_id=" + row[1] + ";" +
+                         " score=" + row[12] + ";"]))
 
 
 def main():
     args = parseCmd()
     preprocessedDiamond = preprocessInput(args.diamond)
-    mergeOverlappingQueryRegions(preprocessedDiamond)
+    mergedQueries = mergeOverlappingQueryRegions(preprocessedDiamond)
     os.remove(preprocessedDiamond)
-
+    final = splitTargets(mergedQueries, args)
+    os.remove(mergedQueries)
+    diamond2gff(final)
+    os.remove(mergedQueries)
 
 def parseCmd():
 
     parser = argparse.ArgumentParser(description='Create seed gene regions \
         and associated protein hits from DIAMOND BLASTx alignments. This \
         script processes hits corresponding to the same target protein by (a) \
-        merging hits separated by introns into seed genes, and (b) splitting \
-        hits to duplicated genes (or conserved regions) into distinct seeds.')
+        merging hits with overlapping query alignment (b) assigning hits \
+        separated by introns into seed genes, (c) splitting hits to \
+        duplicated genes (or conserved regions) into distinct seeds.')
 
     parser.add_argument('diamond', metavar='diamond.tab', type=str,
                         help='DIAMOND blastx output. The program assumes \
@@ -144,11 +188,25 @@ def parseCmd():
                         mismatch gapopen qstart qend sstart send evalue \
                         bitscore score".')
 
+    parser.add_argument('--maxTargetHitOverlap', type=float, default=0.75,
+                        help='Maximum allowed fraction of a hit\'s target \
+        alignment to be overlapped by a target alignment from a neighboring \
+        hit from the same target (neighboring on the query). Hits exceeding \
+        this fraction are split into distinct seeds. If a target alignment of \
+        a hit starts or ends before the target alignment of a preceding hit \
+        (preceding on the query), the overlap is considered to be 1.')
+
     parser.add_argument('--maxIntron', type=int, default=50000,
                         help='Maximum intron length. Hits further apart \
                         are split into separate seed genes.')
 
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    if args.maxTargetHitOverlap > 1 or args.maxTargetHitOverlap < 0:
+        sys.exit("Error: argument --maxTargetHitOverlap must be specified in" +
+                 " range from 0 to 1.")
+
+    return args
 
 
 if __name__ == '__main__':
