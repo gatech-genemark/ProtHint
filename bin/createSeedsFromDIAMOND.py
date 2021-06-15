@@ -76,8 +76,13 @@ def mergeOverlappingQueryRegions(preprocessedDiamond):
         start = int(row[6])
         end = int(row[7])
 
-        prevStart = int(proteins[protein][6])
-        prevEnd = int(proteins[protein][7])
+        target = row[0] + "_" + row[1] + "_" + row[13]
+        if target not in targets:
+            targets[target] = row
+            continue
+
+        prevStart = int(targets[target][6])
+        prevEnd = int(targets[target][7])
 
         if start < prevEnd:
             if end <= prevEnd:
@@ -97,7 +102,7 @@ def mergeOverlappingQueryRegions(preprocessedDiamond):
                 prevUniquePortion = (prevLen - overlapLen) / prevLen
 
                 currScore = float(row[12])
-                prevScore = float(proteins[protein][12])
+                prevScore = float(targets[target][12])
 
                 newScore = currUniquePortion * currScore + \
                     prevUniquePortion * prevScore + \
@@ -108,15 +113,13 @@ def mergeOverlappingQueryRegions(preprocessedDiamond):
                 row[6] = str(prevStart)
                 row[8] = targets[target][8]
                 targets[target] = row
-                if int(row[8]) > int(row[9]):
-                    print("\t".join(targets[target]))
         else:
             # Print the previous hit, it cannot be overlapped anymore
-            # print("\t".join(targets[target]))
+            print("\t".join(targets[target]))
             targets[target] = row
 
-    # for key in targets:
-        # print("\t".join(targets[key]))
+    for key in targets:
+        print("\t".join(targets[key]))
 
 
 def main():
@@ -124,7 +127,7 @@ def main():
     preprocessedDiamond = preprocessInput(args.diamond)
     mergeOverlappingQueryRegions(preprocessedDiamond)
     os.remove(preprocessedDiamond)
-    splitSeeds(args.diamond)
+
 
 def parseCmd():
 
