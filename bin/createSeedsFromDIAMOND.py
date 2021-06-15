@@ -9,8 +9,9 @@
 
 import argparse
 import csv
-
+import tempfile
 import sys
+import os
 import subprocess
 
 
@@ -36,20 +37,41 @@ def splitSeeds(diamond):
         print("\t".join(row))
 
 
-def mergeOverlappingQueryRegions(diamond):
+def preprocessInput(diamond):
+    """ Reverse order of start and end coordinates for hits on the negative
+    strand and sort the output by coordinates.
+
+    Args:
+        diamond: Raw DIAMOND output
+    """
+    flippedDiamond = tempfile.NamedTemporaryFile(mode="w", prefix="flipped",
+                                                 dir=".", delete=False)
+
+    for row in csv.reader(open(diamond), delimiter='\t'):
+        strand = "+"
+        if int(row[6]) > int(row[7]):
+            row[6], row[7] = row[7], row[6]
+            row[8], row[9] = row[9], row[8]
+            strand = "-"
+        row.append(strand)
+        flippedDiamond.write("\t".join(row) + "\n")
+
+    flippedDiamond.close()
+    systemCall("sort -k1,1 -k7,7n -k8,8n " + flippedDiamond.name +
+               " -o " + flippedDiamond.name)
+    return flippedDiamond.name
+
+
+def mergeOverlappingQueryRegions(preprocessedDiamond):
     """Merge overlapping (in the query sequence) hits from the same target.
     Extra care is taken to correctly process the score and target protein
     alignment positions of the merged hits.
 
     Args:
-        diamond: Raw DIAMOND output
+        diamond: Pre-processed DIAMOND output
     """
-    proteins = {}
-    for row in csv.reader(open(diamond), delimiter='\t'):
-        protein = row[1]
-        if protein not in proteins:
-            proteins[protein] = row
-            continue
+    targets = {}
+    for row in csv.reader(open(preprocessedDiamond), delimiter='\t'):
 
         start = int(row[6])
         end = int(row[7])
@@ -84,22 +106,25 @@ def mergeOverlappingQueryRegions(diamond):
 
                 row[12] = str(round(newScore, 2))
                 row[6] = str(prevStart)
-                row[8] = proteins[protein][8]
-                proteins[protein] = row
+                row[8] = targets[target][8]
+                targets[target] = row
+                if int(row[8]) > int(row[9]):
+                    print("\t".join(targets[target]))
         else:
             # Print the previous hit, it cannot be overlapped anymore
-            print("\t".join(proteins[protein]))
-            proteins[protein] = row
+            # print("\t".join(targets[target]))
+            targets[target] = row
 
-    for key in proteins:
-        print("\t".join(proteins[key]))
+    # for key in targets:
+        # print("\t".join(targets[key]))
 
 
 def main():
     args = parseCmd()
-    mergeOverlappingQueryRegions(args.diamond)
-    #splitSeeds(args.diamond)
-
+    preprocessedDiamond = preprocessInput(args.diamond)
+    mergeOverlappingQueryRegions(preprocessedDiamond)
+    os.remove(preprocessedDiamond)
+    splitSeeds(args.diamond)
 
 def parseCmd():
 
