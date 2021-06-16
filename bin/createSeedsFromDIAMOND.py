@@ -125,17 +125,23 @@ def splitTargets(mergedQueries, args):
     seeds = {}
     prevRows = {}
     for row in csv.reader(open(mergedQueries), delimiter='\t'):
-        if row[13] == "-":
-            continue
         target = row[0] + "_" + row[1] + "_" + row[13]
         if target not in seeds:
             seeds[target] = 1
         else:
-            overlap = int(prevRows[target][9]) - int(row[8]) + 1
+            if row[13] == "+":
+                overlap = int(prevRows[target][9]) - int(row[8]) + 1
+            else:
+                overlap = int(row[8]) - int(prevRows[target][9]) + 1
             if overlap > 0:
-                prevLen = int(prevRows[target][9]) - \
-                          int(prevRows[target][8]) + 1
-                currLen = int(row[9]) - int(row[8]) + 1
+                if row[13] == "+":
+                    prevLen = int(prevRows[target][9]) - \
+                              int(prevRows[target][8]) + 1
+                    currLen = int(row[9]) - int(row[8]) + 1
+                else:
+                    prevLen = int(prevRows[target][8]) - \
+                              int(prevRows[target][9]) + 1
+                    currLen = int(row[8]) - int(row[9]) + 1
 
                 if overlap / prevLen > args.maxTargetHitOverlap or \
                    overlap / currLen > args.maxTargetHitOverlap:
@@ -170,7 +176,8 @@ def main():
     final = splitTargets(mergedQueries, args)
     os.remove(mergedQueries)
     diamond2gff(final)
-    os.remove(mergedQueries)
+    os.remove(final)
+
 
 def parseCmd():
 
