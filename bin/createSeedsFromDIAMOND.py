@@ -168,7 +168,39 @@ def diamond2gff(preprocessedDiamond):
         print("\t".join([row[0], "DIAMOND", "CDS", row[6], row[7], "1",
                          row[13], ".", "gene_id=" + row[1] + ";" +
                          " transcript_id=" + row[1] + ";" +
+                         " targetFrom=" + row[8] + ";" +
+                         " targetTo=" + row[9] + ";" +
                          " score=" + row[12] + ";"]))
+
+
+def printSeeds(preprocessedDiamond):
+    """Print seeds in gff format. Seeds are created by joining hits belonging
+    to the same target (after the splitting procedure). Seed score is a sum
+    of scores of individual hits.
+
+    Args:
+        diamond: Pre-processed DIAMOND output
+    """
+    seeds = {}
+
+    for row in csv.reader(open(preprocessedDiamond), delimiter='\t'):
+        if row[1] not in seeds:
+            seeds[row[1]] = [row[0], row[13], row[6], row[7], row[8], row[9],
+                             row[12]]
+        else:
+            seeds[row[1]][3] = row[7]
+            seeds[row[1]][5] = row[9]
+            seeds[row[1]][6] = str(float(seeds[row[1]][6]) + float(row[12]))
+
+    for key in seeds:
+        seed = seeds[key]
+        seed[6] = str(round(float(seed[6]), 2))
+        print("\t".join([seed[0], "DIAMOND", "seed", seed[2], seed[3], "1",
+                         seed[1], ".", "gene_id=" + key + ";" +
+                         " transcript_id=" + key + ";" +
+                         " targetFrom=" + seed[4] + ";" +
+                         " targetTo=" + seed[5] + ";" +
+                         " score=" + seed[6] + ";"]))
 
 
 def main():
@@ -178,7 +210,7 @@ def main():
     os.remove(preprocessedDiamond)
     final = splitTargets(mergedQueries, args)
     os.remove(mergedQueries)
-    diamond2gff(final)
+    printSeeds(final)
     os.remove(final)
 
 
