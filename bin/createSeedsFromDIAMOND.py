@@ -129,23 +129,26 @@ def splitTargets(mergedQueries, args):
         if target not in seeds:
             seeds[target] = 1
         else:
-            if row[13] == "+":
-                overlap = int(prevRows[target][9]) - int(row[8]) + 1
+            if int(row[6]) - int(prevRows[target][7]) - 1 > args.maxIntron:
+                seeds[target] += 1
             else:
-                overlap = int(row[8]) - int(prevRows[target][9]) + 1
-            if overlap > 0:
                 if row[13] == "+":
-                    prevLen = int(prevRows[target][9]) - \
-                              int(prevRows[target][8]) + 1
-                    currLen = int(row[9]) - int(row[8]) + 1
+                    overlap = int(prevRows[target][9]) - int(row[8]) + 1
                 else:
-                    prevLen = int(prevRows[target][8]) - \
-                              int(prevRows[target][9]) + 1
-                    currLen = int(row[8]) - int(row[9]) + 1
+                    overlap = int(row[8]) - int(prevRows[target][9]) + 1
+                if overlap > 0:
+                    if row[13] == "+":
+                        prevLen = int(prevRows[target][9]) - \
+                                  int(prevRows[target][8]) + 1
+                        currLen = int(row[9]) - int(row[8]) + 1
+                    else:
+                        prevLen = int(prevRows[target][8]) - \
+                                  int(prevRows[target][9]) + 1
+                        currLen = int(row[8]) - int(row[9]) + 1
 
-                if overlap / prevLen > args.maxTargetHitOverlap or \
-                   overlap / currLen > args.maxTargetHitOverlap:
-                    seeds[target] += 1
+                    if overlap / prevLen > args.maxTargetHitOverlap or \
+                       overlap / currLen > args.maxTargetHitOverlap:
+                        seeds[target] += 1
 
         prevRows[target] = row
         row[1] = target + "_" + str(seeds[target])
