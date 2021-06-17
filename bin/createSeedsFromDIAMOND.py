@@ -158,6 +158,53 @@ def splitTargets(mergedQueries, args):
     return output.name
 
 
+def clusterCDS(processedDiamond):
+    """Cluster overlapping CDS regions.
+
+    Args:
+        processedDiamond: Processed DIAMOND output
+    """
+
+    clusteredCDS = tempfile.NamedTemporaryFile(mode="w", prefix="clusteredCDS",
+                                               dir=".", delete=False)
+
+    systemCall("sort -k1,1 -k7,7n -k8,8n " + processedDiamond +
+               " -o " + processedDiamond)
+
+    clusterId = 0
+    prevContig = ""
+    currentClusterEnd = 0
+
+    for row in csv.reader(open(processedDiamond), delimiter='\t'):
+        contig = row[0]
+        start = int(row[6])
+        end = int(row[7])
+
+        if prevContig != contig or start > currentClusterEnd:
+            clusterId += 1
+            currentClusterEnd = end
+        else:
+            if end > currentClusterEnd:
+                currentClusterEnd = end
+
+        row.append(str(clusterId))
+        clusteredCDS.write("\t".join(row) + "\n")
+        prevContig = contig
+
+    clusteredCDS.close()
+    return clusteredCDS.name
+
+
+def clusterSeeds(processedDiamond):
+    """Cluster overlapping seeds. Only CDS-level overlaps are considered.
+
+    Args:
+        processedDiamond: Processed DIAMOND output
+    """
+    result = clusterCDS(processedDiamond)
+    return result
+
+
 def diamond2gff(preprocessedDiamond):
     """Convert the DIAMOND output to gff and print the result to stdout
 
