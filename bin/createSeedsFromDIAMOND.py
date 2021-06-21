@@ -332,6 +332,17 @@ def parseCmd():
                         mismatch gapopen qstart qend sstart send evalue \
                         bitscore score".')
 
+    parser.add_argument('--seedRegions', type=str, required=True,
+                        help='Output file for seed regions.')
+
+    parser.add_argument('--alignmentPairs', type=str, required=True,
+                        help='Output with a list of up to --maxProteinsPerSeed\
+        best scoring proteins per each seed region.')
+
+    parser.add_argument('--maxProteinsPerSeed', type=str,
+                        help='Maximum number of protein per seed region. The \
+        best scoring proteins are selected.')
+
     parser.add_argument('--maxTargetHitOverlap', type=float, default=0.75,
                         help='Maximum allowed fraction of a hit\'s target \
         alignment to be overlapped by a target alignment from a neighboring \
@@ -342,7 +353,7 @@ def parseCmd():
 
     parser.add_argument('--maxIntron', type=int, default=50000,
                         help='Maximum intron length. Hits further apart \
-                        are split into separate seed genes.')
+        are split into separate seed genes.')
 
     args = parser.parse_args()
 
