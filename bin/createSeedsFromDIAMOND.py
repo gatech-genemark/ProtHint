@@ -22,7 +22,7 @@ def systemCall(cmd):
 
 
 def getSeedString(row):
-    return row[0] + "-" + row[1] + "-" + row[13]
+    return row[0] + "-" + row[1] + "-" + row[7]
 
 
 def preprocessInput(diamond):
@@ -37,15 +37,15 @@ def preprocessInput(diamond):
 
     for row in csv.reader(open(diamond), delimiter='\t'):
         strand = "+"
-        if int(row[6]) > int(row[7]):
-            row[6], row[7] = row[7], row[6]
-            row[8], row[9] = row[9], row[8]
+        if int(row[2]) > int(row[3]):
+            row[2], row[3] = row[3], row[2]
+            row[4], row[5] = row[5], row[4]
             strand = "-"
         row.append(strand)
         flippedDiamond.write("\t".join(row) + "\n")
 
     flippedDiamond.close()
-    systemCall("sort -k1,1 -k7,7n -k8,8n " + flippedDiamond.name +
+    systemCall("sort -k1,1 -k3,3n -k4,4n " + flippedDiamond.name +
                " -o " + flippedDiamond.name)
     return flippedDiamond.name
 
@@ -63,16 +63,16 @@ def mergeOverlappingQueryRegions(preprocessedDiamond):
     targets = {}
     for row in csv.reader(open(preprocessedDiamond), delimiter='\t'):
 
-        start = int(row[6])
-        end = int(row[7])
+        start = int(row[2])
+        end = int(row[3])
 
         target = getSeedString(row)
         if target not in targets:
             targets[target] = row
             continue
 
-        prevStart = int(targets[target][6])
-        prevEnd = int(targets[target][7])
+        prevStart = int(targets[target][2])
+        prevEnd = int(targets[target][3])
 
         if start < prevEnd:
             if end <= prevEnd:
@@ -91,17 +91,17 @@ def mergeOverlappingQueryRegions(preprocessedDiamond):
                 currUniquePortion = (currLen - overlapLen) / currLen
                 prevUniquePortion = (prevLen - overlapLen) / prevLen
 
-                currScore = float(row[12])
-                prevScore = float(targets[target][12])
+                currScore = float(row[6])
+                prevScore = float(targets[target][6])
 
                 newScore = currUniquePortion * currScore + \
                     prevUniquePortion * prevScore + \
                     1 / 2 * (1 - currUniquePortion) * currScore + \
                     1 / 2 * (1 - prevUniquePortion) * prevScore
 
-                row[12] = str(round(newScore, 2))
-                row[6] = str(prevStart)
-                row[8] = targets[target][8]
+                row[6] = str(round(newScore, 2))
+                row[2] = str(prevStart)
+                row[4] = targets[target][4]
                 targets[target] = row
         else:
             # Print the previous hit, it cannot be overlapped anymore
@@ -133,22 +133,22 @@ def splitTargets(mergedQueries, args):
         if target not in seeds:
             seeds[target] = 1
         else:
-            if int(row[6]) - int(prevRows[target][7]) - 1 > args.maxIntron:
+            if int(row[2]) - int(prevRows[target][3]) - 1 > args.maxIntron:
                 seeds[target] += 1
             else:
-                if row[13] == "+":
-                    overlap = int(prevRows[target][9]) - int(row[8]) + 1
+                if row[7] == "+":
+                    overlap = int(prevRows[target][5]) - int(row[4]) + 1
                 else:
-                    overlap = int(row[8]) - int(prevRows[target][9]) + 1
+                    overlap = int(row[4]) - int(prevRows[target][5]) + 1
                 if overlap > 0:
-                    if row[13] == "+":
-                        prevLen = int(prevRows[target][9]) - \
-                                  int(prevRows[target][8]) + 1
-                        currLen = int(row[9]) - int(row[8]) + 1
+                    if row[7] == "+":
+                        prevLen = int(prevRows[target][5]) - \
+                                  int(prevRows[target][4]) + 1
+                        currLen = int(row[5]) - int(row[4]) + 1
                     else:
-                        prevLen = int(prevRows[target][8]) - \
-                                  int(prevRows[target][9]) + 1
-                        currLen = int(row[8]) - int(row[9]) + 1
+                        prevLen = int(prevRows[target][4]) - \
+                                  int(prevRows[target][5]) + 1
+                        currLen = int(row[4]) - int(row[5]) + 1
 
                     if overlap / prevLen > args.maxTargetHitOverlap or \
                        overlap / currLen > args.maxTargetHitOverlap:
@@ -187,7 +187,7 @@ def clusterSeeds(processedDiamond):
     clusteredSeeds = tempfile.NamedTemporaryFile(mode="w", prefix="clustered",
                                                  dir=".", delete=False)
 
-    systemCall("sort -k1,1 -k7,7n -k8,8n " + processedDiamond +
+    systemCall("sort -k1,1 -k3,3n -k4,4n " + processedDiamond +
                " -o " + processedDiamond)
 
     clusterId = -1
@@ -198,9 +198,9 @@ def clusterSeeds(processedDiamond):
 
     for row in csv.reader(open(processedDiamond), delimiter='\t'):
         contig = row[0]
-        start = int(row[6])
-        end = int(row[7])
-        seed = row[14]
+        start = int(row[2])
+        end = int(row[3])
+        seed = row[8]
 
         if prevContig != contig or start > currentClusterEnd:
             clusterId += 1
@@ -224,7 +224,7 @@ def clusterSeeds(processedDiamond):
     clusteredCDS.close()
 
     for row in csv.reader(open(clusteredCDS.name), delimiter='\t'):
-        row[15] = str(getRootCluster(clusters, int(row[15])))
+        row[9] = str(getRootCluster(clusters, int(row[9])))
         clusteredSeeds.write("\t".join(row) + "\n")
 
     os.remove(clusteredCDS.name)
@@ -239,13 +239,13 @@ def diamond2gff(preprocessedDiamond):
         diamond: Pre-processed DIAMOND output
     """
     for row in csv.reader(open(preprocessedDiamond), delimiter='\t'):
-        print("\t".join([row[0], "DIAMOND", "CDS", row[6], row[7], "1",
-                         row[13], ".", "gene_id=" + row[14] + ";" +
-                         " transcript_id=" + row[14] + ";" +
-                         " targetFrom=" + row[8] + ";" +
-                         " targetTo=" + row[9] + ";" +
-                         " score=" + row[12] + ";",
-                         row[15]]))
+        print("\t".join([row[0], "DIAMOND", "CDS", row[2], row[3], "1",
+                         row[7], ".", "gene_id=" + row[8] + ";" +
+                         " transcript_id=" + row[8] + ";" +
+                         " targetFrom=" + row[4] + ";" +
+                         " targetTo=" + row[5] + ";" +
+                         " score=" + row[6] + ";",
+                         row[9]]))
 
 
 def printClusters(clusteredDiamond, seedRegions):
@@ -260,16 +260,16 @@ def printClusters(clusteredDiamond, seedRegions):
     seeds = {}
 
     for row in csv.reader(open(clusteredDiamond), delimiter='\t'):
-        clusterID = row[15]
+        clusterID = row[9]
         if clusterID not in seeds:
             seeds[clusterID] = row
-        elif int(row[7]) > int(seeds[clusterID][7]):
-            seeds[clusterID][7] = row[7]
+        elif int(row[3]) > int(seeds[clusterID][3]):
+            seeds[clusterID][3] = row[3]
 
     for clusterID in seeds:
         seed = seeds[clusterID]
-        output.write("\t".join([seed[0], "DIAMOND", "CDS", seed[6],
-                     seed[7], "1", seed[13], "0", "gene_id \"" + clusterID +
+        output.write("\t".join([seed[0], "DIAMOND", "CDS", seed[2],
+                     seed[3], "1", seed[7], "0", "gene_id \"" + clusterID +
                      "\";" + " transcript_id \"" + clusterID + "\";"]) + "\n")
     output.close()
 
@@ -287,12 +287,12 @@ def printPairs(clusteredDiamond, topN, alignmentPairs):
     seeds = {}
 
     for row in csv.reader(open(clusteredDiamond), delimiter='\t'):
-        seedID = row[14]
+        seedID = row[8]
         if seedID not in seeds:
-            seeds[seedID] = [float(row[12]), row[15], row[1]]
+            seeds[seedID] = [float(row[6]), row[9], row[1]]
         else:
-            seeds[seedID][0] = seeds[seedID][0] + float(row[12])
-            if seeds[seedID][1] != row[15]:
+            seeds[seedID][0] = seeds[seedID][0] + float(row[6])
+            if seeds[seedID][1] != row[9]:
                 sys.exit("Error: cluster mismatch within the same seed")
 
     for seedID in seeds:
