@@ -253,8 +253,8 @@ def printClusters(clusteredDiamond, seedRegions):
     and right-most coordinates of its members.
 
     Args:
-        diamond: Pre-processed DIAMOND output
-        seedRegions: Where to print the output
+        clusteredDiamond: Clustered DIAMOND output
+        seedRegions: Output file
     """
     output = open(seedRegions, "w")
     seeds = {}
@@ -274,35 +274,33 @@ def printClusters(clusteredDiamond, seedRegions):
     output.close()
 
 
-
-def printSeeds(preprocessedDiamond):
-    """Print seeds in gff format. Seeds are created by joining hits belonging
-    to the same target (after the splitting procedure). Seed score is a sum
-    of scores of individual hits.
+def printPairs(clusteredDiamond, topN, alignmentPairs):
+    """Print cluster ID and its score for each seed. Select only topN best
+    scoring seeds per each cluster.
 
     Args:
-        diamond: Pre-processed DIAMOND output
+        clusteredDiamond: Clustered DIAMOND output
+        topN: How many best scoring seeds to report per cluster.
+        alignmentPairs: Output file
     """
+    output = open(alignmentPairs, "w")
     seeds = {}
 
-    for row in csv.reader(open(preprocessedDiamond), delimiter='\t'):
-        if row[1] not in seeds:
-            seeds[row[1]] = [row[0], row[13], row[6], row[7], row[8], row[9],
-                             row[12]]
+    for row in csv.reader(open(clusteredDiamond), delimiter='\t'):
+        seedID = row[14]
+        if seedID not in seeds:
+            seeds[seedID] = [float(row[12]), row[15], row[1]]
         else:
-            seeds[row[1]][3] = row[7]
-            seeds[row[1]][5] = row[9]
-            seeds[row[1]][6] = str(float(seeds[row[1]][6]) + float(row[12]))
+            seeds[seedID][0] = seeds[seedID][0] + float(row[12])
+            if seeds[seedID][1] != row[15]:
+                sys.exit("Error: cluster mismatch within the same seed")
 
-    for key in seeds:
-        seed = seeds[key]
-        seed[6] = str(round(float(seed[6]), 2))
-        print("\t".join([seed[0], "DIAMOND", "seed", seed[2], seed[3], "1",
-                         seed[1], ".", "gene_id=" + key + ";" +
-                         " transcript_id=" + key + ";" +
-                         " targetFrom=" + seed[4] + ";" +
-                         " targetTo=" + seed[5] + ";" +
-                         " score=" + seed[6] + ";"]))
+    for seedID in seeds:
+        seed = seeds[seedID]
+        seed[0] = str(round(seed[0], 2))
+        output.write("\t".join([seed[1], seed[2], seed[0]]) + "\n")
+
+    output.close()
 
 
 def main():
