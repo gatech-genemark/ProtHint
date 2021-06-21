@@ -151,7 +151,7 @@ def splitTargets(mergedQueries, args):
                         seeds[target] += 1
 
         prevRows[target] = row
-        row[1] = target + "_" + str(seeds[target])
+        row.append(target + "_" + str(seeds[target]))
         output.write("\t".join(row) + "\n")
 
     output.close()
@@ -196,7 +196,7 @@ def clusterSeeds(processedDiamond):
         contig = row[0]
         start = int(row[6])
         end = int(row[7])
-        seed = row[1]
+        seed = row[14]
 
         if prevContig != contig or start > currentClusterEnd:
             clusterId += 1
@@ -220,7 +220,7 @@ def clusterSeeds(processedDiamond):
     clusteredCDS.close()
 
     for row in csv.reader(open(clusteredCDS.name), delimiter='\t'):
-        row[14] = str(getRootCluster(clusters, int(row[14])))
+        row[15] = str(getRootCluster(clusters, int(row[15])))
         clusteredSeeds.write("\t".join(row) + "\n")
 
     os.remove(clusteredCDS.name)
@@ -236,12 +236,12 @@ def diamond2gff(preprocessedDiamond):
     """
     for row in csv.reader(open(preprocessedDiamond), delimiter='\t'):
         print("\t".join([row[0], "DIAMOND", "CDS", row[6], row[7], "1",
-                         row[13], ".", "gene_id=" + row[1] + ";" +
-                         " transcript_id=" + row[1] + ";" +
+                         row[13], ".", "gene_id=" + row[14] + ";" +
+                         " transcript_id=" + row[14] + ";" +
                          " targetFrom=" + row[8] + ";" +
                          " targetTo=" + row[9] + ";" +
                          " score=" + row[12] + ";",
-                         row[14]]))
+                         row[15]]))
 
 
 def printClusters(clusteredDiamond, seedRegions):
@@ -256,7 +256,7 @@ def printClusters(clusteredDiamond, seedRegions):
     seeds = {}
 
     for row in csv.reader(open(clusteredDiamond), delimiter='\t'):
-        clusterID = row[14]
+        clusterID = row[15]
         if clusterID not in seeds:
             seeds[clusterID] = row
         elif int(row[7]) > int(seeds[clusterID][7]):
