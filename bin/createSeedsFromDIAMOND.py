@@ -21,6 +21,10 @@ def systemCall(cmd):
                  'error in command: ' + cmd)
 
 
+def getSeedString(row):
+    return row[0] + "-" + row[1] + "-" + row[13]
+
+
 def preprocessInput(diamond):
     """ Reverse order of start and end coordinates for hits on the negative
     strand and sort the output by coordinates.
@@ -62,7 +66,7 @@ def mergeOverlappingQueryRegions(preprocessedDiamond):
         start = int(row[6])
         end = int(row[7])
 
-        target = row[0] + "_" + row[1] + "_" + row[13]
+        target = getSeedString(row)
         if target not in targets:
             targets[target] = row
             continue
@@ -125,7 +129,7 @@ def splitTargets(mergedQueries, args):
     seeds = {}
     prevRows = {}
     for row in csv.reader(open(mergedQueries), delimiter='\t'):
-        target = row[0] + "_" + row[1] + "_" + row[13]
+        target = getSeedString(row)
         if target not in seeds:
             seeds[target] = 1
         else:
