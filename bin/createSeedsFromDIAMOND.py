@@ -240,7 +240,35 @@ def diamond2gff(preprocessedDiamond):
                          " transcript_id=" + row[1] + ";" +
                          " targetFrom=" + row[8] + ";" +
                          " targetTo=" + row[9] + ";" +
-                         " score=" + row[12] + ";"]))
+                         " score=" + row[12] + ";",
+                         row[14]]))
+
+
+def printClusters(clusteredDiamond, seedRegions):
+    """Print seed clusters in gff format. Clusters are defined by the left-
+    and right-most coordinates of its members.
+
+    Args:
+        diamond: Pre-processed DIAMOND output
+        seedRegions: Where to print the output
+    """
+    output = open(seedRegions, "w")
+    seeds = {}
+
+    for row in csv.reader(open(clusteredDiamond), delimiter='\t'):
+        clusterID = row[14]
+        if clusterID not in seeds:
+            seeds[clusterID] = row
+        elif int(row[7]) > int(seeds[clusterID][7]):
+            seeds[clusterID][7] = row[7]
+
+    for clusterID in seeds:
+        seed = seeds[clusterID]
+        output.write("\t".join([seed[0], "DIAMOND", "CDS", seed[6],
+                     seed[7], "1", seed[13], "0", "gene_id \"" + clusterID +
+                     "\";" + " transcript_id \"" + clusterID + "\";"]) + "\n")
+    output.close()
+
 
 
 def printSeeds(preprocessedDiamond):
