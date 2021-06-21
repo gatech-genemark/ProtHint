@@ -306,12 +306,20 @@ def printPairs(clusteredDiamond, topN, alignmentPairs):
 def main():
     args = parseCmd()
     preprocessedDiamond = preprocessInput(args.diamond)
+
     mergedQueries = mergeOverlappingQueryRegions(preprocessedDiamond)
     os.remove(preprocessedDiamond)
-    final = splitTargets(mergedQueries, args)
+
+    processedDiamond = splitTargets(mergedQueries, args)
     os.remove(mergedQueries)
-    printSeeds(final)
-    os.remove(final)
+
+    clusteredDiamond = clusterSeeds(processedDiamond)
+    os.remove(processedDiamond)
+
+    printClusters(clusteredDiamond, args.seedRegions)
+    printPairs(clusteredDiamond, args.maxProteinsPerSeed, args.alignmentPairs)
+
+    os.remove(clusteredDiamond)
 
 
 def parseCmd():
