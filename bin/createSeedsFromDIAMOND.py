@@ -13,24 +13,64 @@ import tempfile
 import sys
 import os
 import subprocess
+import math
+from multiprocessing import Pool
 
 
 def systemCall(cmd):
     if subprocess.call(["bash", "-c", cmd]) != 0:
-        sys.exit('error: Program exited due to an ' +
-                 'error in command: ' + cmd)
+        sys.exit('error: Program exited due to an error in command: ' + cmd)
 
 
 def getSeedString(row):
     return row[0] + "-" + row[1] + "-" + row[7]
 
 
-def preprocessInput(diamond):
+def sortSingle(args):
+    systemCall("sort " + args[1] + " " + args[0] + " > " +
+               args[0] + ".sorted")
+
+
+def fastSort(inputFile, sortString, threads):
+    """ Fast, parallel sort. Other parts of this script are not parallelized
+    since they only involve a linear traversal of the input file.
+
+    Args:
+        inputFile: The file to sort
+        sortString: Sorting keys
+        threads: How many threads to use
+    """
+    sortFolder = tempfile.TemporaryDirectory(prefix="sort", dir=".")
+
+    # Using wc -l is the fastest way
+    cmd = "wc -l " + inputFile
+    try:
+        wcOut = subprocess.check_output(["bash", "-c", cmd]).decode()
+    except subprocess.CalledProcessError:
+        sys.exit('error: Program exited due to an error in command: ' + cmd)
+    nLines = int(wcOut.split(" ")[0])
+
+    linesPerFile = math.ceil(nLines / threads)
+    # Again, system call is the fastest way to do this
+    systemCall("split " + inputFile + " " + sortFolder.name +
+               "/raw -a 5 -l " + str(linesPerFile))
+
+    sortFiles = os.listdir(sortFolder.name)
+    pool = Pool(processes=threads)
+    pool.map(sortSingle, [[sortFolder.name + "/" + x,
+                           sortString] for x in sortFiles])
+
+    systemCall("sort " + sortString + " -m " + sortFolder.name + "/*.sorted" +
+               " > " + inputFile)
+
+
+def preprocessInput(diamond, threads):
     """ Reverse order of start and end coordinates for hits on the negative
     strand and sort the output by coordinates.
 
     Args:
         diamond: Raw DIAMOND output
+        threads: How many threads to use in sorting
     """
     flippedDiamond = tempfile.NamedTemporaryFile(mode="w", prefix="flipped",
                                                  dir=".", delete=False)
@@ -45,8 +85,7 @@ def preprocessInput(diamond):
         flippedDiamond.write("\t".join(row) + "\n")
 
     flippedDiamond.close()
-    systemCall("sort -k1,1 -k3,3n -k4,4n " + flippedDiamond.name +
-               " -o " + flippedDiamond.name)
+    fastSort(flippedDiamond.name, "-k1,1 -k3,3n -k4,4n", threads)
     return flippedDiamond.name
 
 
@@ -174,11 +213,12 @@ def getRootCluster(clusters, i):
     return i
 
 
-def clusterSeeds(processedDiamond):
+def clusterSeeds(processedDiamond, threads):
     """Cluster overlapping seeds. Only CDS-level overlaps are considered.
 
     Args:
         processedDiamond: Processed DIAMOND output
+        threads: How many threads to use in sorting
     """
 
     clusteredCDS = tempfile.NamedTemporaryFile(mode="w", prefix="clusteredCDS",
@@ -187,8 +227,7 @@ def clusterSeeds(processedDiamond):
     clusteredSeeds = tempfile.NamedTemporaryFile(mode="w", prefix="clustered",
                                                  dir=".", delete=False)
 
-    systemCall("sort -k1,1 -k3,3n -k4,4n " + processedDiamond +
-               " -o " + processedDiamond)
+    fastSort(processedDiamond, "-k1,1 -k3,3n -k4,4n", threads)
 
     clusterId = -1
     prevContig = ""
@@ -305,7 +344,7 @@ def printPairs(clusteredDiamond, topN, alignmentPairs):
 
 def main():
     args = parseCmd()
-    preprocessedDiamond = preprocessInput(args.diamond)
+    preprocessedDiamond = preprocessInput(args.diamond, args.threads)
 
     mergedQueries = mergeOverlappingQueryRegions(preprocessedDiamond)
     os.remove(preprocessedDiamond)
@@ -313,7 +352,7 @@ def main():
     processedDiamond = splitTargets(mergedQueries, args)
     os.remove(mergedQueries)
 
-    clusteredDiamond = clusterSeeds(processedDiamond)
+    clusteredDiamond = clusterSeeds(processedDiamond, args.threads)
     os.remove(processedDiamond)
 
     printClusters(clusteredDiamond, args.seedRegions)
@@ -360,6 +399,9 @@ def parseCmd():
     parser.add_argument('--maxIntron', type=int, default=50000,
                         help='Maximum intron length. Hits further apart \
         are split into separate seed genes.')
+
+    parser.add_argument('--threads', type=int, default=1,
+                        help='Number of threads to use.')
 
     args = parser.parse_args()
 
