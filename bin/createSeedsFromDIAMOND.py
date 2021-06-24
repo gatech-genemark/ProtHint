@@ -271,20 +271,26 @@ def clusterSeeds(processedDiamond, threads):
     return clusteredSeeds.name
 
 
-def diamond2gff(preprocessedDiamond):
-    """Convert the DIAMOND output to gff and print the result to stdout
+def diamond2gff(preprocessedDiamond, outputFile):
+    """Convert the DIAMOND output to gff and print the result to a file
 
     Args:
         diamond: Pre-processed DIAMOND output
+        outputFile: Output file
     """
+    output = open(outputFile, "w")
+
     for row in csv.reader(open(preprocessedDiamond), delimiter='\t'):
-        print("\t".join([row[0], "DIAMOND", "CDS", row[2], row[3], "1",
-                         row[7], ".", "gene_id=" + row[8] + ";" +
-                         " transcript_id=" + row[8] + ";" +
-                         " targetFrom=" + row[4] + ";" +
-                         " targetTo=" + row[5] + ";" +
-                         " score=" + row[6] + ";",
-                         row[9]]))
+        if len(row) == 8:
+            row.append(row[1])
+
+        output.write("\t".join([row[0], "DIAMOND", "CDS", row[2], row[3], "1",
+                                row[7], ".", "gene_id=" + row[8] + ";" +
+                                " transcript_id=" + row[8] + ";" +
+                                " targetFrom=" + row[4] + ";" +
+                                " targetTo=" + row[5] + ";" +
+                                " score=" + row[6]]) + "\n")
+    output.close()
 
 
 def printClusters(clusteredDiamond, seedRegions):
@@ -348,9 +354,13 @@ def main():
 
     mergedQueries = mergeOverlappingQueryRegions(preprocessedDiamond)
     os.remove(preprocessedDiamond)
+    if args.rawSeeds:
+        diamond2gff(mergedQueries, args.rawSeeds)
 
     processedDiamond = splitTargets(mergedQueries, args)
     os.remove(mergedQueries)
+    if args.splitSeeds:
+        diamond2gff(processedDiamond, args.splitSeeds)
 
     clusteredDiamond = clusterSeeds(processedDiamond, args.threads)
     os.remove(processedDiamond)
@@ -402,6 +412,14 @@ def parseCmd():
 
     parser.add_argument('--threads', type=int, default=1,
                         help='Number of threads to use.')
+
+    parser.add_argument('--rawSeeds', type=str,
+                        help='Output raw, unclustered, seeds here. This is \
+        an optional output; mainly useful for debugging.')
+
+    parser.add_argument('--splitSeeds', type=str,
+                        help='Output split, unclustered, seeds here. This is \
+        an optional output; mainly useful for debugging.')
 
     args = parser.parse_args()
 
