@@ -9,12 +9,9 @@
 
 import argparse
 import csv
-import tempfile
 import sys
-import os
-import subprocess
 import math
-from multiprocessing import Pool
+import subprocess
 
 
 class Border():
@@ -38,9 +35,10 @@ class Block():
         self.start = start
         self.end = end
         self.coverage = coverage
+        self.state = ""
         
     def print(self):
-        print(self.start - 1, self.end - 1, self.coverage)
+        print(self.start - 1, self.end - 1, self.coverage, self.state)
 
 
 def systemCall(cmd):
@@ -66,13 +64,22 @@ def computeCoverage(borders):
     coverage = 0
     blocks = []
     prevCoordinate = borders[0].coordinate
+    maxCoverage = 0
+    meanCoverage = 0
+    clusterLength = borders[-1].coordinate - borders[0].coordinate
 
     for border in borders:
         if border.coordinate != prevCoordinate:
+            meanCoverage += ((border.coordinate - prevCoordinate)
+                             / clusterLength) * coverage
             if len(blocks) != 0 and blocks[-1].coverage == coverage:
                 blocks[-1].end = border.coordinate
             else:
-                blocks.append(Block(prevCoordinate, border.coordinate, coverage))
+                blocks.append(Block(prevCoordinate, border.coordinate,
+                                    coverage))
+
+                if coverage > maxCoverage:
+                    maxCoverage = coverage
 
         if border.start:
             coverage += 1
@@ -81,13 +88,42 @@ def computeCoverage(borders):
 
         prevCoordinate = border.coordinate
 
+    return blocks, maxCoverage, meanCoverage
+
+
+def labelBlocks(blocks, maxCoverage, lowThreshold, highThreshold):
+    state = "start"
+    lowThresholdInt = int(lowThreshold * maxCoverage)
+    highThresholdInt = math.ceil(highThreshold * maxCoverage)
+
+    for block in blocks:
+        if state == "start":
+            if block.coverage <= lowThresholdInt:
+                state = "edge"
+            else:
+                state = "subCluster"
+        elif state == "subCluster":
+            if block.coverage <= lowThresholdInt:
+                state = "bridge"
+        elif state == "bridge":
+            if block.coverage >= highThresholdInt:
+                state = "subCluster"
+        elif state == "edge":
+            if block.coverage >= highThresholdInt:
+                state = "subCluster"
+
+        block.state = state
+
     for block in blocks:
         block.print()
+
 
 def main():
     args = parseCmd()
     borders = loadBorders(args.input)
-    computeCoverage(borders)
+    blocks, maxCoverage, meanCoverage = computeCoverage(borders)
+    print(maxCoverage, meanCoverage)
+    labelBlocks(blocks, maxCoverage, args.lowThreshold, args.highThreshold)
 
 
 def parseCmd():
@@ -96,6 +132,9 @@ def parseCmd():
 
     parser.add_argument('input', metavar='cluster', type=str,
                         help='')
+
+    parser.add_argument('--lowThreshold', type=float, default=0.1)
+    parser.add_argument('--highThreshold', type=float, default=0.2)
 
     return parser.parse_args()
 
