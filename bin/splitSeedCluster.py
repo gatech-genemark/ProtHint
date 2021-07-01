@@ -257,6 +257,8 @@ def printPairs(output, subClusters):
     output.close()
 
 
+
+
 def main():
     args = parseCmd()
 
