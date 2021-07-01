@@ -300,18 +300,40 @@ def diamond2gff(preprocessedDiamond, outputFile):
     output.close()
 
 
+def flushClusterBuffer(buffer, folder):
+    for cluster in list(buffer.keys()):
+        with open(folder + "/" + cluster, "a") as outfile:
+            for row in buffer[cluster]:
+                outfile.write("\t".join(row) + "\n")
+        del buffer[cluster]
+
+
+def saveClustersToFiles(clusteredDiamond, clusterFolder):
+    buffer = {}
+    FLUSH = 1000000
+    counter = 0
+    for row in csv.reader(open(clusteredDiamond), delimiter='\t'):
+        cluster = row[9]
+        if cluster not in buffer:
+            buffer[cluster] = [row]
+        else:
+            buffer[cluster].append(row)
+        counter += 1
+
+        if counter == FLUSH:
+            flushClusterBuffer(buffer, clusterFolder)
+            counter = 0
+
+    flushClusterBuffer(buffer, clusterFolder)
+
+
 def processClusters(clusteredDiamond, topN, seedRegions, alignmentPairs):
 
-    rawClusters = tempfile.TemporaryDirectory(prefix="clusters", dir=".")
+    clusterFolder = tempfile.TemporaryDirectory(prefix="clusters", dir=".")
 
-    # Buffer this into a dictionary and flush once in a while to prevent
-    # frequent file handle opens.
-    for row in csv.reader(open(clusteredDiamond), delimiter='\t'):
-        file = open(rawClusters.name + "/" + row[9], "a")
-        file.write("\t".join(row) + "\n")
-        file.close()
+    saveClustersToFiles(clusteredDiamond, clusterFolder.name)
 
-    clusters = os.listdir(rawClusters.name)
+    clusters = os.listdir(clusterFolder.name)
 
     if os.path.exists(seedRegions):
         os.remove(seedRegions)
@@ -320,12 +342,12 @@ def processClusters(clusteredDiamond, topN, seedRegions, alignmentPairs):
 
     # Parallelize
     for cluster in clusters:
-        splitSeedCluster.split(rawClusters.name + "/" + cluster, 0, 0,
+        splitSeedCluster.split(clusterFolder.name + "/" + cluster, 0, 0,
                                topN,
-                               rawClusters.name + "/seeds_" + cluster,
-                               rawClusters.name + "/pairs_" + cluster)
-        append(rawClusters.name + "/seeds_" + cluster, seedRegions)
-        append(rawClusters.name + "/pairs_" + cluster, alignmentPairs)
+                               clusterFolder.name + "/seeds_" + cluster,
+                               clusterFolder.name + "/pairs_" + cluster)
+        append(clusterFolder.name + "/seeds_" + cluster, seedRegions)
+        append(clusterFolder.name + "/pairs_" + cluster, alignmentPairs)
 
 
 def main():
