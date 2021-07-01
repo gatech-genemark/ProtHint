@@ -117,6 +117,28 @@ def makeSeedBorders(seeds):
     return borders
 
 
+def getMeanCDSCoverage(CDSBorders):
+    coverage = 0
+    prevCoordinate = CDSBorders[0].coordinate
+    meanCoverage = 0
+    CDSArea = 0
+
+    for border in CDSBorders:
+        if border.coordinate != prevCoordinate:
+            if coverage != 0:
+                CDSArea += border.coordinate - prevCoordinate
+                meanCoverage += (border.coordinate - prevCoordinate) * coverage
+
+        if border.start:
+            coverage += 1
+        else:
+            coverage -= 1
+
+        prevCoordinate = border.coordinate
+
+    return meanCoverage / CDSArea
+
+
 def computeCoverage(borders):
     coverage = 0
     blocks = []
