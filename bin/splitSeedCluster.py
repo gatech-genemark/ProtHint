@@ -236,7 +236,7 @@ def assignSeedsToSubsclusters(subClusters, seeds):
 
 def printSubClusters(output, subClusters):
 
-    output = open(output, "a")
+    output = open(output, "w")
 
     for subCluster in subClusters:
         subCluster.printToFile(output)
@@ -246,7 +246,7 @@ def printSubClusters(output, subClusters):
 
 def printPairs(output, subClusters):
 
-    output = open(output, "a")
+    output = open(output, "w")
 
     for subCluster in subClusters:
         for seed in subCluster.seeds:

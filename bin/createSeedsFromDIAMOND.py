@@ -32,6 +32,12 @@ def sortSingle(args):
                args[0] + ".sorted")
 
 
+def append(inputName, outputName):
+    with open(outputName, "a") as outfile:
+        with open(inputName) as infile:
+            outfile.write(infile.read())
+
+
 def fastSort(inputFile, sortString, threads):
     """ Fast, parallel sort. Other parts of this script are not parallelized
     since they only involve a linear traversal of the input file.
@@ -296,21 +302,30 @@ def diamond2gff(preprocessedDiamond, outputFile):
 
 def processClusters(clusteredDiamond, topN, seedRegions, alignmentPairs):
 
-    os.mkdir("rawclusters")
+    rawClusters = tempfile.TemporaryDirectory(prefix="clusters", dir=".")
 
     # Buffer this into a dictionary and flush once in a while to prevent
     # frequent file handle opens.
     for row in csv.reader(open(clusteredDiamond), delimiter='\t'):
-        file = open("rawclusters/" + row[9], "a")
+        file = open(rawClusters.name + "/" + row[9], "a")
         file.write("\t".join(row) + "\n")
         file.close()
 
-    clusters = os.listdir("rawclusters")
+    clusters = os.listdir(rawClusters.name)
+
+    if os.path.exists(seedRegions):
+        os.remove(seedRegions)
+    if os.path.exists(alignmentPairs):
+        os.remove(alignmentPairs)
 
     # Parallelize
     for cluster in clusters:
-        splitSeedCluster.split("rawclusters/" + cluster, 0, 0,
-                               topN, seedRegions, alignmentPairs)
+        splitSeedCluster.split(rawClusters.name + "/" + cluster, 0, 0,
+                               topN,
+                               rawClusters.name + "/seeds_" + cluster,
+                               rawClusters.name + "/pairs_" + cluster)
+        append(rawClusters.name + "/seeds_" + cluster, seedRegions)
+        append(rawClusters.name + "/pairs_" + cluster, alignmentPairs)
 
 
 def main():
