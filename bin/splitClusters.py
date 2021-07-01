@@ -9,9 +9,7 @@
 
 import argparse
 import csv
-import sys
 import math
-import subprocess
 
 
 class Border():
