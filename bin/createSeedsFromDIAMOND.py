@@ -15,6 +15,7 @@ import os
 import subprocess
 import math
 from multiprocessing import Pool
+import splitSeedCluster
 
 
 def systemCall(cmd):
@@ -293,59 +294,23 @@ def diamond2gff(preprocessedDiamond, outputFile):
     output.close()
 
 
-def printClusters(clusteredDiamond, seedRegions):
-    """Print seed clusters in gff format. Clusters are defined by the left-
-    and right-most coordinates of its members.
+def processClusters(clusteredDiamond, topN, seedRegions, alignmentPairs):
 
-    Args:
-        clusteredDiamond: Clustered DIAMOND output
-        seedRegions: Output file
-    """
-    output = open(seedRegions, "w")
-    seeds = {}
+    os.mkdir("rawclusters")
 
+    # Buffer this into a dictionary and flush once in a while to prevent
+    # frequent file handle opens.
     for row in csv.reader(open(clusteredDiamond), delimiter='\t'):
-        clusterID = row[9]
-        if clusterID not in seeds:
-            seeds[clusterID] = row
-        elif int(row[3]) > int(seeds[clusterID][3]):
-            seeds[clusterID][3] = row[3]
+        file = open("rawclusters/" + row[9], "a")
+        file.write("\t".join(row) + "\n")
+        file.close()
 
-    for clusterID in seeds:
-        seed = seeds[clusterID]
-        output.write("\t".join([seed[0], "DIAMOND", "CDS", seed[2],
-                     seed[3], "1", seed[7], "0", "gene_id \"" + clusterID +
-                     "\";" + " transcript_id \"" + clusterID + "\";"]) + "\n")
-    output.close()
+    clusters = os.listdir("rawclusters")
 
-
-def printPairs(clusteredDiamond, topN, alignmentPairs):
-    """Print cluster ID and its score for each seed. Select only topN best
-    scoring seeds per each cluster.
-
-    Args:
-        clusteredDiamond: Clustered DIAMOND output
-        topN: How many best scoring seeds to report per cluster.
-        alignmentPairs: Output file
-    """
-    output = open(alignmentPairs, "w")
-    seeds = {}
-
-    for row in csv.reader(open(clusteredDiamond), delimiter='\t'):
-        seedID = row[8]
-        if seedID not in seeds:
-            seeds[seedID] = [float(row[6]), row[9], row[1]]
-        else:
-            seeds[seedID][0] = seeds[seedID][0] + float(row[6])
-            if seeds[seedID][1] != row[9]:
-                sys.exit("Error: cluster mismatch within the same seed")
-
-    for seedID in seeds:
-        seed = seeds[seedID]
-        seed[0] = str(round(seed[0], 2))
-        output.write("\t".join([seed[1], seed[2], seed[0]]) + "\n")
-
-    output.close()
+    # Parallelize
+    for cluster in clusters:
+        splitSeedCluster.split("rawclusters/" + cluster, 0, 0,
+                               topN, seedRegions, alignmentPairs)
 
 
 def main():
@@ -365,8 +330,8 @@ def main():
     clusteredDiamond = clusterSeeds(processedDiamond, args.threads)
     os.remove(processedDiamond)
 
-    printClusters(clusteredDiamond, args.seedRegions)
-    printPairs(clusteredDiamond, args.maxProteinsPerSeed, args.alignmentPairs)
+    processClusters(clusteredDiamond, args.maxProteinsPerSeed,
+                    args.seedRegions, args.alignmentPairs)
 
     os.remove(clusteredDiamond)
 
