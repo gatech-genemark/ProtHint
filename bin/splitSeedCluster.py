@@ -257,21 +257,25 @@ def printPairs(output, subClusters):
     output.close()
 
 
+def split(clusterFile, lowThreshold, highThreshold, maxProteinsPerSeed,
+          seedRegions, alignmentPairs):
 
-
-def main():
-    args = parseCmd()
-
-    seeds, CDSBorders = loadSeeds(args.input)
+    seeds, CDSBorders = loadSeeds(clusterFile)
     seedBorders = makeSeedBorders(seeds)
     blocks, maxCoverage, meanCoverage = computeCoverage(seedBorders)
 
     subClusters = labelBlocks(blocks, meanCoverage,
-                              args.lowThreshold, args.highThreshold)
+                              lowThreshold, highThreshold)
 
     assignSeedsToSubsclusters(subClusters, seeds)
-    printSubClusters(args.seedRegions, subClusters)
-    printPairs(args.alignmentPairs, subClusters)
+    printSubClusters(seedRegions, subClusters)
+    printPairs(alignmentPairs, subClusters)
+
+
+def main():
+    args = parseCmd()
+    split(args.input, args.lowThreshold, args.highThreshold,
+          args.maxProteinsPerSeed, args.seedRegions, args.alignmentPairs)
 
 
 def parseCmd():
@@ -283,6 +287,10 @@ def parseCmd():
 
     parser.add_argument('--lowThreshold', type=float, default=0.1)
     parser.add_argument('--highThreshold', type=float, default=0.2)
+
+    parser.add_argument('--maxProteinsPerSeed', type=int,
+                        help='Maximum number of protein per seed region. The \
+        best scoring proteins are selected.')
 
     parser.add_argument('--seedRegions', type=str, required=True,
                         help='Output file for seed regions.')
