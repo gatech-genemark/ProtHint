@@ -14,8 +14,11 @@ import sys
 import os
 import subprocess
 import math
-from multiprocessing import Pool
+from multiprocessing import Pool, Lock
 import splitSeedCluster
+
+seedLock = Lock()
+pairsLock = Lock()
 
 
 def systemCall(cmd):
@@ -327,7 +330,32 @@ def saveClustersToFiles(clusteredDiamond, clusterFolder):
     flushClusterBuffer(buffer, clusterFolder)
 
 
-def processClusters(clusteredDiamond, topN, seedRegions, alignmentPairs):
+def processSingle(args):
+    cluster = args[0]
+    lowThreshold = args[1]
+    highThreshold = args[2]
+    topN = args[3]
+    seedRegions = args[4]
+    alignmentPairs = args[5]
+    clusterFolder = args[6]
+
+    splitSeedCluster.split(clusterFolder + "/" + cluster,
+                           lowThreshold, highThreshold, topN,
+                           clusterFolder + "/seeds_" + cluster,
+                           clusterFolder + "/pairs_" + cluster)
+
+    with seedLock:
+        append(clusterFolder + "/seeds_" + cluster, seedRegions)
+    with pairsLock:
+        append(clusterFolder + "/pairs_" + cluster, alignmentPairs)
+
+    os.remove(clusterFolder + "/" + cluster)
+    os.remove(clusterFolder + "/seeds_" + cluster)
+    os.remove(clusterFolder + "/pairs_" + cluster)
+
+
+def processClusters(clusteredDiamond, topN, seedRegions, alignmentPairs,
+                    threads):
 
     clusterFolder = tempfile.TemporaryDirectory(prefix="clusters", dir=".")
 
@@ -340,15 +368,15 @@ def processClusters(clusteredDiamond, topN, seedRegions, alignmentPairs):
     if os.path.exists(alignmentPairs):
         os.remove(alignmentPairs)
 
-    # Parallelize
-    for cluster in clusters:
-        splitSeedCluster.split(clusterFolder.name + "/" + cluster, 0, 0,
-                               topN,
-                               clusterFolder.name + "/seeds_" + cluster,
-                               clusterFolder.name + "/pairs_" + cluster)
-        append(clusterFolder.name + "/seeds_" + cluster, seedRegions)
-        append(clusterFolder.name + "/pairs_" + cluster, alignmentPairs)
-
+    pool = Pool(processes=threads)
+    pool.map(processSingle, [[x,
+                              0,
+                              0,
+                              topN,
+                              seedRegions,
+                              alignmentPairs,
+                              clusterFolder.name
+                              ] for x in clusters])
 
 def main():
     args = parseCmd()
