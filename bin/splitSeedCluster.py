@@ -244,15 +244,18 @@ def printSubClusters(output, subClusters):
     output.close()
 
 
-def printPairs(output, subClusters):
+def printPairs(output, subClusters, topN):
 
     output = open(output, "w")
 
     for subCluster in subClusters:
-        for seed in subCluster.seeds:
+        subCluster.seeds.sort(reverse=True)
+        for counter, seed in enumerate(subCluster.seeds):
             output.write("\t".join([seed.clusterID,
                                     seed.protein,
                                     str(round(seed.score, 2))]) + "\n")
+            if counter == topN - 1:
+                break
 
     output.close()
 
@@ -269,7 +272,7 @@ def split(clusterFile, lowThreshold, highThreshold, maxProteinsPerSeed,
 
     assignSeedsToSubsclusters(subClusters, seeds)
     printSubClusters(seedRegions, subClusters)
-    printPairs(alignmentPairs, subClusters)
+    printPairs(alignmentPairs, subClusters, maxProteinsPerSeed)
 
 
 def main():
@@ -288,9 +291,9 @@ def parseCmd():
     parser.add_argument('--lowThreshold', type=float, default=0.1)
     parser.add_argument('--highThreshold', type=float, default=0.2)
 
-    parser.add_argument('--maxProteinsPerSeed', type=int,
+    parser.add_argument('--maxProteinsPerSeed', type=int, default=25,
                         help='Maximum number of protein per seed region. The \
-        best scoring proteins are selected.')
+        best scoring proteins are selected. Default = 25.')
 
     parser.add_argument('--seedRegions', type=str, required=True,
                         help='Output file for seed regions.')

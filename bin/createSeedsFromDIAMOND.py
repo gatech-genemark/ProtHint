@@ -378,6 +378,7 @@ def processClusters(clusteredDiamond, topN, seedRegions, alignmentPairs,
                               clusterFolder.name
                               ] for x in clusters])
 
+
 def main():
     args = parseCmd()
     preprocessedDiamond = preprocessInput(args.diamond, args.threads)
@@ -396,7 +397,7 @@ def main():
     os.remove(processedDiamond)
 
     processClusters(clusteredDiamond, args.maxProteinsPerSeed,
-                    args.seedRegions, args.alignmentPairs)
+                    args.seedRegions, args.alignmentPairs, args.threads)
 
     os.remove(clusteredDiamond)
 
@@ -424,9 +425,9 @@ def parseCmd():
                         help='Output with a list of up to --maxProteinsPerSeed\
         best scoring proteins per each seed region.')
 
-    parser.add_argument('--maxProteinsPerSeed', type=str,
+    parser.add_argument('--maxProteinsPerSeed', type=int, default=25,
                         help='Maximum number of protein per seed region. The \
-        best scoring proteins are selected.')
+        best scoring proteins are selected. Default = 25.')
 
     parser.add_argument('--maxTargetHitOverlap', type=float, default=0.75,
                         help='Maximum allowed fraction of a hit\'s target \
