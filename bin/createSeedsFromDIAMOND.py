@@ -354,8 +354,8 @@ def processSingle(args):
     os.remove(clusterFolder + "/pairs_" + cluster)
 
 
-def processClusters(clusteredDiamond, topN, seedRegions, alignmentPairs,
-                    threads):
+def processClusters(clusteredDiamond, topN, lowThreshold, highThreshold,
+                    seedRegions, alignmentPairs, threads):
 
     clusterFolder = tempfile.TemporaryDirectory(prefix="clusters", dir=".")
 
@@ -370,8 +370,8 @@ def processClusters(clusteredDiamond, topN, seedRegions, alignmentPairs,
 
     pool = Pool(processes=threads)
     pool.map(processSingle, [[x,
-                              0,
-                              0,
+                              lowThreshold,
+                              highThreshold,
                               topN,
                               seedRegions,
                               alignmentPairs,
@@ -397,6 +397,7 @@ def main():
     os.remove(processedDiamond)
 
     processClusters(clusteredDiamond, args.maxProteinsPerSeed,
+                    args.lowThreshold, args.highThreshold,
                     args.seedRegions, args.alignmentPairs, args.threads)
 
     os.remove(clusteredDiamond)
@@ -451,6 +452,9 @@ def parseCmd():
     parser.add_argument('--splitSeeds', type=str,
                         help='Output split, unclustered, seeds here. This is \
         an optional output; mainly useful for debugging.')
+
+    parser.add_argument('--lowThreshold', type=float, default=0.1)
+    parser.add_argument('--highThreshold', type=float, default=0.2)
 
     args = parser.parse_args()
 

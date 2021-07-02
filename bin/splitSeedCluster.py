@@ -58,7 +58,7 @@ class SubCluster():
     def printToFile(self, output):
         chrom = self.seeds[0].chrom
         strand = self.seeds[0].strand
-        clusterID = self.seeds[0].clusterID
+        clusterID = self.seeds[0].clusterID + "_" + str(self.index)
         output.write("\t".join([chrom, "DIAMOND", "CDS", str(self.start),
                      str(self.end), "1", strand, "0", "gene_id \"" +
                      clusterID + "\";" + " transcript_id \"" + clusterID +
@@ -203,12 +203,6 @@ def labelBlocks(blocks, maxCoverage, lowThreshold, highThreshold):
     # Close the last subcluster.
     subClusters[-1].close(blocks[-1].end - 1)
 
-    for block in blocks:
-        block.print()
-
-    for subcluster in subClusters:
-        subcluster.print()
-
     return subClusters
 
 
@@ -216,7 +210,6 @@ def assignSeedsToSubsclusters(subClusters, seeds):
     MARGIN = 100
 
     for subcluster in subClusters:
-        print(len(seeds))
         for key in list(seeds.keys()):
             seed = seeds[key]
             if seed.start < subcluster.start - MARGIN:
@@ -251,7 +244,8 @@ def printPairs(output, subClusters, topN):
     for subCluster in subClusters:
         subCluster.seeds.sort(reverse=True)
         for counter, seed in enumerate(subCluster.seeds):
-            output.write("\t".join([seed.clusterID,
+            output.write("\t".join([seed.clusterID +
+                                    "_" + str(subCluster.index),
                                     seed.protein,
                                     str(round(seed.score, 2))]) + "\n")
             if counter == topN - 1:
@@ -267,7 +261,7 @@ def split(clusterFile, lowThreshold, highThreshold, maxProteinsPerSeed,
     seedBorders = makeSeedBorders(seeds)
     blocks, maxCoverage, meanCoverage = computeCoverage(seedBorders)
 
-    subClusters = labelBlocks(blocks, meanCoverage,
+    subClusters = labelBlocks(blocks, maxCoverage,
                               lowThreshold, highThreshold)
 
     assignSeedsToSubsclusters(subClusters, seeds)
