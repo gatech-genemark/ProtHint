@@ -25,10 +25,8 @@ class Hint(object):
         self.topProt = extractFeatureGff(row[8], "topProt")
         self.splice_sites = extractFeatureGff(row[8], "splice_sites")
 
-        if row[5] == ".":
-            self.count = 1
-        else:
-            self.count = int(row[5])
+        self.counts = {}
+        self.updateCount(extractFeatureGff(row[8], "seed_gene_id"), row[5])
 
     def update(self, row):
         al_score = extractFeatureGff(row[8], "al_score")
@@ -41,13 +39,21 @@ class Hint(object):
         if self.splice_sites is None:
             self.splice_sites = extractFeatureGff(row[8], "splice_sites")
 
-        if row[5] == ".":
-            self.count += 1
+        self.updateCount(extractFeatureGff(row[8], "seed_gene_id"), row[5])
+
+    def updateCount(self, seed, score):
+        if score == ".":
+            update = 1
         else:
-            self.count += int(row[5])
+            update = int(score)
+
+        if seed not in self.counts:
+            self.counts[seed] = 0
+
+        self.counts[seed] += update
 
     def print(self):
-        self.row[5] = str(self.count)
+        self.row[5] = str(max(self.counts.values()))
         extraFeatures = "."
         if self.al_score != -1:
             al_score = str(self.al_score)
