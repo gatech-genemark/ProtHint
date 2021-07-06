@@ -237,10 +237,11 @@ def clusterSeeds(processedDiamond, threads):
     clusteredSeeds = tempfile.NamedTemporaryFile(mode="w", prefix="clustered",
                                                  dir=".", delete=False)
 
-    fastSort(processedDiamond, "-k1,1 -k3,3n -k4,4n", threads)
+    fastSort(processedDiamond, "-k8,8r -k1,1 -k3,3n -k4,4n", threads)
 
     clusterId = -1
     prevContig = ""
+    prevStrand = ""
     currentClusterEnd = 0
     clusters = []
     seed2cluster = {}
@@ -250,8 +251,10 @@ def clusterSeeds(processedDiamond, threads):
         start = int(row[2])
         end = int(row[3])
         seed = row[8]
+        strand = row[7]
 
-        if prevContig != contig or start > currentClusterEnd:
+        if prevContig != contig or start > currentClusterEnd or \
+           prevStrand != strand:
             clusterId += 1
             clusters.append(clusterId)
             currentClusterEnd = end
@@ -269,6 +272,7 @@ def clusterSeeds(processedDiamond, threads):
         row.append(str(clusterId))
         clusteredCDS.write("\t".join(row) + "\n")
         prevContig = contig
+        prevStrand = strand
 
     clusteredCDS.close()
 
