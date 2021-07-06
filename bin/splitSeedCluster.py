@@ -99,10 +99,10 @@ def loadSeeds(clusterFile):
         else:
             seeds[seedID].updateSeed(int(row[2]), int(row[3]), float(row[6]))
 
-        # CDSBorders.append(Border(int(row[2]), True))
-        # CDSBorders.append(Border(int(row[3]), False))
+        CDSBorders.append(Border(int(row[2]), True))
+        CDSBorders.append(Border(int(row[3]), False))
 
-    # CDSBorders.sort()
+    CDSBorders.sort()
 
     return seeds, CDSBorders
 
@@ -170,10 +170,10 @@ def computeCoverage(borders):
     return blocks, maxCoverage, meanCoverage
 
 
-def labelBlocks(blocks, maxCoverage, lowThreshold, highThreshold):
+def labelBlocks(blocks, baseline, lowThreshold, highThreshold):
     state = "start"
-    lowThresholdInt = int(lowThreshold * maxCoverage)
-    highThresholdInt = math.ceil(highThreshold * maxCoverage)
+    lowThresholdInt = int(lowThreshold * baseline)
+    highThresholdInt = math.ceil(highThreshold * baseline)
     subClusters = []
 
     for block in blocks:
@@ -261,7 +261,9 @@ def split(clusterFile, lowThreshold, highThreshold, maxProteinsPerSeed,
     seedBorders = makeSeedBorders(seeds)
     blocks, maxCoverage, meanCoverage = computeCoverage(seedBorders)
 
-    subClusters = labelBlocks(blocks, maxCoverage,
+    meanCDSCoverage = getMeanCDSCoverage(CDSBorders)
+
+    subClusters = labelBlocks(blocks, meanCDSCoverage,
                               lowThreshold, highThreshold)
 
     assignSeedsToSubsclusters(subClusters, seeds)
