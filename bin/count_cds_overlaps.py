@@ -9,7 +9,7 @@
 # files (start codons and CDS coordinates in gff format) need to be sorted by
 # chromosome, start and end. For example like this: sort -k1,1 -k4,4n -k5,5n
 # starts.gff > starts_sorted.gff. The file with CDS coordinates can be collapsed
-# (with combine_gff_records.gff script) for faster execution of this script.
+# (with combineRawHints.py script) for faster execution of this script.
 # ==============================================================
 
 
@@ -102,7 +102,7 @@ def parseCmd():
         to be overlapping. Both input files (start codons and CDS coordinates in gff\
         format) need to be sorted by chromosome, start and end. For example like this: \
         sort -k1,1 -k4,4n -k5,5n starts.gff > starts_sorted.gff. The file with CDS \
-        coordinates can be collapsed (with combine_gff_records.gff script) for faster\
+        coordinates can be collapsed (with combineRawHints.py script) for faster\
         execution of this script.')
 
     parser.add_argument('starts', metavar='starts.gff', type=str,

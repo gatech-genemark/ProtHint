@@ -368,8 +368,7 @@ def processSpalnIntrons():
                "--intronAlignment 0.1 --addAllSpliceSites > introns_01.gff")
     os.remove("introns.gff")
 
-    callScript("combine_gff_records.pl", "--in_gff introns_01.gff --out_gff " +
-               "prothint.gff")
+    callScript("combineRawHints.py", "introns_01.gff > prothint.gff")
     os.remove("introns_01.gff")
 
 
@@ -381,8 +380,7 @@ def processSpalnStops():
                "--stopAlignment 0.01 > stops_01.gff")
     os.remove("stops.gff")
 
-    callScript("combine_gff_records.pl", "--in_gff stops_01.gff --out_gff " +
-               "stops_01_combined.gff")
+    callScript("combineRawHints.py", "stops_01.gff > stops_01_combined.gff")
     systemCall("cat stops_01_combined.gff >> prothint.gff")
 
     os.remove("stops_01.gff")
@@ -397,8 +395,7 @@ def processSpalnStarts():
                "--startAlignment 0.01 > starts_01.gff")
     os.remove("starts.gff")
 
-    callScript("combine_gff_records.pl", "--in_gff starts_01.gff --out_gff " +
-               "starts_01_combined.gff")
+    callScript("combineRawHints.py", "starts_01.gff > starts_01_combined.gff")
     os.remove("starts_01.gff")
 
     # The rest of this function counts CDS overlap of starts
@@ -408,8 +405,7 @@ def processSpalnStarts():
     os.remove("starts_01_combined.gff")
 
     systemCall("grep CDS Spaln/spaln.gff > cds.gff || [[ $? == 1 ]]")
-    callScript("combine_gff_records.pl", "--in_gff cds.gff --out_gff " +
-               "cds_combined.gff")
+    callScript("combineRawHints.py", "cds.gff > cds_combined.gff")
     os.remove("cds.gff")
 
     # Only count CDS regions which have an upstream support
