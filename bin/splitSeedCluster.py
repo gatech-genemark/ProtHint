@@ -203,6 +203,14 @@ def labelBlocks(blocks, baseline, lowThreshold, highThreshold):
     # Close the last subcluster.
     subClusters[-1].close(blocks[-1].end - 1)
 
+    # If there are more than one subclusters, also create a subcluster which
+    # covers the original full cluster.
+    if len(subClusters) == 1:
+        subClusters[0].index = 0
+    else:
+        subClusters.insert(0, SubCluster(blocks[0].start, 0))
+        subClusters[0].close(blocks[-1].end - 1)
+
     return subClusters
 
 
@@ -212,6 +220,12 @@ def assignSeedsToSubsclusters(subClusters, seeds):
     for subcluster in subClusters:
         for key in list(seeds.keys()):
             seed = seeds[key]
+            # The subcluster with zero index always covers
+            # the whole original cluster
+            if subcluster.index == 0:
+                subcluster.addSeed(seed)
+                continue
+
             if seed.start < subcluster.start - MARGIN:
                 # Seeds starts before this cluster, it cannot be inside
                 # any subsequent subcluster
