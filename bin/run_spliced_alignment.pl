@@ -275,7 +275,7 @@ sub ReadSequence
 		}
 		else
 		{
-			if( !$id ) { print STDERR "error, fasta record whithout definition line found $0: $line\n"; exit 1; }
+			if( $id eq '' ) { print STDERR "error, fasta record whithout definition line found $0: $line\n"; exit 1; }
 
 			if ( $skip ) {next;}
 
