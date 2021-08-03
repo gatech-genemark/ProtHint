@@ -34,7 +34,7 @@ class Block():
         self.end = end
         self.coverage = coverage
         self.state = ""
-        
+
     def print(self):
         print(self.start - 1, self.end - 1, self.coverage, self.state)
 
@@ -56,6 +56,8 @@ class SubCluster():
         print(self.start, self.end, self.index)
 
     def printToFile(self, output):
+        if len(self.seeds) == 0:
+            return
         chrom = self.seeds[0].chrom
         strand = self.seeds[0].strand
         clusterID = self.seeds[0].clusterID + "_" + str(self.index)
