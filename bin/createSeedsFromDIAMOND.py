@@ -150,7 +150,15 @@ def mergeOverlappingQueryRegions(preprocessedDiamond):
 
                 row[6] = str(round(newScore, 2))
                 row[2] = str(prevStart)
-                row[4] = targets[target][4]
+
+                # Make sure the new protein coordinates make sense
+                if row[7] == "+":
+                    row[4] = str(min(int(targets[target][4]), int(row[4])))
+                    row[5] = str(max(int(targets[target][5]), int(row[5])))
+                else:
+                    row[4] = str(max(int(targets[target][4]), int(row[4])))
+                    row[5] = str(min(int(targets[target][5]), int(row[5])))
+
                 targets[target] = row
         else:
             # Print the previous hit, it cannot be overlapped anymore
