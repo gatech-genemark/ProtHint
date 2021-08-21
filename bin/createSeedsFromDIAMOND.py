@@ -99,6 +99,72 @@ def preprocessInput(diamond, threads):
     return flippedDiamond.name
 
 
+def removeMaskedHits(preprocessedDiamond, repeats, maxRepeatOverlapFraction):
+    """Remove hits overlapped by repeats
+
+    Args:
+        preprocessedDiamond (TYPE): Input hits
+        repeats (TYPE): Gff file with repeats
+        maxRepeatOverlapFraction (TYPE): Maximum allowed overlap fraction. Hits
+        overlapped by more than this fraction are filtered out.
+
+    Returns:
+        TYPE: Filtered hits
+    """
+    maskedDiamond = tempfile.NamedTemporaryFile(mode="w", prefix="masked",
+                                                dir=".", delete=False)
+    HS = 2  # Hit start index
+    HE = 3  # Hit end index
+    RS = 3  # Repeat start index
+    RE = 4  # Repeat end index
+
+    repeatQueue = []
+    repeatsReader = csv.reader(open(repeats), delimiter='\t')
+
+    for hit in csv.reader(open(preprocessedDiamond), delimiter='\t'):
+        hitLength = int(hit[HE]) - int(hit[HS]) + 1
+        hitOverlap = 0
+        for repeat in list(repeatQueue):
+            # Remove repeats which end before the hit from the queue.
+            if repeat[0] > hit[0]:
+                # Handle a special case where repeat is in subsequent contig
+                break
+            if repeat[0] < hit[0] or int(repeat[RE]) < int(hit[HS]):
+                repeatQueue.pop(0)
+            else:
+                break
+
+        if len(repeatQueue) == 0 or \
+           (repeatQueue[-1][0] == hit[0] and
+           int(repeatQueue[-1][RS]) <= int(hit[HE])):
+            # Add all repeats which overlap the current hit (plus one
+            # subsequent) repeat into the queue.
+            for repeat in repeatsReader:
+                if repeat[0] < hit[0] or \
+                   (repeat[0] == hit[0] and int(repeat[RE]) < int(hit[HS])):
+                    continue
+                repeatQueue.append(repeat)
+                if repeat[0] > hit[0] or int(repeat[RS]) > int(hit[HE]):
+                    break
+
+        for repeat in repeatQueue:
+            # Now go through all possibly overlapping repeats in the queue
+            # and compute # of overlapping nucleotides
+            if repeat[0] > hit[0] or int(repeat[RS]) > int(hit[HE]):
+                break
+            overlap = min(int(repeat[RE]), int(hit[HE])) - \
+                max(int(repeat[RS]), int(hit[HS])) + 1
+            if overlap <= 0:
+                sys.exit("error: unexpected repeat overlap encoutered.")
+            hitOverlap += overlap
+
+        overlappedFraction = hitOverlap / hitLength
+        if overlappedFraction <= maxRepeatOverlapFraction:
+            maskedDiamond.write("\t".join(hit) + "\n")
+
+    return maskedDiamond.name
+
+
 def mergeOverlappingQueryRegions(preprocessedDiamond):
     """Merge overlapping (in the query sequence) hits from the same target.
     Extra care is taken to correctly process the score and target protein
@@ -395,8 +461,16 @@ def main():
     args = parseCmd()
     preprocessedDiamond = preprocessInput(args.diamond, args.threads)
 
-    mergedQueries = mergeOverlappingQueryRegions(preprocessedDiamond)
-    os.remove(preprocessedDiamond)
+    if args.repeats:
+        maskedDiamond = removeMaskedHits(preprocessedDiamond, args.repeats,
+                                         args.maxRepeatOverlapFraction)
+        os.remove(preprocessedDiamond)
+    else:
+        maskedDiamond = preprocessedDiamond
+
+    mergedQueries = mergeOverlappingQueryRegions(maskedDiamond)
+    os.remove(maskedDiamond)
+
     if args.rawSeeds:
         diamond2gff(mergedQueries, args.rawSeeds)
 
@@ -431,6 +505,12 @@ def parseCmd():
                         mismatch gapopen qstart qend sstart send evalue \
                         bitscore score".')
 
+    parser.add_argument('--repeats', type=str,
+                        help='Input file with repeat coordinates. If \
+        provided, DIAMOND hits overlapped by repeats are ignored. The minimum\
+        overlap fraction for a hit to be ignored is controlled by the \
+        --maxRepeatOverlapFraction parameter.')
+
     parser.add_argument('--seedRegions', type=str, required=True,
                         help='Output file for seed regions.')
 
@@ -448,11 +528,18 @@ def parseCmd():
         hit from the same target (neighboring on the query). Hits exceeding \
         this fraction are split into distinct seeds. If a target alignment of \
         a hit starts or ends before the target alignment of a preceding hit \
-        (preceding on the query), the overlap is considered to be 1.')
+        (preceding on the query), the overlap is considered to be 1. \
+        DEFAULT = 0.75')
 
     parser.add_argument('--maxIntron', type=int, default=50000,
                         help='Maximum intron length. Hits further apart \
         are split into separate seed genes.')
+
+    parser.add_argument('--maxRepeatOverlapFraction', type=float, default=0.5,
+                        help='Maximum allowed fraction of hit to overlap with \
+        repeats (supplied by --repeats argument). Hits overlapped by repeats \
+        by more than MAXREPEATOVERLAPFRACTION fraction are ignored. \
+        DEFAULT = 0.5')
 
     parser.add_argument('--threads', type=int, default=1,
                         help='Number of threads to use.')
@@ -473,6 +560,10 @@ def parseCmd():
     if args.maxTargetHitOverlap > 1 or args.maxTargetHitOverlap < 0:
         sys.exit("Error: argument --maxTargetHitOverlap must be specified in" +
                  " range from 0 to 1.")
+
+    if args.maxRepeatOverlapFraction > 1 or args.maxRepeatOverlapFraction < 0:
+        sys.exit("Error: argument --maxRepeatOverlapFraction must be " +
+                 "specified in range from 0 to 1.")
 
     return args
 
