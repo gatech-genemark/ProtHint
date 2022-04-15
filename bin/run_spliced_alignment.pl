@@ -40,6 +40,8 @@ my $aligner = '';
 my $tmp_dir = '';
 my $min_exon_score = 25;
 my $nonCanonical = 0;
+my $longGene = 30000;
+my $longProtein = 15000;
 # ------------------------------------------------
 my $SPALN_OUT = "spaln.gff";
 my $BATCH_SIZE = 100;
@@ -173,7 +175,7 @@ sub alignerThread
 {
 	while (my $batchFile = $q->dequeue()) {
 		$tmp_out_file = "${batchFile}_out";
-		system("$bin/spalnBatch.sh $batchFile $tmp_out_file $min_exon_score $nonCanonical");
+		system("$bin/spalnBatch.sh $batchFile $tmp_out_file $min_exon_score $nonCanonical $longGene $longProtein");
 
 		# Safe write
 		$mutex->lock;
@@ -372,7 +374,9 @@ sub ParseCMD
 		'verbose'   => \$v,
 		'debug'     => \$debug,
 		'min_exon_score=f' => \$min_exon_score,
-		'nonCanonical' => \$nonCanonical
+		'nonCanonical' => \$nonCanonical,
+		'longGene=i'   => \$longGene,
+		'longProtein=i'   => \$longProtein
 	);
 
 	if( !$opt_results ) { print STDERR "error on command line: $0\n"; exit 1; }
@@ -390,6 +394,8 @@ sub ParseCMD
 	$cfg->{'d'}->{'cmd'}   = $cmd;
 	$cfg->{'d'}->{'min_exon_score'} = $min_exon_score;
 	$cfg->{'d'}->{'nonCanonical'} = $nonCanonical;
+	$cfg->{'d'}->{'longGene'} = $longGene;
+	$cfg->{'d'}->{'longProtein'} = $longProtein;
 	
 	print STDERR Dumper($cfg) if $debug;
 };
@@ -410,6 +416,8 @@ Required options:
   --cores            [number] number of threads to use
   --min_exon_score   [number] discard all hints inside/neighboring exons with score lower than minExonScore. Spaln specific option.
   --nonCanonical     Allow non-canonical introns
+  --longGene         Threshold for what is considered a long gene in Spaln alignment
+  --longProtein      Threshold for what is considered a long protein in Spaln alignment
 
 Developer options:
   --verbose

@@ -35,6 +35,8 @@ my $seq_file = '';      # input sequence
 my $list_file = '';     # file with pairs of gene_id and protein_id (blast output)
 my $out_file_gff = '';  # output in GFF
 my $min_exon_score = 25;
+my $longGene = 30000;
+my $longProtein = 15000;
 
 my $node_dir = '/tmp';  # use this directory on for holding tmp data on node
 my $SPALN_OUT = "spaln.gff";
@@ -103,7 +105,7 @@ cp $bin/spaln_to_gff.py bin
 cp $bin/../dependencies/spaln_boundary_scorer dependencies
 cp $bin/spalnBatch.sh bin
 
-./bin/run_spliced_alignment.pl --nuc $name --prot $db --list $list --cores $K --aligner spaln --min_exon_score $min_exon_score $nonCanonicalFlag
+./bin/run_spliced_alignment.pl --nuc $name --prot $db --list $list --cores $K --aligner spaln --min_exon_score $min_exon_score $nonCanonicalFlag --longGene $longGene --longProtein $longProtein
 
 mv $SPALN_OUT ${name}.gff
 cd ..
@@ -390,7 +392,9 @@ sub ParseCMD
 		'nonCanonical' => \$nonCanonical,
 		'verbose' => \$v,
 		'debug'   => \$debug,
-		'min_exon_score=f' => \$min_exon_score
+		'min_exon_score=f' => \$min_exon_score,
+		'longGene=i'   => \$longGene,
+		'longProtein=i'   => \$longProtein
 	);
 
 	if( !$opt_results ) { print STDERR "error on command line: $0\n"; exit 1; }
@@ -432,6 +436,8 @@ run spliced alignment on PBS
   --nonCanonical Allow non-canonical introns
   --v        verbose
   --min_exon_score [f] discard all hints inside/neighboring exons with score lower than minExonScore. Spaln specific option.
+  --longGene         Threshold for what is considered a long gene in Spaln alignment
+  --longProtein      Threshold for what is considered a long protein in Spaln alignment
   --debug
 # -----------
 ";

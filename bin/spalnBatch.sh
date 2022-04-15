@@ -6,10 +6,8 @@
 # Run Spaln on a list of genome-protein pairs
 # ==============================================================
 
-LONG_GENE=30000
-LONG_PROTEIN=15000
 
-if [ ! "$#" -eq 4 ]; then
+if [ ! "$#" -eq 6 ]; then
   echo "Usage: $0 input_batch output min_exon_score nonCanonicalIntrons"
   exit
 fi
@@ -18,6 +16,8 @@ batchFile=$1
 output=$2
 min_exon_score=$3
 nonCanonicalIntrons=$4
+LONG_GENE=$5
+LONG_PROTEIN=$6
 
 binDir="$(readlink -f $(dirname "$0"))"
 

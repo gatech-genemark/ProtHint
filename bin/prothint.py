@@ -67,7 +67,7 @@ def standardRun(args):
     prepareSeedSequences(diamondPairs)
 
     runSpaln(diamondPairs, args.pbs, args.minExonScore,
-             args.nonCanonicalSpliceSites)
+             args.nonCanonicalSpliceSites, args.longGene, args.longProtein)
 
     checkOutputs(diamondPairs, seedGenes)
     flagTopProteins(diamondPairs)
@@ -100,7 +100,7 @@ def nextIteration(args):
         diamondPairs = runDiamond(args.maxProteinsPerSeed, args.evalue)
         prepareSeedSequences(diamondPairs)
         runSpaln(diamondPairs, args.pbs, args.minExonScore,
-                 args.nonCanonicalSpliceSites)
+                 args.nonCanonicalSpliceSites, args.longGene, args.longProtein)
         flagTopProteins(diamondPairs)
         # Append subset of hints from the previous iteration to the current result
         os.chdir(workDir)
@@ -256,7 +256,8 @@ def prepareSeedSequences(diamondPairs):
     sys.stderr.write("[" + time.ctime() + "] Preparation of pairs finished\n")
 
 
-def runSpaln(diamondPairs, pbs, minExonScore, nonCanonical):
+def runSpaln(diamondPairs, pbs, minExonScore, nonCanonical,
+             longGene, longProtein):
     """Run Spaln spliced alignment and score the outputs with spaln-boundary-scorer
 
     Args:
@@ -266,6 +267,10 @@ def runSpaln(diamondPairs, pbs, minExonScore, nonCanonical):
         minExonScore (float): Discard all hints inside/neighboring exons with
                               score lower than minExonScore
         nonCanonical (bool): Whether to predict non-canonical introns
+        longGene (int): Threshold for what is considered a long gene in
+                        Spaln alignment
+        longProtein (int): Threshold for what is considered a long protein in
+                           Spaln alignment
     """
     spalnDir = workDir + "/Spaln"
     if not os.path.isdir(spalnDir):
@@ -280,12 +285,16 @@ def runSpaln(diamondPairs, pbs, minExonScore, nonCanonical):
         callScript("run_spliced_alignment.pl", "--cores " + threads +
                    " --nuc ../nuc.fasta --list " + diamondPairs + " --prot " +
                    proteins + " --v --aligner spaln --min_exon_score " +
-                   str(minExonScore) + nonCanonicalFlag)
+                   str(minExonScore) + nonCanonicalFlag +
+                   " --longGene " + str(longGene) +
+                   " --longProtein " + str(longProtein))
     else:
         callScript("run_spliced_alignment_pbs.pl", "--N 120 --K " + threads +
                    " --seq ../nuc.fasta --list " + diamondPairs + " --db " +
                    proteins + " --v --aligner spaln --min_exon_score " +
-                   str(minExonScore) + nonCanonicalFlag)
+                   str(minExonScore) + nonCanonicalFlag +
+                   " --longGene " + str(longGene) +
+                   " --longProtein " + str(longProtein))
 
 
 def checkOutputs(diamondPairs, seedGenes):
@@ -669,6 +678,10 @@ def parseCmd():
                         help='Maximum e-value for DIAMOND alignments hits. Default = 0.001')
     parser.add_argument('--minExonScore', type=float, default=25,
                         help='Discard all hints inside/neighboring exons with score lower than minExonScore. Default = 25')
+    parser.add_argument('--longGene', type=int, default=30000,
+                        help='Threshold for what is considered a long gene in Spaln alignment. Default = 30000')
+    parser.add_argument('--longProtein', type=int, default=15000,
+                        help='Threshold for what is considered a long protein in Spaln alignment. Default = 15000')
     parser.add_argument('--cleanup', default=False, action='store_true',
                         help='Delete temporary files and intermediate results. Cleanup is turned off by default as it is useful to keep these files \
                         for troubleshooting and the intermediate results might be useful on their own.')

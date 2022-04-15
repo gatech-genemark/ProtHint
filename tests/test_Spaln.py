@@ -17,7 +17,7 @@ class TestSpaln(unittest.TestCase):
         # Proteins file is deleted at the end of prothint
         shutil.copy(prothint.workDir + "/proteins.fasta", prothint.workDir + "/proteins_copy.fasta")
         prothint.proteins = prothint.workDir + "/proteins_copy.fasta"
-        prothint.runSpaln(prothint.workDir + "/pairs.out", pbs, 25)
+        prothint.runSpaln(prothint.workDir + "/pairs.out", pbs, 25, False, 30000, 15000)
 
         command = "diff <(sort " + prothint.workDir + "/Spaln/spaln.gff) \
             <(sort " + prothint.workDir + "/result_spaln.gff)"
@@ -34,7 +34,7 @@ class TestSpaln(unittest.TestCase):
         # Proteins file is deleted at the end of prothint
         shutil.copy(prothint.workDir + "/proteins.fasta", prothint.workDir + "/proteins_copy.fasta")
         prothint.proteins = prothint.workDir + "/proteins_copy.fasta"
-        prothint.runSpaln(prothint.workDir + "/pairs.out", True, 1000)
+        prothint.runSpaln(prothint.workDir + "/pairs.out", True, False, 1000, 30000, 15000)
 
         command = "diff <(sort " + prothint.workDir + "/Spaln/spaln.gff) \
             <(sort " + prothint.workDir + "/result_spaln_1000.gff)"
