@@ -11,7 +11,6 @@ import argparse
 import os
 import sys
 import subprocess
-import multiprocessing
 import time
 import shutil
 import tempfile
@@ -576,7 +575,7 @@ def setEnvironment(args):
     if args.threads > 0:
         threads = str(args.threads)
     else:
-        threads = str(multiprocessing.cpu_count())
+        threads = str(len(os.sched_getaffinity(0)))
 
 
 def checkFileAndMakeAbsolute(file):
