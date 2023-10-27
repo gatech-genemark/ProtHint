@@ -575,8 +575,10 @@ def setEnvironment(args):
     if args.threads > 0:
         threads = str(args.threads)
     else:
-        threads = str(len(os.sched_getaffinity(0)))
-
+        if hasattr(os, "sched_getaffinity"):
+             threads = str(len(os.sched_getaffinity(0)))
+        else:
+             threads = str(os.cpu_count() or 1)
 
 def checkFileAndMakeAbsolute(file):
     """Check if a file with given name exists and make the path to it absolute
