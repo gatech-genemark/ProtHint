@@ -209,6 +209,9 @@ sub ReadSequence
 		}
 		else
 		{
+			# skip ';' comment lines (e.g. FAIR-bioHeaders metadata) and empty
+			# lines before the first definition line
+			if( $id eq '' and $line =~ /^\s*(;|$)/ ) { next; }
 			if( $id eq '' ) { print "error, fasta record whithout definition line found $0: $line\n"; exit 1; }
 
 			if ( $soft_mask )
