@@ -563,6 +563,8 @@ def setEnvironment(args):
     if not os.path.isdir(workDir):
         os.mkdir(workDir)
 
+    genome = stripLeadingFastaComments(genome)
+
     # Log info about cmd
     callDir = "Called from: " + os.path.abspath(".") + "\n"
     cmd = "Cmd: " + " ".join(sys.argv) + "\n\n"
@@ -579,6 +581,50 @@ def setEnvironment(args):
              threads = str(len(os.sched_getaffinity(0)))
         else:
              threads = str(os.cpu_count() or 1)
+
+def stripLeadingFastaComments(fasta):
+    """Remove ';' comment lines before the first FASTA record
+
+    Lines starting with ';' before the first '>' line are comments in the
+    original Pearson FASTA format. The FAIR-bioHeaders metadata block
+    (https://doi.org/10.1093/bib/bbae122) uses them. GeneMark-ES and the
+    Perl scripts in ProtHint treat them as sequence, so a copy of the
+    genome without these lines is written to the working directory. If
+    the file does not start with comment lines, it is used as it is.
+
+    Args:
+        fasta (filepath): Path to the genome file
+
+    Returns:
+        filepath: Path to the genome file to use in the run
+    """
+    with open(fasta) as file:
+        for line in file:
+            if line.strip():
+                break
+        else:
+            return fasta
+    if not line.lstrip().startswith(";"):
+        return fasta
+
+    cleaned = workDir + "/genome_no_comments.fasta"
+    removed = 0
+    with open(fasta) as fin, open(cleaned, "w") as fout:
+        beforeFirstRecord = True
+        for line in fin:
+            if beforeFirstRecord:
+                stripped = line.strip()
+                if not stripped or stripped.startswith(";"):
+                    removed += 1
+                    continue
+                beforeFirstRecord = False
+            fout.write(line)
+
+    sys.stderr.write("[" + time.ctime() + "] Removed " + str(removed) +
+                     " comment/empty line(s) before the first FASTA record "
+                     "of the genome, using " + cleaned + "\n")
+    return cleaned
+
 
 def checkFileAndMakeAbsolute(file):
     """Check if a file with given name exists and make the path to it absolute
